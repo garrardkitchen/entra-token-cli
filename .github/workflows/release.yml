@@ -1,0 +1,215 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'src/EntraTokenCli/EntraTokenCli.csproj'
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --configuration Release --no-build --verbosity normal
+
+  publish-nuget:
+    name: Publish NuGet Package
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Pack NuGet package
+      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release /p:Version=${{ steps.get_version.outputs.VERSION }} -o ./artifacts
+
+    - name: Push to NuGet.org
+      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      continue-on-error: true
+
+    - name: Upload NuGet artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-package
+        path: ./artifacts/*.nupkg
+
+  publish-executables:
+    name: Publish Self-Contained Executables
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+            artifact-name: entratool-win-x64.exe
+          - os: macos-latest
+            rid: osx-arm64
+            artifact-name: entratool-osx-arm64
+          - os: macos-latest
+            rid: osx-x64
+            artifact-name: entratool-osx-x64
+          - os: ubuntu-latest
+            rid: linux-x64
+            artifact-name: entratool-linux-x64
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Get version from tag
+      id: get_version
+      shell: bash
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Publish self-contained executable
+      run: |
+        dotnet publish ${{ env.PROJECT_PATH }} \
+          --configuration Release \
+          --runtime ${{ matrix.rid }} \
+          --self-contained true \
+          -p:PublishSingleFile=true \
+          -p:PublishTrimmed=true \
+          -p:Version=${{ steps.get_version.outputs.VERSION }} \
+          -o ./publish/${{ matrix.rid }}
+
+    - name: Rename executable (Unix)
+      if: matrix.os != 'windows-latest'
+      run: |
+        cd ./publish/${{ matrix.rid }}
+        mv AzureAdTokenCli ${{ matrix.artifact-name }}
+        chmod +x ${{ matrix.artifact-name }}
+
+    - name: Rename executable (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        cd ./publish/${{ matrix.rid }}
+        Rename-Item -Path "AzureAdTokenCli.exe" -NewName "${{ matrix.artifact-name }}"
+
+    - name: Upload executable artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: executable-${{ matrix.rid }}
+        path: ./publish/${{ matrix.rid }}/${{ matrix.artifact-name }}
+
+  create-release:
+    name: Create GitHub Release
+    needs: [publish-nuget, publish-executables]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Create Release Notes
+      id: release_notes
+      run: |
+        cat > release_notes.md << 'EOF'
+        ## Azure AD Token CLI v${{ steps.get_version.outputs.VERSION }}
+
+        ### Installation
+
+        **Option 1: .NET Global Tool**
+        ```bash
+        dotnet tool install -g AzureAdTokenCli --version ${{ steps.get_version.outputs.VERSION }}
+        ```
+
+        **Option 2: Self-Contained Executables**
+
+        Download the appropriate executable for your platform:
+        - **Windows**: `entratool-win-x64.exe`
+        - **macOS (Apple Silicon)**: `entratool-osx-arm64`
+        - **macOS (Intel)**: `entratool-osx-x64`
+        - **Linux**: `entratool-linux-x64`
+
+        ### Quick Start
+
+        ```bash
+        # Create a profile
+        entratool config create
+
+        # Get a token
+        entratool get-token -p myprofile
+
+        # Inspect a token
+        entratool inspect <token>
+        ```
+
+        ### Documentation
+
+        See the [README](https://github.com/${{ github.repository }}/blob/main/README.md) for complete documentation.
+
+        ### Changelog
+
+        See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+        EOF
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Release v${{ steps.get_version.outputs.VERSION }}
+        body_path: release_notes.md
+        draft: false
+        prerelease: false
+        files: |
+          ./artifacts/executable-win-x64/entratool-win-x64.exe
+          ./artifacts/executable-osx-arm64/entratool-osx-arm64
+          ./artifacts/executable-osx-x64/entratool-osx-x64
+          ./artifacts/executable-linux-x64/entratool-linux-x64
+          ./artifacts/nuget-package/*.nupkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
