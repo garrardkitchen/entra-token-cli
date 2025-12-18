@@ -41,6 +41,7 @@ public class MsalAuthService
         OAuth2Flow flow,
         int? port = null,
         bool cacheCertPassword = false,
+        X509Certificate2? preLoadedCertificate = null,
         CancellationToken cancellationToken = default)
     {
         // Validate profile before attempting authentication
@@ -54,13 +55,13 @@ public class MsalAuthService
         return flow switch
         {
             OAuth2Flow.ClientCredentials => await AuthenticateClientCredentialsAsync(
-                profile, cacheCertPassword, cancellationToken),
+                profile, cacheCertPassword, preLoadedCertificate, cancellationToken),
             OAuth2Flow.AuthorizationCode => await AuthenticateAuthorizationCodeAsync(
-                profile, port, cacheCertPassword, cancellationToken),
+                profile, port, cacheCertPassword, preLoadedCertificate, cancellationToken),
             OAuth2Flow.DeviceCode => await AuthenticateDeviceCodeAsync(
-                profile, cacheCertPassword, cancellationToken),
+                profile, cacheCertPassword, preLoadedCertificate, cancellationToken),
             OAuth2Flow.InteractiveBrowser => await AuthenticateInteractiveBrowserAsync(
-                profile, port, cacheCertPassword, cancellationToken),
+                profile, port, cacheCertPassword, preLoadedCertificate, cancellationToken),
             _ => throw new NotSupportedException($"OAuth2 flow '{flow}' is not supported.")
         };
     }
@@ -100,9 +101,10 @@ public class MsalAuthService
     private async Task<AuthenticationResult> AuthenticateClientCredentialsAsync(
         AuthProfile profile,
         bool cacheCertPassword,
+        X509Certificate2? preLoadedCertificate,
         CancellationToken cancellationToken)
     {
-        var app = await GetOrCreateConfidentialClientAsync(profile, cacheCertPassword, cancellationToken);
+        var app = await GetOrCreateConfidentialClientAsync(profile, cacheCertPassword, preLoadedCertificate, cancellationToken);
 
         var scopes = profile.Scopes.Any() 
             ? profile.Scopes.ToArray() 
@@ -118,6 +120,7 @@ public class MsalAuthService
         AuthProfile profile,
         int? port,
         bool cacheCertPassword,
+        X509Certificate2? preLoadedCertificate,
         CancellationToken cancellationToken)
     {
         var app = await GetOrCreatePublicClientAsync(profile, cancellationToken);
@@ -150,6 +153,7 @@ public class MsalAuthService
     private async Task<AuthenticationResult> AuthenticateDeviceCodeAsync(
         AuthProfile profile,
         bool cacheCertPassword,
+        X509Certificate2? preLoadedCertificate,
         CancellationToken cancellationToken)
     {
         var app = await GetOrCreatePublicClientAsync(profile, cancellationToken);
@@ -174,6 +178,7 @@ public class MsalAuthService
         AuthProfile profile,
         int? port,
         bool cacheCertPassword,
+        X509Certificate2? preLoadedCertificate,
         CancellationToken cancellationToken)
     {
         var app = await GetOrCreatePublicClientAsync(profile, cancellationToken);
@@ -236,6 +241,7 @@ public class MsalAuthService
     private async Task<IConfidentialClientApplication> GetOrCreateConfidentialClientAsync(
         AuthProfile profile,
         bool cacheCertPassword,
+        X509Certificate2? preLoadedCertificate,
         CancellationToken cancellationToken)
     {
         var cacheKey = $"confidential:{profile.Name}";
@@ -264,14 +270,20 @@ public class MsalAuthService
 
             case AuthenticationMethod.Certificate:
             case AuthenticationMethod.PasswordlessCertificate:
-                var cachedPassword = cacheCertPassword
-                    ? await _configService.GetCertificatePasswordAsync(profile.Name, cancellationToken)
-                    : null;
+                // Use pre-loaded certificate if provided, otherwise load it now
+                var certificate = preLoadedCertificate;
+                if (certificate == null)
+                {
+                    var cachedPassword = cacheCertPassword
+                        ? await _configService.GetCertificatePasswordAsync(profile.Name, cancellationToken)
+                        : null;
 
-                var certificate = CertificateLoader.LoadCertificate(
-                    profile.CertificatePath!,
-                    cachedPassword,
-                    cacheCertPassword);
+                    certificate = CertificateLoader.LoadCertificate(
+                        profile.CertificatePath!,
+                        cachedPassword,
+                        cacheCertPassword,
+                        promptForPassword: false); // Don't prompt - should be pre-loaded
+                }
 
                 builder.WithCertificate(certificate);
                 break;

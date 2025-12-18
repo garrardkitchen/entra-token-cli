@@ -1,5 +1,6 @@
 using Spectre.Console.Cli;
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 using EntraTokenCli.Configuration;
 using EntraTokenCli.Authentication;
 using EntraTokenCli.UI;
@@ -105,6 +106,14 @@ public class GetTokenCommand : AsyncCommand<GetTokenSettings>
                 };
             }
 
+            // Pre-load certificate if needed (to avoid password prompt during spinner)
+            X509Certificate2? preLoadedCertificate = null;
+            if (profile.AuthMethod == AuthenticationMethod.Certificate || 
+                profile.AuthMethod == AuthenticationMethod.PasswordlessCertificate)
+            {
+                preLoadedCertificate = await PreLoadCertificateAsync(profile, settings.CacheCertPassword);
+            }
+
             // Authenticate
             var result = await ConsoleUi.ShowSpinnerAsync(
                 $"Authenticating using {flow} flow...",
@@ -112,7 +121,8 @@ public class GetTokenCommand : AsyncCommand<GetTokenSettings>
                     profile,
                     flow,
                     settings.Port,
-                    settings.CacheCertPassword));
+                    settings.CacheCertPassword,
+                    preLoadedCertificate));
 
             // Check expiry warning
             if (result.IsFromCache)
@@ -139,5 +149,23 @@ public class GetTokenCommand : AsyncCommand<GetTokenSettings>
             ConsoleUi.DisplayError(ex.Message);
             return 1;
         }
+    }
+
+    /// <summary>
+    /// Pre-loads certificate to prompt for password before showing spinner.
+    /// This avoids concurrent interactive operations (prompt + spinner).
+    /// </summary>
+    private async Task<X509Certificate2> PreLoadCertificateAsync(AuthProfile profile, bool cacheCertPassword)
+    {
+        var cachedPassword = cacheCertPassword
+            ? await _configService.GetCertificatePasswordAsync(profile.Name)
+            : null;
+
+        // This will prompt for password if needed, BEFORE we start the spinner
+        return Authentication.CertificateLoader.LoadCertificate(
+            profile.CertificatePath!,
+            cachedPassword,
+            cacheCertPassword,
+            promptForPassword: true);
     }
 }
