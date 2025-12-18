@@ -106,6 +106,7 @@ jobs:
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
     - name: Publish self-contained executable
+      shell: bash
       run: |
         dotnet publish ${{ env.PROJECT_PATH }} \
           --configuration Release \
@@ -118,9 +119,10 @@ jobs:
 
     - name: Rename executable (Unix)
       if: matrix.os != 'windows-latest'
+      shell: bash
       run: |
         cd ./publish/${{ matrix.rid }}
-        mv AzureAdTokenCli ${{ matrix.artifact-name }}
+        mv EntraTokenCli ${{ matrix.artifact-name }}
         chmod +x ${{ matrix.artifact-name }}
 
     - name: Rename executable (Windows)
@@ -128,7 +130,7 @@ jobs:
       shell: pwsh
       run: |
         cd ./publish/${{ matrix.rid }}
-        Rename-Item -Path "AzureAdTokenCli.exe" -NewName "${{ matrix.artifact-name }}"
+        Rename-Item -Path "EntraTokenCli.exe" -NewName "${{ matrix.artifact-name }}"
 
     - name: Upload executable artifact
       uses: actions/upload-artifact@v4
