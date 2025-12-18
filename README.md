@@ -5,7 +5,7 @@ A cross-platform .NET CLI tool for generating Azure AD access tokens via multipl
 ## Features
 
 - **Multiple OAuth2 Flows**: Authorization Code, Client Credentials, Device Code, Interactive Browser
-- **Secure Storage**: Platform-native encryption (DPAPI on Windows, Keychain on macOS, libsecret on Linux)
+- **Secure Storage**: Platform-native encryption (DPAPI on Windows, Keychain on macOS) ⚠️ *Linux uses XOR obfuscation only*
 - **Certificate Authentication**: Support for .pfx certificates with flexible password handling
 - **Profile Management**: Save and manage multiple authentication profiles
 - **Profile Export/Import**: Share profiles across teams with AES-256 encryption
@@ -233,10 +233,23 @@ cat ~/.config/entratool/profiles.json
 Secrets (client secrets and certificate passwords) are stored separately using platform-native secure storage:
 
 - **Windows**: DPAPI (Data Protection API) - `%APPDATA%\entratool\secure\`
+  - ✅ Strong encryption, scoped to current user
 - **macOS**: Keychain - Service name: `entratool`, account format: `entratool:{profileName}:{secretType}`
+  - ✅ Strong encryption, integrated with system security
+  - Secrets can be viewed using Keychain Access app by searching for "entratool"
 - **Linux**: XOR-obfuscated files (fallback) - `~/.config/entratool/secure/`
+  - ⚠️ **SECURITY WARNING**: Uses XOR obfuscation, NOT cryptographic encryption
+  - ⚠️ Secrets are easily reversible by anyone with file system access
+  - ⚠️ Suitable for development only; avoid storing production credentials on Linux
+  - 🔨 Proper libsecret integration is planned for future versions
 
-**Note**: On macOS, secrets are stored in the system Keychain and can be viewed using Keychain Access app by searching for "entratool".
+**Linux Users - Important Security Considerations:**
+
+The current Linux implementation provides **obfuscation only**, not true encryption. If you need to store sensitive production credentials on Linux, consider these alternatives:
+- Use environment variables for secrets instead of profiles
+- Store profiles on an encrypted file system
+- Use a secrets manager (HashiCorp Vault, Azure Key Vault)
+- Wait for libsecret integration in a future release
 
 ## Troubleshooting
 
@@ -313,7 +326,13 @@ dotnet publish -c Release -r linux-x64 --self-contained
 
 ## Security Considerations
 
-- Client secrets and certificate passwords are stored in platform-native secure storage
+**Platform Security Status:**
+- ✅ **Windows & macOS**: Strong cryptographic storage (DPAPI/Keychain)
+- ⚠️ **Linux**: XOR obfuscation only - not suitable for production secrets
+
+**Best Practices:**
+- Client secrets and certificate passwords are stored in platform-native secure storage (Windows/macOS)
+- **Linux users**: Avoid storing production credentials; use environment variables or secrets managers instead
 - Profile exports are encrypted with AES-256 using PBKDF2 key derivation
 - Tokens are cached with encryption using MSAL's built-in serialization
 - Always use `--no-clipboard` in shared/recorded terminal sessions
