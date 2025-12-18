@@ -43,13 +43,13 @@ jobs:
       run: dotnet restore
 
     - name: Build
+      shell: bash
       run: |
         if [ "${{ steps.get_version.outputs.VERSION }}" != "" ]; then
-          dotnet build --configuration Release --no-restore /p:Version=${{ steps.get_version.outputs.VERSION }}
+          dotnet build --configuration Release --no-restore "-p:Version=${{ steps.get_version.outputs.VERSION }}"
         else
           dotnet build --configuration Release --no-restore
         fi
-      shell: bash
 
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
