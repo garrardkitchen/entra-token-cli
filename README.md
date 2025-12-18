@@ -212,6 +212,137 @@ entratool get-token -p myprofile --no-clipboard
 TOKEN=$(cat ~/.config/entratool/last-token.txt)
 ```
 
+## Working with Certificates
+
+### Creating a Certificate for App Registration
+
+#### Option 1: PowerShell (Windows/macOS/Linux with PowerShell)
+
+```powershell
+# Create a self-signed certificate
+$cert = New-SelfSignedCertificate `
+    -Subject "CN=MyAppName" `
+    -CertStoreLocation "Cert:\CurrentUser\My" `
+    -KeyExportPolicy Exportable `
+    -KeySpec Signature `
+    -KeyLength 2048 `
+    -KeyAlgorithm RSA `
+    -HashAlgorithm SHA256 `
+    -NotAfter (Get-Date).AddYears(2)
+
+# Export the certificate with private key (.pfx)
+$password = ConvertTo-SecureString -String "YourPassword123!" -Force -AsPlainText
+Export-PfxCertificate -Cert $cert -FilePath "myapp.pfx" -Password $password
+
+# Export the public key for Azure upload (.cer)
+Export-Certificate -Cert $cert -FilePath "myapp.cer"
+```
+
+#### Option 2: OpenSSL (macOS/Linux)
+
+```bash
+# Generate private key and certificate
+openssl req -x509 -newkey rsa:2048 -keyout myapp-key.pem -out myapp-cert.pem -days 730 -nodes \
+    -subj "/CN=MyAppName"
+
+# Create .pfx file (for use with entratool)
+openssl pkcs12 -export -out myapp.pfx -inkey myapp-key.pem -in myapp-cert.pem \
+    -passout pass:YourPassword123!
+
+# Create .cer file (for Azure upload)
+openssl x509 -outform der -in myapp-cert.pem -out myapp.cer
+```
+
+#### Option 3: Azure Key Vault (Production)
+
+```bash
+# Create certificate in Key Vault (best for production)
+az keyvault certificate create \
+    --vault-name mykeyvault \
+    --name myapp-cert \
+    --policy @policy.json
+
+# Download for local use
+az keyvault secret download \
+    --vault-name mykeyvault \
+    --name myapp-cert \
+    --encoding base64 \
+    --file myapp.pfx
+```
+
+### Uploading Certificate to App Registration
+
+#### Azure Portal
+
+1. Navigate to **Azure Portal** → **Azure Active Directory** → **App registrations**
+2. Select your application
+3. Go to **Certificates & secrets** → **Certificates** tab
+4. Click **Upload certificate**
+5. Select your `.cer` file (public key only)
+6. Add a description and click **Add**
+
+#### Azure CLI
+
+```bash
+# Upload certificate to app registration
+az ad app credential reset \
+    --id <your-app-id> \
+    --cert @myapp.cer \
+    --append
+```
+
+#### PowerShell
+
+```powershell
+# Connect to Azure AD
+Connect-AzureAD
+
+# Upload certificate
+$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2("myapp.cer")
+New-AzureADApplicationKeyCredential `
+    -ObjectId <your-app-object-id> `
+    -Type AsymmetricX509Cert `
+    -Usage Verify `
+    -Value $cert.GetRawCertData()
+```
+
+### Using Certificates with entratool
+
+Once uploaded, configure your profile:
+
+```bash
+# Create profile with certificate
+entratool config create
+# Profile name: myapp-cert
+# Tenant ID: yourtenant.onmicrosoft.com
+# Client ID: <your-client-id>
+# Scopes: https://graph.microsoft.com/.default
+# Auth method: Certificate
+# Certificate path: /path/to/myapp.pfx
+# Cache certificate password: Yes
+# Certificate password: YourPassword123!
+
+# Get token
+entratool get-token -p myapp-cert -f ClientCredentials
+```
+
+### Important Notes
+
+- **Upload `.cer` file to Azure** (public key only)
+- **Keep `.pfx` file secure locally** (contains private key)
+- **.pfx password** is stored in platform-native secure storage by entratool
+- **Certificate expiration**: Self-signed certs typically 1-2 years; monitor expiration
+- **Production**: Use proper CA-issued certificates or Azure Key Vault managed certificates
+
+### Quick Test
+
+After uploading:
+
+```bash
+# Test certificate authentication
+entratool get-token -p myapp-cert -f ClientCredentials --cache-cert-password
+```
+
 ## Configuration Files
 
 ### Profile Storage
