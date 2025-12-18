@@ -144,3 +144,6 @@ PublishProfiles/
 # Application specific
 last-token.txt
 profiles.json
+*.pem
+*.cer
+*.pfx
