@@ -161,13 +161,13 @@ jobs:
       id: release_notes
       run: |
         cat > release_notes.md << 'EOF'
-        ## Azure AD Token CLI v${{ steps.get_version.outputs.VERSION }}
+        ## Entra Token CLI v${{ steps.get_version.outputs.VERSION }}
 
         ### Installation
 
         **Option 1: .NET Global Tool**
         ```bash
-        dotnet tool install -g AzureAdTokenCli --version ${{ steps.get_version.outputs.VERSION }}
+        dotnet tool install -g EntraTokenCli --version ${{ steps.get_version.outputs.VERSION }}
         ```
 
         **Option 2: Self-Contained Executables**
