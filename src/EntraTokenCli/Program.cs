@@ -6,6 +6,7 @@ using EntraTokenCli.Configuration;
 using EntraTokenCli.Authentication;
 using EntraTokenCli.Commands;
 using EntraTokenCli.Discovery;
+using System.Reflection;
 
 namespace EntraTokenCli;
 
@@ -15,6 +16,23 @@ class Program
     {
         try
         {
+            // Get version
+            var version = Assembly.GetExecutingAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.
+                InformationalVersion ?? "1.0.0";
+
+            // Display version banner if help is requested or no args provided
+            if (args.Length == 0 || args.Any(a => a == "--help" || a == "-h" || a == "help"))
+            {
+                AnsiConsole.Write(
+                    new FigletText("entratool")
+                        .LeftJustified()
+                        .Color(Color.Cyan1));
+                AnsiConsole.MarkupLine($"[dim]Version [orange1]{version}[/][/]");
+                AnsiConsole.MarkupLine($"[dim]Created by [orange1]Garrard Kitchen[/] (garrardkitchen@gmail.com)[/]");
+                AnsiConsole.WriteLine();
+            }
+
             // Create service collection and configure DI
             var services = new ServiceCollection();
             ConfigureServices(services);
@@ -25,7 +43,7 @@ class Program
             app.Configure(config =>
             {
                 config.SetApplicationName("entratool");
-                config.SetApplicationVersion("1.0.0");
+                config.SetApplicationVersion(version);
 
                 config.AddCommand<GetTokenCommand>("get-token")
                     .WithDescription("Generate an Azure AD access token")

@@ -31,6 +31,16 @@ Download the latest release for your platform from the [Releases](https://github
 - **macOS (Intel)**: `entratool-osx-x64`
 - **Linux**: `entratool-linux-x64`
 
+### Check Version
+
+```bash
+entratool --version
+```
+
+## Quick Start
+- **macOS (Intel)**: `entratool-osx-x64`
+- **Linux**: `entratool-linux-x64`
+
 ## Quick Start
 
 ### 1. Create a Profile
