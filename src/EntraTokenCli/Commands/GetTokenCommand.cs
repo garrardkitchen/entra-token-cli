@@ -36,6 +36,10 @@ public class GetTokenSettings : CommandSettings
     [CommandOption("--warn-expiry <MINUTES>")]
     [Description("Warn if cached token expires within specified minutes (default: 5)")]
     public int WarnExpiryMinutes { get; init; } = 5;
+
+    [CommandOption("-s|--scope <SCOPE>")]
+    [Description("Override scope(s) for this request (comma-separated). Examples: 'https://graph.microsoft.com/.default', 'api://myapi/access'")]
+    public string? Scope { get; init; }
 }
 
 public class GetTokenCommand : AsyncCommand<GetTokenSettings>
@@ -76,6 +80,15 @@ public class GetTokenCommand : AsyncCommand<GetTokenSettings>
             if (!string.IsNullOrWhiteSpace(settings.RedirectUri))
             {
                 profile = profile with { RedirectUri = settings.RedirectUri };
+            }
+
+            // Apply scope override
+            if (!string.IsNullOrWhiteSpace(settings.Scope))
+            {
+                var overrideScopes = settings.Scope.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim())
+                    .ToList();
+                profile = profile with { Scopes = overrideScopes };
             }
 
             // Determine flow

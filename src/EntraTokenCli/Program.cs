@@ -49,6 +49,8 @@ class Program
                     .WithDescription("Generate an Azure AD access token")
                     .WithExample(new[] { "get-token", "-p", "myprofile" })
                     .WithExample(new[] { "get-token", "-p", "myprofile", "-f", "DeviceCode" })
+                    .WithExample(new[] { "get-token", "-p", "myprofile", "-s", "https://management.azure.com/.default" })
+                    .WithExample(new[] { "get-token", "-p", "myprofile", "-s", "api://my-api/.default" })
                     .WithExample(new[] { "get-token", "--no-clipboard" });
 
                 config.AddCommand<RefreshCommand>("refresh")

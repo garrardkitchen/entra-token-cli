@@ -68,6 +68,12 @@ entratool get-token -p myprofile
 # Using a specific OAuth2 flow
 entratool get-token -p myprofile -f DeviceCode
 
+# Override scope for this request (useful for getting tokens for different APIs)
+entratool get-token -p myprofile -s "https://management.azure.com/.default"
+
+# Get token for custom API
+entratool get-token -p myprofile -s "api://YOUR-API-CLIENT-ID/.default"
+
 # Without clipboard copy
 entratool get-token -p myprofile --no-clipboard
 ```
@@ -141,6 +147,66 @@ entratool get-token -p myprofile -f InteractiveBrowser --port 5000
 
 # With custom redirect URI
 entratool get-token -p myprofile --redirect-uri http://localhost:3000
+```
+
+## Scope Management
+
+### Understanding Scopes
+
+Scopes define what resources and permissions your token will have access to. Common scope patterns:
+
+- **Microsoft Graph API**: `https://graph.microsoft.com/.default`
+- **Azure Management API**: `https://management.azure.com/.default`
+- **Custom API (default scope)**: `api://YOUR-API-CLIENT-ID/.default`
+- **Custom API (specific permission)**: `api://YOUR-API-CLIENT-ID/access`
+
+### Setting Scopes in Profiles
+
+When creating or editing a profile, you'll be prompted for scopes with helpful examples:
+
+```bash
+entratool config create
+# ... other prompts ...
+# Examples shown:
+#   - Microsoft Graph API: https://graph.microsoft.com/.default
+#   - Azure Management API: https://management.azure.com/.default
+#   - Custom API: api://YOUR-API-CLIENT-ID/.default
+# Scopes (comma-separated): https://graph.microsoft.com/.default
+```
+
+### Overriding Scopes at Runtime
+
+You can override the profile's scopes for a single token request using the `--scope` or `-s` option:
+
+```bash
+# Get token for Azure Management API (override profile scope)
+entratool get-token -p myprofile -s "https://management.azure.com/.default"
+
+# Get token for custom API
+entratool get-token -p myprofile -s "api://12345678-1234-1234-1234-123456789abc/.default"
+
+# Multiple scopes (comma-separated)
+entratool get-token -p myprofile -s "api://my-api/read,api://my-api/write"
+```
+
+### Use Case: Client App Calling API App
+
+When you have a client app that needs to call a protected API:
+
+1. **API App Registration**: Register your API in Entra ID and define app roles/scopes
+2. **Client App Registration**: Register your client app with permissions to call the API
+3. **Get Token**: Use the client app credentials to get a token scoped to the API:
+
+```bash
+# Configure client app profile with Graph scope (default)
+entratool config create
+# Name: myclient
+# Client ID: <client-app-id>
+# Client Secret: <secret>
+# Scopes: https://graph.microsoft.com/.default
+
+# Get token for the API instead
+entratool get-token -p myclient -s "api://<api-app-id>/.default"
 ```
 
 ## Profile Management

@@ -122,6 +122,11 @@ public class ConfigCreateCommand : AsyncCommand<ConfigCreateSettings>
             }
 
             // Scopes
+            AnsiConsole.MarkupLine("[dim]Examples:[/]");
+            AnsiConsole.MarkupLine("[dim]  - Microsoft Graph API: https://graph.microsoft.com/.default[/]");
+            AnsiConsole.MarkupLine("[dim]  - Azure Management API: https://management.azure.com/.default[/]");
+            AnsiConsole.MarkupLine("[dim]  - Custom API: api://YOUR-API-CLIENT-ID/.default[/]");
+            AnsiConsole.MarkupLine("[dim]  - Specific scope: api://YOUR-API-CLIENT-ID/access[/]\n");
             var scopesInput = AnsiConsole.Ask<string>("Scopes (comma-separated):", "https://graph.microsoft.com/.default");
             profile.Scopes = scopesInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim())
@@ -256,6 +261,11 @@ public class ConfigEditCommand : AsyncCommand<ConfigEditSettings>
 
             // Update scopes
             var currentScopes = string.Join(", ", existingProfile.Scopes);
+            AnsiConsole.MarkupLine("[dim]Examples:[/]");
+            AnsiConsole.MarkupLine("[dim]  - Microsoft Graph API: https://graph.microsoft.com/.default[/]");
+            AnsiConsole.MarkupLine("[dim]  - Azure Management API: https://management.azure.com/.default[/]");
+            AnsiConsole.MarkupLine("[dim]  - Custom API: api://YOUR-API-CLIENT-ID/.default[/]");
+            AnsiConsole.MarkupLine("[dim]  - Specific scope: api://YOUR-API-CLIENT-ID/access[/]\n");
             var scopesInput = AnsiConsole.Ask("Scopes (comma-separated):", currentScopes);
             updatedProfile.Scopes = scopesInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim())
