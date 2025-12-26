@@ -147,3 +147,5 @@ profiles.json
 *.pem
 *.cer
 *.pfx
+
+/docs/learn/public/

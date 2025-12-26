@@ -1,0 +1,90 @@
+baseURL: "https://entratool-docs.garrardkitchen.com/"
+title: "Entra Token CLI Documentation"
+languageCode: "en-us"
+enableEmoji: true
+enableGitInfo: false
+
+module:
+  hugoVersion:
+    extended: true
+    min: "0.153.0"
+  imports:
+    - path: github.com/colinwilson/lotusdocs
+    - path: github.com/gohugoio/hugo-mod-bootstrap-scss/v5
+
+params:
+  description: "Cross-platform CLI for generating Microsoft Entra ID access tokens"
+  author: "Garrard Kitchen"
+  
+  # Branding
+  primary: "#0078D4"      # Microsoft blue
+  secondary: "#003d7a"
+  
+  # Social links
+  social:
+    github: "https://github.com/garrardkitchen/entra-token-cli"
+  
+  # Docs configuration
+  docs:
+    title: "Documentation"
+    pathName: "docs"
+    themeColor: "blue"
+  
+  # Table of Contents
+  toc:
+    enable: true
+    startLevel: 2
+    endLevel: 3
+  
+  # Footer
+  footer:
+    copyright: "© :YEAR: Garrard Kitchen"
+    version: true
+
+# Menu Configuration
+menu:
+  primary:
+    - name: Home
+      url: /
+      weight: 10
+    - name: Docs
+      url: /docs/
+      weight: 20
+    - name: GitHub
+      url: https://github.com/garrardkitchen/entra-token-cli
+      weight: 30
+  
+  docs:
+    - name: Getting Started
+      url: /docs/getting-started/
+      weight: 10
+    - name: Core Concepts
+      url: /docs/core-concepts/
+      weight: 20
+    - name: User Guide
+      url: /docs/user-guide/
+      weight: 30
+    - name: Recipes
+      url: /docs/recipes/
+      weight: 40
+    - name: OAuth Flows
+      url: /docs/oauth-flows/
+      weight: 50
+    - name: Reference
+      url: /docs/reference/
+      weight: 60
+    - name: Platform Guides
+      url: /docs/platform-guides/
+      weight: 70
+    - name: Troubleshooting
+      url: /docs/troubleshooting/
+      weight: 80
+
+# Markup Configuration
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    style: monokai
+    lineNos: true
