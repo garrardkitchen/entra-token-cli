@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feat/**
     paths:
       - 'docs/learn/**'
       - '.github/workflows/deploy-docs.yml'
