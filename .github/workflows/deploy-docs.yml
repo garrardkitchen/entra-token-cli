@@ -1,4 +1,4 @@
-name: Deploy Documentation
+name: Deploy Documentation entratool-docs
 
 on:
   push:
@@ -11,8 +11,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: "pages"
@@ -23,12 +21,12 @@ defaults:
     shell: bash
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     env:
       HUGO_VERSION: 0.153.2
     steps:
-      - name: Checkout
+      - name: Checkout source repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -48,10 +46,6 @@ jobs:
         working-directory: docs/learn
         run: hugo mod get
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
       - name: Build with Hugo
         working-directory: docs/learn
         env:
@@ -61,20 +55,16 @@ jobs:
           hugo \
             --gc \
             --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+            --baseURL "https://entratool-docs.garrardkitchen.com/"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to entratool-docs repository
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./docs/learn/public
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          personal_token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
+          external_repository: garrardkitchen/entratool-docs
+          publish_branch: main
+          publish_dir: ./docs/learn/public
+          cname: entratool-docs.garrardkitchen.com
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy documentation from ${{ github.sha }}'
