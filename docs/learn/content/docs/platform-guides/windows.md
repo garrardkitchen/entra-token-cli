@@ -21,14 +21,14 @@ Entra Token CLI leverages Windows security features for optimal token protection
 
 ### Using Winget
 
-```powershell
+```powershell {linenos=inline}
 # Install using Windows Package Manager
 winget install GarrardKitchen.EntraTokenCLI
 ```
 
 ### Manual Installation
 
-```powershell
+```powershell {linenos=inline}
 # Download latest release
 $version = "1.0.0"
 $url = "https://github.com/garrardkitchen/entratool-cli/releases/download/v$version/entratool-windows-amd64.exe"
@@ -46,7 +46,7 @@ $path = [Environment]::GetEnvironmentVariable("Path", "User")
 
 ### Verify Installation
 
-```powershell
+```powershell {linenos=inline}
 # Check version
 entratool --version
 
@@ -60,7 +60,7 @@ entratool --help
 
 Tokens are encrypted using Windows DPAPI:
 
-```powershell
+```powershell {linenos=inline}
 # Tokens stored at:
 $env:LOCALAPPDATA\EntraTokenCLI\profiles\
 
@@ -77,7 +77,7 @@ $env:LOCALAPPDATA\EntraTokenCLI\profiles\
 
 ### View Storage Location
 
-```powershell
+```powershell {linenos=inline}
 # Check storage path
 $storagePath = "$env:LOCALAPPDATA\EntraTokenCLI\profiles"
 Get-ChildItem $storagePath
@@ -95,7 +95,7 @@ Get-ChildItem $storagePath
 
 ### Security Permissions
 
-```powershell
+```powershell {linenos=inline}
 # Check file permissions
 Get-Acl "$env:LOCALAPPDATA\EntraTokenCLI\profiles\default.token" | Format-List
 
@@ -108,7 +108,7 @@ $acl.Access | Where-Object { $_.IdentityReference -eq "$env:USERDOMAIN\$env:USER
 
 ### Basic Usage
 
-```powershell
+```powershell {linenos=inline}
 # Get token
 $token = entratool get-token --output json | ConvertFrom-Json
 $accessToken = $token.access_token
@@ -123,7 +123,7 @@ $response
 
 ### Function Wrapper
 
-```powershell
+```powershell {linenos=inline}
 function Get-EntraToken {
     [CmdletBinding()]
     param(
@@ -164,7 +164,7 @@ $token = Get-EntraToken -Scope "https://graph.microsoft.com/User.Read"
 
 ### Error Handling
 
-```powershell
+```powershell {linenos=inline}
 function Invoke-EntraTokenCommand {
     param(
         [Parameter(Mandatory)]
@@ -207,7 +207,7 @@ $result = Invoke-EntraTokenCommand -Arguments @("get-token", "--output", "json")
 
 ### Microsoft Graph Module Integration
 
-```powershell
+```powershell {linenos=inline}
 # Install Microsoft Graph PowerShell SDK
 Install-Module Microsoft.Graph -Scope CurrentUser
 
@@ -231,7 +231,7 @@ Disconnect-MgGraph
 
 ### Task Scheduler Integration
 
-```powershell
+```powershell {linenos=inline}
 # Create scheduled task for token refresh
 $action = New-ScheduledTaskAction -Execute "entratool" -Argument "refresh --profile production"
 
@@ -252,7 +252,7 @@ Get-ScheduledTaskInfo -TaskName "RefreshEntraToken"
 
 ### Windows Service Integration
 
-```powershell
+```powershell {linenos=inline}
 # Example Windows Service using Entra Token CLI
 # Service.ps1
 
@@ -299,7 +299,7 @@ Start-Service $serviceName
 
 ### Event Log Integration
 
-```powershell
+```powershell {linenos=inline}
 # Log Entra Token CLI operations to Windows Event Log
 function Write-EntraTokenLog {
     param(
@@ -329,7 +329,7 @@ Write-EntraTokenLog -Message "Failed to refresh token" -EntryType Error
 
 ### Azure DevOps Integration
 
-```powershell
+```powershell {linenos=inline}
 # Azure DevOps pipeline task
 # build.ps1
 
@@ -372,7 +372,7 @@ Invoke-RestMethod -Method Post `
 
 ### PowerShell Module
 
-```powershell
+```powershell {linenos=inline}
 # EntraToken.psm1
 
 function Connect-EntraToken {
@@ -445,7 +445,7 @@ Export-ModuleMember -Function Connect-EntraToken, Get-CurrentEntraToken, Invoke-
 
 ### Secure Profile Creation
 
-```powershell
+```powershell {linenos=inline}
 # Read sensitive data securely
 $tenantId = Read-Host -Prompt "Tenant ID"
 $clientId = Read-Host -Prompt "Client ID"
@@ -471,7 +471,7 @@ finally {
 
 ### Credential Manager Integration
 
-```powershell
+```powershell {linenos=inline}
 # Store credentials in Windows Credential Manager
 cmdkey /generic:EntraTokenCLI /user:$clientId /pass:$clientSecret
 
@@ -493,7 +493,7 @@ entratool create-profile `
 
 **Solutions:**
 
-```powershell
+```powershell {linenos=inline}
 # Check user profile
 whoami
 echo $env:USERNAME
@@ -512,7 +512,7 @@ entratool create-profile --name default
 
 **Solutions:**
 
-```powershell
+```powershell {linenos=inline}
 # Check PATH
 $env:Path -split ';' | Select-String -Pattern "EntraToken"
 
@@ -533,7 +533,7 @@ Get-Command entratool
 
 **Solutions:**
 
-```powershell
+```powershell {linenos=inline}
 # Check current policy
 Get-ExecutionPolicy
 
@@ -548,7 +548,7 @@ PowerShell -ExecutionPolicy Bypass -File .\script.ps1
 
 ### Token Caching
 
-```powershell
+```powershell {linenos=inline}
 # Cache token in memory for script duration
 $script:TokenCache = @{}
 
@@ -579,7 +579,7 @@ function Get-CachedToken {
 
 ### Parallel Execution
 
-```powershell
+```powershell {linenos=inline}
 # Parallel API calls with same token
 $token = Get-CachedToken
 $headers = @{ Authorization = "Bearer $token" }

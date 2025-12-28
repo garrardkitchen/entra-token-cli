@@ -73,7 +73,7 @@ entratool get-token -p my-profile
 
 ### macOS
 
-```bash
+```bash {linenos=inline}
 # Install
 dotnet tool install --global EntraTokenCli
 
@@ -86,7 +86,7 @@ entratool get-token -p my-profile
 
 ### Linux
 
-```bash
+```bash {linenos=inline}
 # Install
 dotnet tool install --global EntraTokenCli
 

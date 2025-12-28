@@ -10,7 +10,7 @@ Manage authentication profiles for storing connection settings and credentials.
 
 ## Synopsis
 
-```bash
+```bash {linenos=inline}
 entratool config <command> [flags]
 ```
 
@@ -28,10 +28,9 @@ Each profile contains:
 ## Subcommands
 
 ### create
-
 Create a new authentication profile.
 
-```bash
+```bash {linenos=inline}
 entratool config create [flags]
 ```
 
@@ -47,7 +46,7 @@ entratool config create [flags]
 
 **Examples:**
 
-```bash
+```bash {linenos=inline}
 # Interactive creation (recommended)
 entratool config create
 
@@ -73,10 +72,9 @@ entratool config create \
 ```
 
 ### list
-
 List all configured profiles.
 
-```bash
+```bash {linenos=inline}
 entratool config list [flags]
 ```
 
@@ -86,7 +84,7 @@ entratool config list [flags]
 
 **Examples:**
 
-```bash
+```bash {linenos=inline}
 # Simple list
 entratool config list
 
@@ -98,10 +96,9 @@ entratool config list --output json
 ```
 
 ### show
-
 Display detailed information about a profile.
 
-```bash
+```bash {linenos=inline}
 entratool config show [flags]
 ```
 
@@ -112,7 +109,7 @@ entratool config show [flags]
 
 **Examples:**
 
-```bash
+```bash {linenos=inline}
 # Show profile details
 entratool config show --name production
 
@@ -124,10 +121,9 @@ entratool config show --name production --show-secrets
 ```
 
 ### edit
-
 Edit an existing profile.
 
-```bash
+```bash {linenos=inline}
 entratool config edit [flags]
 ```
 
@@ -142,7 +138,7 @@ entratool config edit [flags]
 
 **Examples:**
 
-```bash
+```bash {linenos=inline}
 # Interactive edit
 entratool config edit --name production
 
@@ -159,10 +155,9 @@ entratool config edit --name production \
 ```
 
 ### delete
-
 Delete a profile.
 
-```bash
+```bash {linenos=inline}
 entratool config delete [flags]
 ```
 
@@ -172,7 +167,7 @@ entratool config delete [flags]
 
 **Examples:**
 
-```bash
+```bash {linenos=inline}
 # Delete with confirmation
 entratool config delete --name old-profile
 
@@ -186,10 +181,9 @@ done
 ```
 
 ### export
-
 Export profile configuration to a file.
 
-```bash
+```bash {linenos=inline}
 entratool config export [flags]
 ```
 
@@ -200,7 +194,7 @@ entratool config export [flags]
 
 **Examples:**
 
-```bash
+```bash {linenos=inline}
 # Export single profile
 entratool config export --name production > production-profile.json
 
@@ -212,10 +206,9 @@ entratool config export --name production --include-secrets > backup.json
 ```
 
 ### import
-
 Import profile configuration from a file.
 
-```bash
+```bash {linenos=inline}
 entratool config import [flags]
 ```
 
@@ -226,7 +219,7 @@ entratool config import [flags]
 
 **Examples:**
 
-```bash
+```bash {linenos=inline}
 # Import from file
 entratool config import --file production-profile.json
 
@@ -246,7 +239,7 @@ entratool config import --file backup.json --dry-run
 
 #### Client Secret Authentication
 
-```bash
+```bash {linenos=inline}
 # Interactive (recommended for first-time users)
 entratool config create
 
@@ -261,7 +254,7 @@ entratool config create
 
 #### Certificate Authentication
 
-```bash
+```bash {linenos=inline}
 # Create with certificate
 entratool config create \
   --name secure-prod \
@@ -274,7 +267,7 @@ entratool config create \
 
 #### Multiple Environments
 
-```bash
+```bash {linenos=inline}
 # Development environment
 entratool config create --name dev \
   --tenant-id "$DEV_TENANT_ID" \
@@ -298,7 +291,7 @@ entratool config create --name production \
 
 #### List and View
 
-```bash
+```bash {linenos=inline}
 # List all profiles
 entratool config list
 
@@ -323,7 +316,7 @@ entratool config show --name production
 
 #### Update Configuration
 
-```bash
+```bash {linenos=inline}
 # Change default scopes
 entratool config edit --name production \
   --scope "User.Read Mail.Read Calendars.Read"
@@ -342,7 +335,7 @@ entratool config edit --name production \
 
 #### Backup Profiles
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Backup all profiles
@@ -363,7 +356,7 @@ echo "Backup complete: $BACKUP_DIR"
 
 #### Migrate to New Machine
 
-```bash
+```bash {linenos=inline}
 # On old machine
 entratool config export --include-secrets > profiles-backup.json
 
@@ -379,7 +372,7 @@ entratool config list
 
 ### Environment-Based Configuration
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Script to create profiles based on environment
@@ -410,7 +403,7 @@ entratool config list
 
 ### Validation Script
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Validate all profiles can generate tokens
@@ -464,7 +457,7 @@ Each profile consists of:
 
 ### Secrets Management
 
-```bash
+```bash {linenos=inline}
 # ✅ Good - use environment variables
 export CLIENT_SECRET=$(vault read -field=secret secret/azure/client)
 entratool config create --client-secret "$CLIENT_SECRET"
@@ -481,7 +474,7 @@ entratool config create --client-secret "$SECRET"  # If $SECRET expands
 
 ### Profile Naming
 
-```bash
+```bash {linenos=inline}
 # ✅ Good - descriptive names
 entratool config create --name prod-graph-api
 entratool config create --name staging-azure-mgmt
@@ -494,7 +487,7 @@ entratool config create --name test
 
 ### Regular Rotation
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 # Rotate secrets for all profiles
 
@@ -520,7 +513,7 @@ done
 
 ### Profile Not Found
 
-```bash
+```bash {linenos=inline}
 # List available profiles
 entratool config list
 
@@ -530,7 +523,7 @@ entratool config show --name Production  # Won't match "production"
 
 ### Cannot Create Profile
 
-```bash
+```bash {linenos=inline}
 # Check storage directory permissions
 # Linux/macOS
 ls -la ~/.entratool/profiles/
@@ -542,7 +535,7 @@ Test-Path "$env:LOCALAPPDATA\EntraTokenCLI\profiles"
 
 ### Profile Corruption
 
-```bash
+```bash {linenos=inline}
 # View raw profile file
 # Linux/macOS
 cat ~/.entratool/profiles/production.json

@@ -12,7 +12,7 @@ Common problems with profile configuration, access, and management.
 
 ### Problem
 
-```bash
+```bash {linenos=inline}
 $ entratool get-token --profile production
 Error: profile 'production' not found
 ```
@@ -21,7 +21,7 @@ Error: profile 'production' not found
 
 #### 1. List Available Profiles
 
-```bash
+```bash {linenos=inline}
 # See all configured profiles
 entratool list-profiles
 
@@ -31,7 +31,7 @@ entratool list-profiles | grep -i prod
 
 #### 2. Create Missing Profile
 
-```bash
+```bash {linenos=inline}
 # Create the profile
 entratool create-profile --name production
 
@@ -41,7 +41,7 @@ entratool create-profile
 
 #### 3. Use Default Profile
 
-```bash
+```bash {linenos=inline}
 # If you meant to use default profile
 entratool get-token
 
@@ -53,7 +53,7 @@ entratool list-profiles | grep default
 
 ### Problem
 
-```bash
+```bash {linenos=inline}
 $ entratool create-profile --name dev
 Error: profile 'dev' already exists
 ```
@@ -62,7 +62,7 @@ Error: profile 'dev' already exists
 
 #### 1. Use Existing Profile
 
-```bash
+```bash {linenos=inline}
 # View existing profile
 entratool show-profile --name dev
 
@@ -72,7 +72,7 @@ entratool edit-profile --name dev
 
 #### 2. Delete and Recreate
 
-```bash
+```bash {linenos=inline}
 # Delete existing profile
 entratool delete-profile --name dev
 
@@ -82,7 +82,7 @@ entratool create-profile --name dev
 
 #### 3. Use Different Name
 
-```bash
+```bash {linenos=inline}
 # Create with different name
 entratool create-profile --name dev-new
 entratool create-profile --name dev-v2
@@ -92,7 +92,7 @@ entratool create-profile --name dev-v2
 
 ### Problem
 
-```bash
+```bash {linenos=inline}
 $ entratool get-token --profile myapp
 Error: invalid profile configuration: missing tenant_id
 ```
@@ -101,7 +101,7 @@ Error: invalid profile configuration: missing tenant_id
 
 #### 1. Check Profile Configuration
 
-```bash
+```bash {linenos=inline}
 # View profile details
 entratool show-profile --name myapp
 
@@ -113,7 +113,7 @@ entratool show-profile --name myapp
 
 #### 2. Edit Profile
 
-```bash
+```bash {linenos=inline}
 # Interactive edit
 entratool edit-profile --name myapp
 
@@ -124,7 +124,7 @@ entratool create-profile --name myapp
 
 #### 3. Validate Required Fields
 
-```bash
+```bash {linenos=inline}
 # Profile must have:
 # - Tenant ID (GUID)
 # - Client ID (GUID)
@@ -146,17 +146,17 @@ entratool create-profile --name myapp
 ### Problem
 
 **Windows:**
-```bash
+```bash {linenos=inline}
 Error: failed to access DPAPI encrypted storage
 ```
 
 **macOS:**
-```bash
+```bash {linenos=inline}
 Error: failed to access Keychain: user canceled
 ```
 
 **Linux:**
-```bash
+```bash {linenos=inline}
 Error: permission denied accessing /home/user/.entratool/profiles/
 ```
 
@@ -181,7 +181,7 @@ entratool create-profile --name myapp
 
 #### macOS (Keychain)
 
-```bash
+```bash {linenos=inline}
 # 1. Allow Keychain access
 # Click "Always Allow" when prompted
 
@@ -199,7 +199,7 @@ security unlock-keychain ~/Library/Keychains/login.keychain-db
 
 #### Linux (File Permissions)
 
-```bash
+```bash {linenos=inline}
 # 1. Check permissions
 ls -la ~/.entratool/profiles/
 
@@ -220,7 +220,7 @@ entratool create-profile --name myapp
 
 ### Problem
 
-```bash
+```bash {linenos=inline}
 $ entratool get-token --profile prod
 Error: failed to parse profile: invalid JSON
 ```
@@ -229,7 +229,7 @@ Error: failed to parse profile: invalid JSON
 
 #### 1. View Raw Profile
 
-```bash
+```bash {linenos=inline}
 # Windows
 type %LOCALAPPDATA%\EntraTokenCLI\profiles\prod.json
 
@@ -239,7 +239,7 @@ cat ~/.entratool/profiles/prod.json
 
 #### 2. Delete Corrupted Profile
 
-```bash
+```bash {linenos=inline}
 # Delete via CLI
 entratool delete-profile --name prod
 
@@ -253,7 +253,7 @@ rm ~/.entratool/profiles/prod.*
 
 #### 3. Recreate Profile
 
-```bash
+```bash {linenos=inline}
 entratool create-profile --name prod
 ```
 
@@ -261,7 +261,7 @@ entratool create-profile --name prod
 
 ### Problem
 
-```bash
+```bash {linenos=inline}
 # After moving to new machine
 $ entratool get-token --profile myapp
 Error: cannot decrypt token
@@ -278,7 +278,7 @@ Tokens are encrypted per-machine and per-user:
 
 #### 2. Export and Import Profiles
 
-```bash
+```bash {linenos=inline}
 # On old machine - export (configuration only, not tokens)
 entratool export-profile --name myapp > myapp-profile.json
 
@@ -291,7 +291,7 @@ entratool get-token --profile myapp --force
 
 #### 3. Recreate Profiles
 
-```bash
+```bash {linenos=inline}
 # Easiest solution: recreate profiles on new machine
 entratool create-profile --name myapp
 # Enter same tenant ID, client ID, etc.
@@ -301,7 +301,7 @@ entratool create-profile --name myapp
 
 ### Problem
 
-```bash
+```bash {linenos=inline}
 $ entratool create-profile
 Error: permission denied: cannot write to profiles directory
 ```
@@ -310,7 +310,7 @@ Error: permission denied: cannot write to profiles directory
 
 #### 1. Check Directory Permissions
 
-```bash
+```bash {linenos=inline}
 # Linux/macOS
 ls -ld ~/.entratool/
 mkdir -p ~/.entratool/profiles
@@ -323,7 +323,7 @@ New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\EntraTokenCLI\profi
 
 #### 2. Check Disk Space
 
-```bash
+```bash {linenos=inline}
 # Linux/macOS
 df -h ~
 
@@ -333,7 +333,7 @@ Get-PSDrive C
 
 #### 3. Run as User (Not Root)
 
-```bash
+```bash {linenos=inline}
 # Don't use sudo
 sudo entratool create-profile  # ❌ Wrong
 
@@ -345,7 +345,7 @@ entratool create-profile       # ✅ Correct
 
 ### Problem
 
-```bash
+```bash {linenos=inline}
 $ entratool create-profile --name "My Profile"
 Error: invalid profile name: spaces not allowed
 ```
@@ -354,7 +354,7 @@ Error: invalid profile name: spaces not allowed
 
 #### 1. Use Valid Names
 
-```bash
+```bash {linenos=inline}
 # Valid profile names:
 entratool create-profile --name my-profile
 entratool create-profile --name my_profile
@@ -369,7 +369,7 @@ entratool create-profile --name "my@profile"  # special chars
 
 #### 2. Naming Conventions
 
-```bash
+```bash {linenos=inline}
 # Recommended patterns:
 entratool create-profile --name production
 entratool create-profile --name dev
@@ -394,7 +394,7 @@ Multiple profiles with same tenant/client but different configurations cause con
 
 #### 1. Use Descriptive Names
 
-```bash
+```bash {linenos=inline}
 # Instead of:
 entratool create-profile --name app1
 entratool create-profile --name app2
@@ -406,7 +406,7 @@ entratool create-profile --name graph-admin
 
 #### 2. List Profiles with Details
 
-```bash
+```bash {linenos=inline}
 # Show all profiles with details
 entratool list-profiles --verbose
 
@@ -419,7 +419,7 @@ entratool show-profile --name profile2
 
 ### General Troubleshooting
 
-```bash
+```bash {linenos=inline}
 # 1. List all profiles
 entratool list-profiles
 
@@ -442,7 +442,7 @@ entratool get-token
 
 ### Verify Azure Configuration
 
-```bash
+```bash {linenos=inline}
 # Check app registration exists
 az ad app show --id YOUR_CLIENT_ID
 
@@ -457,7 +457,7 @@ az ad app permission list --id YOUR_CLIENT_ID
 
 ### Best Practices
 
-```bash
+```bash {linenos=inline}
 # 1. Use descriptive profile names
 entratool create-profile --name prod-graph-api
 

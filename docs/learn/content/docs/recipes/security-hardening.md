@@ -14,7 +14,7 @@ Learn how to secure your Entra Token CLI deployments for production environments
 
 ### Use Temporary Files with Restricted Permissions
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -35,7 +35,7 @@ curl -H "Authorization: Bearer $TOKEN" https://api.example.com
 
 ### Never Log Tokens
 
-```bash
+```bash {linenos=inline}
 # Bad: Token in logs
 echo "Token: $TOKEN"
 logger "Using token: $TOKEN"
@@ -53,7 +53,7 @@ logger "Authentication completed"
 
 Create separate profiles for each environment:
 
-```bash
+```bash {linenos=inline}
 # Development
 entratool config create
 # Name: dev-graph
@@ -78,7 +78,7 @@ entratool config create
 
 ### Never Mix Environments
 
-```bash
+```bash {linenos=inline}
 # Good: Clear environment separation
 entratool get-token -p dev-graph      # Development
 entratool get-token -p prod-graph     # Production
@@ -93,7 +93,7 @@ entratool get-token -p shared-graph   # Risk of production data exposure
 
 ### Regular Rotation Schedule
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 rotate_secret() {
@@ -130,7 +130,7 @@ rotate_secret "prod-service-principal" "$NEW_SECRET"
 
 ### Automated Rotation
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -178,7 +178,7 @@ fi
 
 Always use the minimum required scopes:
 
-```bash
+```bash {linenos=inline}
 # Good: Specific scope
 entratool get-token -p my-profile \
   --scope "https://graph.microsoft.com/User.Read"
@@ -192,7 +192,7 @@ entratool get-token -p my-profile \
 
 Assign minimum required Azure RBAC roles:
 
-```bash
+```bash {linenos=inline}
 # Good: Specific role
 az ad sp create-for-rbac --name "entratool-deployment" \
   --role "Contributor" \
@@ -212,7 +212,7 @@ az ad sp create-for-rbac --name "entratool-deployment" \
 
 Prefer certificates over client secrets for production:
 
-```bash
+```bash {linenos=inline}
 # Create certificate with strong key
 openssl req -x509 -newkey rsa:4096 \
   -keyout key.pem -out cert.pem \
@@ -228,7 +228,7 @@ openssl pkcs12 -export \
 
 ### Secure Certificate Storage
 
-```bash
+```bash {linenos=inline}
 # Create secure directory
 mkdir -p ~/.entratool/certs
 chmod 700 ~/.entratool/certs
@@ -248,7 +248,7 @@ echo "*.p12" >> .gitignore
 
 ### Use HTTPS Only
 
-```bash
+```bash {linenos=inline}
 # Good: HTTPS
 curl -H "Authorization: Bearer $TOKEN" \
   https://graph.microsoft.com/v1.0/me
@@ -260,7 +260,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Proxy Configuration
 
-```bash
+```bash {linenos=inline}
 # Use corporate proxy
 export HTTPS_PROXY="https://proxy.corp.com:8080"
 export HTTP_PROXY="http://proxy.corp.com:8080"
@@ -274,7 +274,7 @@ entratool get-token -p my-profile
 
 ### Log Authentication Attempts
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 log_auth() {
@@ -296,7 +296,7 @@ fi
 
 ### Monitor Token Usage
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Track token acquisition
@@ -332,7 +332,7 @@ fi
 
 ### Environment-Specific Configuration
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Set environment
@@ -353,7 +353,7 @@ entratool get-token -p "$ENVIRONMENT-profile"
 ### Use External Secret Managers
 
 **Azure Key Vault:**
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Retrieve secret from Key Vault
@@ -367,7 +367,7 @@ entratool get-token -p prod-profile --client-secret "$CLIENT_SECRET"
 ```
 
 **HashiCorp Vault:**
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Retrieve secret from Vault

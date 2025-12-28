@@ -44,7 +44,7 @@ Entra Token CLI supports four OAuth2 authentication flows. Each flow is designed
 
 ### Example
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p service-principal -f ClientCredentials
 ```
 
@@ -76,7 +76,7 @@ entratool get-token -p service-principal -f ClientCredentials
 
 ### Example
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p webapp -f AuthorizationCode
 ```
 
@@ -108,7 +108,7 @@ entratool get-token -p webapp -f AuthorizationCode
 
 ### Example
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p iot-device -f DeviceCode
 ```
 
@@ -151,7 +151,7 @@ URL: https://microsoft.com/devicelogin
 
 ### Example
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p desktop-app -f InteractiveBrowser
 ```
 
@@ -174,7 +174,7 @@ You can override this by setting a default flow in your profile or using the `-f
 
 When creating or editing a profile:
 
-```bash
+```bash {linenos=inline}
 entratool config create
 # ... other prompts ...
 Set default OAuth2 flow? y
@@ -183,7 +183,7 @@ Default OAuth2 flow: ClientCredentials
 
 Or specify at runtime:
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile -f DeviceCode
 ```
 
@@ -228,7 +228,7 @@ entratool get-token -p myprofile -f DeviceCode
 **Auth**: Certificate (recommended)  
 **Scopes**: `https://management.azure.com/.default`
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p azure-automation -f ClientCredentials
 ```
 
@@ -238,7 +238,7 @@ entratool get-token -p azure-automation -f ClientCredentials
 **Auth**: No client secret needed (public client)  
 **Scopes**: `https://graph.microsoft.com/User.Read`
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p personal-graph -f InteractiveBrowser
 ```
 
@@ -248,7 +248,7 @@ entratool get-token -p personal-graph -f InteractiveBrowser
 **Auth**: Client Secret (stored in CI/CD secrets)  
 **Scopes**: API-specific scope
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p cicd-deployer -f ClientCredentials
 ```
 

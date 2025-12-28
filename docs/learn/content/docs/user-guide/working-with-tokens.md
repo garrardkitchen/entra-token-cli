@@ -26,7 +26,7 @@ Once you have an access token, learn how to inspect, validate, refresh, and use 
 
 ### Decode JWT Claims
 
-```bash
+```bash {linenos=inline}
 entratool inspect -t "eyJ0eXAiOiJKV1QiLCJh..."
 ```
 
@@ -62,14 +62,14 @@ entratool inspect -t "eyJ0eXAiOiJKV1QiLCJh..."
 
 ### Inspect from File
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile --silent > token.txt
 entratool inspect -f token.txt
 ```
 
 ### Inspect from Pipeline
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile --silent | entratool inspect
 ```
 
@@ -123,7 +123,7 @@ entratool get-token -p myprofile --silent | entratool inspect
 
 ### Quick Token Info
 
-```bash
+```bash {linenos=inline}
 entratool discover -t "eyJ0eXAiOiJKV1QiLCJh..."
 ```
 
@@ -141,7 +141,7 @@ Token Information:
 
 ### Check if Token is Valid
 
-```bash
+```bash {linenos=inline}
 entratool discover -t "eyJ0eXAiOiJKV1QiLCJh..." && echo "Valid" || echo "Expired"
 ```
 
@@ -151,7 +151,7 @@ entratool discover -t "eyJ0eXAiOiJKV1QiLCJh..." && echo "Valid" || echo "Expired
 
 ### Expiration Check
 
-```bash
+```bash {linenos=inline}
 # Get expiration timestamp
 EXP=$(entratool inspect -t "$TOKEN" | jq -r .payload.exp)
 
@@ -173,13 +173,13 @@ date -d @$EXP  # Linux
 - You need a fresh token with updated permissions
 
 **Check expiration:**
-```bash
+```bash {linenos=inline}
 entratool discover -t "$TOKEN"
 ```
 
 ### Refresh Command
 
-```bash
+```bash {linenos=inline}
 entratool refresh -p myprofile
 ```
 
@@ -216,7 +216,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 
 ### Microsoft Graph API
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p graph-profile --silent)
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -236,7 +236,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Azure Resource Manager
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p azure-profile --silent)
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -245,7 +245,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Custom APIs
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p custom-api --silent)
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -261,7 +261,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 ### Client-Side Validation
 
 **Check expiration:**
-```bash
+```bash {linenos=inline}
 # Extract exp claim
 EXP=$(entratool inspect -t "$TOKEN" | jq -r .payload.exp)
 
@@ -275,7 +275,7 @@ fi
 ```
 
 **Verify audience:**
-```bash
+```bash {linenos=inline}
 AUD=$(entratool inspect -t "$TOKEN" | jq -r .payload.aud)
 if [ "$AUD" = "https://graph.microsoft.com" ]; then
   echo "Valid for Graph API"
@@ -313,7 +313,7 @@ APIs validate tokens by:
 ### Handling Expiration
 
 **Pattern 1: Check before use**
-```bash
+```bash {linenos=inline}
 if entratool discover -f token.txt &>/dev/null; then
   TOKEN=$(cat token.txt)
 else
@@ -323,7 +323,7 @@ fi
 ```
 
 **Pattern 2: Catch API errors**
-```bash
+```bash {linenos=inline}
 TOKEN=$(cat token.txt)
 RESPONSE=$(curl -s -w "%{http_code}" \
   -H "Authorization: Bearer $TOKEN" \
@@ -341,7 +341,7 @@ fi
 ```
 
 **Pattern 3: Preemptive refresh**
-```bash
+```bash {linenos=inline}
 # Refresh if less than 5 minutes remaining
 EXP=$(entratool inspect -f token.txt | jq -r .payload.exp)
 NOW=$(date +%s)
@@ -360,7 +360,7 @@ fi
 
 ### Temporary Storage
 
-```bash
+```bash {linenos=inline}
 # In-memory (session only)
 export TOKEN=$(entratool get-token -p myprofile --silent)
 
@@ -388,7 +388,7 @@ chmod 600 /tmp/token.txt
 
 ### Clearing Cache
 
-```bash
+```bash {linenos=inline}
 # Delete cache directory
 rm -rf ~/.msal/cache
 
@@ -421,7 +421,7 @@ entratool get-token -p myprofile
 
 ### Secure Token Handling
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -e
 
@@ -446,7 +446,7 @@ curl -H "Authorization: Bearer $TOKEN" https://api.example.com
 
 ### Pattern 1: Token in Script
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -463,7 +463,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Pattern 2: Cached Token
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 TOKEN_CACHE="/tmp/my-token-cache.txt"
@@ -491,7 +491,7 @@ TOKEN=$(cat "$TOKEN_CACHE")
 
 ### Pattern 3: Token Rotation
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Function to get valid token
@@ -516,7 +516,7 @@ curl -H "Authorization: Bearer $TOKEN" https://api.example.com
 
 ### Pattern 4: Multi-Profile Management
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 declare -A TOKENS
@@ -548,7 +548,7 @@ curl -H "Authorization: Bearer $AZURE_TOKEN" https://management.azure.com/subscr
 **Cause:** Token is malformed or corrupted
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # Validate token format
 entratool inspect -t "$TOKEN"
 
@@ -561,7 +561,7 @@ TOKEN=$(entratool get-token -p myprofile --silent)
 **Cause:** Token lifetime exceeded
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # Get new token
 TOKEN=$(entratool get-token -p myprofile --silent)
 ```
@@ -586,7 +586,7 @@ TOKEN=$(entratool get-token -p myprofile --silent)
 **Cause:** Token issued for different API
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # Check audience
 entratool inspect -t "$TOKEN" | jq .payload.aud
 

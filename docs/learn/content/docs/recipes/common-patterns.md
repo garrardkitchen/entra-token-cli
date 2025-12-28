@@ -14,7 +14,7 @@ Frequently used patterns and techniques for working with Entra Token CLI.
 
 Handle API rate limiting with exponential backoff.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 call_api_with_rate_limit() {
@@ -62,7 +62,7 @@ call_api_with_rate_limit "https://graph.microsoft.com/v1.0/users" "$TOKEN"
 
 Make multiple API calls concurrently for better performance.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Get token once
@@ -92,7 +92,7 @@ echo "All API calls completed"
 
 Only refresh tokens when they're close to expiration.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 get_valid_token() {
@@ -129,7 +129,7 @@ TOKEN=$(get_valid_token "my-profile")
 
 Process items in batches to avoid rate limits.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 process_batch() {
@@ -166,7 +166,7 @@ process_batch "${items[@]}"
 
 Prevent cascading failures with a circuit breaker pattern.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 FAILURE_THRESHOLD=5
@@ -223,7 +223,7 @@ call_api_with_circuit_breaker "https://api.example.com/data" "$TOKEN"
 
 Prevent duplicate requests with request hashing.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 declare -A REQUEST_CACHE
@@ -264,7 +264,7 @@ call_api_deduplicated "https://api.example.com/data" "$TOKEN"  # Uses cache
 
 Add randomness to retry delays to avoid thundering herd.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 call_api_with_jitter() {
@@ -312,7 +312,7 @@ call_api_with_jitter "https://api.example.com/data" "$TOKEN"
 
 Implement health checks for monitoring.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 health_check() {
@@ -354,7 +354,7 @@ fi
 
 Defer token acquisition until needed.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 TOKEN=""
@@ -386,7 +386,7 @@ curl -H "Authorization: Bearer $(get_token_lazy)" \
 
 Handle multiple Azure tenants in one script.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 call_multi_tenant_api() {
@@ -416,7 +416,7 @@ done
 
 Provide fallback behavior when authentication fails.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 get_data_with_fallback() {

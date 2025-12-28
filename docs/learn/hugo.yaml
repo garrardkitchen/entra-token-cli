@@ -29,6 +29,8 @@ params:
     title: "Documentation"
     pathName: "docs"
     themeColor: "blue"
+    prism: true
+    prismTheme: "lotusdocs"
   
   # Table of Contents
   toc:
@@ -85,6 +87,3 @@ markup:
   goldmark:
     renderer:
       unsafe: true
-  highlight:
-    style: monokai
-    lineNos: true

@@ -68,7 +68,7 @@ X.509 certificates provide a more secure alternative to client secrets for authe
 
 **Most common format for certificates with private keys**
 
-```bash
+```bash {linenos=inline}
 # File extensions
 certificate.pfx
 certificate.p12
@@ -90,7 +90,7 @@ certificate.p12
 
 **Text-based format (not directly supported)**
 
-```bash
+```bash {linenos=inline}
 # Separate files
 certificate.pem  # Public key
 private-key.pem  # Private key
@@ -99,7 +99,7 @@ private-key.pem  # Private key
 **To use with Entra Token CLI:**
 Convert to PFX format:
 
-```bash
+```bash {linenos=inline}
 openssl pkcs12 -export \
   -in certificate.pem \
   -inkey private-key.pem \

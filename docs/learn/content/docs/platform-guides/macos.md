@@ -21,7 +21,7 @@ Entra Token CLI integrates seamlessly with macOS security features:
 
 ### Using Homebrew
 
-```bash
+```bash {linenos=inline}
 # Add tap (if not already added)
 brew tap garrardkitchen/entratool
 
@@ -34,7 +34,7 @@ brew upgrade entratool-cli
 
 ### Manual Installation
 
-```bash
+```bash {linenos=inline}
 # Download latest release
 VERSION="1.0.0"
 curl -L "https://github.com/garrardkitchen/entratool-cli/releases/download/v${VERSION}/entratool-darwin-amd64" \
@@ -49,7 +49,7 @@ entratool --version
 
 ### Intel vs Apple Silicon
 
-```bash
+```bash {linenos=inline}
 # Apple Silicon (M1/M2/M3)
 curl -L "https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-darwin-arm64" \
   -o /usr/local/bin/entratool
@@ -69,7 +69,7 @@ curl -L "https://github.com/garrardkitchen/entratool-cli/releases/latest/downloa
 
 Tokens are securely stored in macOS Keychain:
 
-```bash
+```bash {linenos=inline}
 # Tokens stored in Keychain with:
 # - Service: com.garrardkitchen.entratool-cli
 # - Account: profile-name
@@ -88,7 +88,7 @@ open -a "Keychain Access"
 
 ### Keychain Access Management
 
-```bash
+```bash {linenos=inline}
 # List Entra Token CLI keychains
 security find-generic-password -s "com.garrardkitchen.entratool-cli"
 
@@ -107,7 +107,7 @@ security export -k ~/Library/Keychains/login.keychain-db \
 
 Enable token sync across your Apple devices:
 
-```bash
+```bash {linenos=inline}
 # Check iCloud Keychain status
 security show-keychain-info ~/Library/Keychains/login.keychain-db
 
@@ -153,7 +153,7 @@ graph_api() {
 
 ### Bash
 
-```bash
+```bash {linenos=inline}
 # Add to ~/.bash_profile or ~/.bashrc
 
 # Completion
@@ -194,7 +194,7 @@ end
 
 ### Notification Center
 
-```bash
+```bash {linenos=inline}
 # Show notification on token refresh
 refresh_with_notification() {
     if entratool refresh --profile "$1"; then
@@ -239,7 +239,7 @@ Automate token refresh using Launch Agent:
 </plist>
 ```
 
-```bash
+```bash {linenos=inline}
 # Load Launch Agent
 launchctl load ~/Library/LaunchAgents/com.entratool.refresh.plist
 
@@ -255,7 +255,7 @@ tail -f /tmp/entratool-refresh.out
 
 ### Spotlight Integration
 
-```bash
+```bash {linenos=inline}
 # Add entratool to Spotlight search
 # Create Alfred/Raycast workflow
 
@@ -273,7 +273,7 @@ chmod +x ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflow
 
 ### Touch Bar Support
 
-```bash
+```bash {linenos=inline}
 # Add Entra Token CLI to Touch Bar using BetterTouchTool
 # Quick actions:
 # - Get Token (copies to clipboard)
@@ -285,7 +285,7 @@ chmod +x ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflow
 
 ### Clipboard Integration
 
-```bash
+```bash {linenos=inline}
 # Copy token to clipboard
 get_token_clipboard() {
     local profile="${1:-default}"
@@ -315,7 +315,7 @@ end run
 
 ### Script Menu
 
-```bash
+```bash {linenos=inline}
 # Add to ~/Library/Scripts/
 # Appears in Script menu (if enabled)
 
@@ -348,7 +348,7 @@ end run
 
 ### FileVault Integration
 
-```bash
+```bash {linenos=inline}
 # Ensure FileVault is enabled for disk encryption
 sudo fdesetup status
 
@@ -358,7 +358,7 @@ sudo fdesetup enable
 
 ### Keychain Security
 
-```bash
+```bash {linenos=inline}
 # Set Keychain to lock after inactivity
 security set-keychain-settings -t 3600 ~/Library/Keychains/login.keychain-db
 
@@ -373,7 +373,7 @@ sudo pmset -a autopoweroff 0
 
 ### Secure Profile Creation
 
-```bash
+```bash {linenos=inline}
 # Use environment variables from secure source
 export TENANT_ID=$(security find-generic-password -s "azure-tenant-id" -w)
 export CLIENT_ID=$(security find-generic-password -s "azure-client-id" -w)
@@ -393,7 +393,7 @@ unset TENANT_ID CLIENT_ID CLIENT_SECRET
 
 ### Docker for Mac
 
-```bash
+```bash {linenos=inline}
 # Use Entra Token CLI from Docker container
 docker run -it --rm \
   -v ~/Library/Keychains:/root/Library/Keychains:ro \
@@ -431,7 +431,7 @@ services:
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Allow entratool always
 # Click "Always Allow" in Keychain prompt
 
@@ -451,7 +451,7 @@ entratool get-token  # Creates new entry
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Remove quarantine attribute
 xattr -d com.apple.quarantine /usr/local/bin/entratool
 
@@ -469,7 +469,7 @@ xattr -l /usr/local/bin/entratool
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Check if installed
 which entratool
 
@@ -491,7 +491,7 @@ entratool --version
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Check system architecture
 uname -m
 # arm64 = Apple Silicon
@@ -512,7 +512,7 @@ arch -x86_64 /usr/local/bin/entratool
 
 ### Token Caching
 
-```bash
+```bash {linenos=inline}
 # Cache token in memory for session
 export ENTRA_TOKEN_CACHE=$(entratool get-token --output json)
 
@@ -525,7 +525,7 @@ unset ENTRA_TOKEN_CACHE
 
 ### Parallel Requests
 
-```bash
+```bash {linenos=inline}
 # Parallel API calls with GNU parallel
 TOKEN=$(entratool get-token --output json | jq -r .access_token)
 
@@ -539,7 +539,7 @@ parallel -j 4 "curl -s -H 'Authorization: Bearer $TOKEN' {}" ::: \
 
 ### Keychain Optimization
 
-```bash
+```bash {linenos=inline}
 # Reduce Keychain search time
 # Create separate keychain for entratool
 security create-keychain -p "" entratool.keychain

@@ -14,7 +14,7 @@ Learn how to use Entra Token CLI in Bash scripts with proper error handling, cac
 
 Implement token caching to improve performance and reduce authentication requests.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -48,7 +48,7 @@ curl -H "Authorization: Bearer $TOKEN" https://api.example.com
 
 Implement robust error handling with retries.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -87,7 +87,7 @@ fi
 
 Work with multiple APIs using different tokens.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -117,7 +117,7 @@ echo "$SUBS" | jq -r '.value[].displayName'
 
 Only refresh tokens when necessary.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 get_valid_token() {
@@ -153,7 +153,7 @@ TOKEN=$(get_valid_token "my-profile")
 
 Make multiple API calls concurrently.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Get token once
@@ -183,7 +183,7 @@ echo "All API calls completed"
 
 Use secure temporary files for token storage.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -208,7 +208,7 @@ curl -H "Authorization: Bearer $TOKEN" https://api.example.com
 
 Handle API rate limiting with exponential backoff.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 call_api_with_rate_limit() {
@@ -254,7 +254,7 @@ call_api_with_rate_limit "https://graph.microsoft.com/v1.0/users" "$TOKEN"
 
 Handle paginated API responses.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p graph-admin --silent)
 URL="https://graph.microsoft.com/v1.0/users"
@@ -276,7 +276,7 @@ done
 
 A production-ready script combining multiple patterns.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -355,14 +355,14 @@ main "$@"
 
 ### Always Use set -euo pipefail
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail  # Exit on error, undefined var, pipe failure
 ```
 
 ### Use Silent Mode for Scripts
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p my-profile --silent)
 # vs
 TOKEN=$(entratool get-token -p my-profile)  # May include extra output
@@ -370,7 +370,7 @@ TOKEN=$(entratool get-token -p my-profile)  # May include extra output
 
 ### Secure Token Storage
 
-```bash
+```bash {linenos=inline}
 # Good: Restricted permissions
 chmod 600 token.txt
 
@@ -380,7 +380,7 @@ chmod 644 token.txt
 
 ### Clean Up Temporary Files
 
-```bash
+```bash {linenos=inline}
 # Use trap to ensure cleanup
 TOKEN_FILE=$(mktemp)
 trap "rm -f $TOKEN_FILE" EXIT

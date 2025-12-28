@@ -71,7 +71,7 @@ Manage authentication profiles
 
 Display help information for any command.
 
-```bash
+```bash {linenos=inline}
 # General help
 entratool --help
 
@@ -84,7 +84,7 @@ entratool config --help
 
 Show version information.
 
-```bash
+```bash {linenos=inline}
 entratool --version
 ```
 
@@ -94,7 +94,7 @@ entratool --version
 
 ### Common Commands
 
-```bash
+```bash {linenos=inline}
 # Generate token
 entratool get-token -p my-profile
 

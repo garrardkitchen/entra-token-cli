@@ -41,7 +41,7 @@ Write-Host "Thumbprint: $($cert.Thumbprint)"
 
 ### macOS / Linux
 
-```bash
+```bash {linenos=inline}
 # Generate private key and certificate
 openssl req -x509 -newkey rsa:4096 \
   -keyout key.pem \
@@ -65,7 +65,7 @@ openssl x509 -in cert.pem -text -noout
 
 ### With Subject Alternative Names (SAN)
 
-```bash
+```bash {linenos=inline}
 # Create OpenSSL config file
 cat > cert.conf <<EOF
 [req]
@@ -113,7 +113,7 @@ Production environments should use certificates signed by a trusted Certificate 
 
 ### Step 1: Generate Private Key and CSR
 
-```bash
+```bash {linenos=inline}
 # Generate private key (4096-bit RSA)
 openssl genrsa -out private-key.pem 4096
 
@@ -130,7 +130,7 @@ openssl req -text -noout -verify -in certificate.csr
 ### Step 2: Submit CSR to CA
 
 **Internal/Enterprise CA:**
-```bash
+```bash {linenos=inline}
 # Submit to your organization's CA
 # (Process varies by organization)
 
@@ -147,7 +147,7 @@ certreq -submit -config "CA-SERVER\CA-NAME" certificate.csr
 
 ### Step 3: Combine with Private Key
 
-```bash
+```bash {linenos=inline}
 # After receiving signed certificate from CA:
 # Combine certificate and private key into PFX
 
@@ -168,7 +168,7 @@ openssl pkcs12 -export \
 
 ### Step 4: Verify Certificate
 
-```bash
+```bash {linenos=inline}
 # Check certificate details
 openssl pkcs12 -info -in certificate.pfx -noout -passin pass:YourStrongPassword123!
 
@@ -186,7 +186,7 @@ openssl pkcs12 -in certificate.pfx -nokeys -passin pass:YourStrongPassword123! |
 
 ### Key Length
 
-```bash
+```bash {linenos=inline}
 # Minimum: 2048-bit (acceptable)
 openssl genrsa -out key.pem 2048
 
@@ -196,7 +196,7 @@ openssl genrsa -out key.pem 4096
 
 ### Hash Algorithm
 
-```bash
+```bash {linenos=inline}
 # Use SHA-256 or better
 -sha256  # Good
 -sha384  # Better
@@ -209,7 +209,7 @@ openssl genrsa -out key.pem 4096
 
 ### Validity Period
 
-```bash
+```bash {linenos=inline}
 # Development: 1-2 years
 -days 365   # 1 year
 -days 730   # 2 years
@@ -220,7 +220,7 @@ openssl genrsa -out key.pem 4096
 
 ### Strong Passwords
 
-```bash
+```bash {linenos=inline}
 # Generate strong password
 PASSWORD=$(openssl rand -base64 32)
 
@@ -241,7 +241,7 @@ echo "Certificate password: $PASSWORD"
 
 ### PEM to PFX
 
-```bash
+```bash {linenos=inline}
 # If you have separate PEM files
 openssl pkcs12 -export \
   -in certificate.pem \
@@ -252,7 +252,7 @@ openssl pkcs12 -export \
 
 ### PFX to PEM
 
-```bash
+```bash {linenos=inline}
 # Extract certificate (public key)
 openssl pkcs12 -in certificate.pfx \
   -clcerts -nokeys \
@@ -268,7 +268,7 @@ openssl pkcs12 -in certificate.pfx \
 
 ### DER to PFX
 
-```bash
+```bash {linenos=inline}
 # Convert DER to PEM first
 openssl x509 -inform DER -in certificate.der -out certificate.pem
 
@@ -285,7 +285,7 @@ openssl pkcs12 -export \
 
 ### Automated Certificate Generation
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -341,7 +341,7 @@ rm "$OUTPUT_DIR/key.pem" "$OUTPUT_DIR/cert.pem"
 ### "unable to write 'random state'"
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Remove old random state file
 rm ~/.rnd
 
@@ -352,7 +352,7 @@ RANDFILE=/tmp/.rnd openssl ...
 ### "unable to load Private Key"
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Verify private key format
 openssl rsa -in private-key.pem -check
 
@@ -363,7 +363,7 @@ openssl rsa -in encrypted-key.pem -out private-key.pem
 ### "Verification failure"
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Check if certificate and key match
 CERT_MODULUS=$(openssl x509 -noout -modulus -in cert.pem | openssl md5)
 KEY_MODULUS=$(openssl rsa -noout -modulus -in key.pem | openssl md5)

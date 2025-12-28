@@ -119,7 +119,7 @@ Encrypted data is stored in user-specific Windows data stores. The exact locatio
 
 ### Storage Location
 
-```bash
+```bash {linenos=inline}
 ~/Library/Keychains/login.keychain-db
 ```
 
@@ -147,7 +147,7 @@ Open **Keychain Access** app:
 
 You can export secrets for backup:
 
-```bash
+```bash {linenos=inline}
 security export -k login.keychain-db -t identities -o backup.p12
 ```
 
@@ -191,7 +191,7 @@ Secrets are obfuscated using XOR encoding, which provides **no real security**. 
 
 ### Storage Location
 
-```bash
+```bash {linenos=inline}
 ~/.entratool/secrets.dat
 ```
 
@@ -212,7 +212,7 @@ XOR obfuscation is a **lowest common denominator** approach that works everywher
 
 Store secrets in environment variables:
 
-```bash
+```bash {linenos=inline}
 export AZURE_CLIENT_SECRET="your-secret"
 entratool get-token -p myprofile
 ```
@@ -233,14 +233,14 @@ The tool will read from `AZURE_CLIENT_SECRET` if available.
 
 Store secrets in Azure Key Vault and retrieve at runtime:
 
-```bash
+```bash {linenos=inline}
 SECRET=$(az keyvault secret show --vault-name MyVault --name ClientSecret --query value -o tsv)
 entratool get-token -p myprofile --client-secret "$SECRET"
 ```
 
 #### 3. HashiCorp Vault
 
-```bash
+```bash {linenos=inline}
 SECRET=$(vault kv get -field=client_secret secret/entratool)
 entratool get-token -p myprofile --client-secret "$SECRET"
 ```
@@ -249,14 +249,14 @@ entratool get-token -p myprofile --client-secret "$SECRET"
 
 Use certificates instead of secrets (more secure):
 
-```bash
+```bash {linenos=inline}
 entratool config create
 # Select: Certificate
 # Provide: /path/to/cert.pfx
 ```
 
 Certificates can be stored with restricted file permissions:
-```bash
+```bash {linenos=inline}
 chmod 600 /path/to/cert.pfx
 chown myuser:myuser /path/to/cert.pfx
 ```
@@ -265,7 +265,7 @@ chown myuser:myuser /path/to/cert.pfx
 
 On Azure VMs, use Managed Identity (no secrets needed):
 
-```bash
+```bash {linenos=inline}
 # Configure VM with Managed Identity
 # No secrets stored locally
 entratool get-token -p managed-identity-profile
@@ -312,7 +312,7 @@ Certificates are **not stored by the tool**. You provide the certificate path:
 
 #### 1. Restrict File Permissions
 
-```bash
+```bash {linenos=inline}
 # Linux/macOS
 chmod 600 /path/to/cert.pfx
 chown myuser:myuser /path/to/cert.pfx
@@ -325,7 +325,7 @@ icacls cert.pfx /inheritance:r /grant:r "%USERNAME%:F"
 
 Always use password-protected PFX files:
 
-```bash
+```bash {linenos=inline}
 # Convert to password-protected PFX
 openssl pkcs12 -export -in cert.pem -inkey key.pem \
   -out cert.pfx -password pass:YourStrongPassword
@@ -334,19 +334,19 @@ openssl pkcs12 -export -in cert.pem -inkey key.pem \
 #### 3. Store in Secure Locations
 
 **macOS:**
-```bash
+```bash {linenos=inline}
 # Store in user-protected directory
 ~/Library/Application Support/entratool/certs/
 ```
 
 **Windows:**
-```bash
+```bash {linenos=inline}
 # Store in user profile
 %USERPROFILE%\.entratool\certs\
 ```
 
 **Linux:**
-```bash
+```bash {linenos=inline}
 # Store with restricted permissions
 ~/.entratool/certs/
 chmod 700 ~/.entratool/certs/
@@ -355,7 +355,7 @@ chmod 700 ~/.entratool/certs/
 #### 4. Use Certificate Stores
 
 **Windows Certificate Store:**
-```bash
+```bash {linenos=inline}
 # Import certificate to Windows store
 certutil -user -p YourPassword -importPFX cert.pfx
 
@@ -364,7 +364,7 @@ certutil -user -p YourPassword -importPFX cert.pfx
 ```
 
 **macOS Keychain:**
-```bash
+```bash {linenos=inline}
 # Import to Keychain
 security import cert.pfx -k login.keychain -P YourPassword
 
@@ -379,7 +379,7 @@ security import cert.pfx -k login.keychain -P YourPassword
 ### 1. Secret Creation
 
 **Client Secret:**
-```bash
+```bash {linenos=inline}
 entratool config create
 # Select: Client Secret
 # Enter: your-secret-here
@@ -387,7 +387,7 @@ entratool config create
 ```
 
 **Certificate:**
-```bash
+```bash {linenos=inline}
 entratool config create
 # Select: Certificate
 # Enter: /path/to/cert.pfx
@@ -408,7 +408,7 @@ When generating tokens:
 
 Update secrets regularly:
 
-```bash
+```bash {linenos=inline}
 # Edit profile and update secret
 entratool config edit -p myprofile
 # Select: Client Secret or Certificate
@@ -420,7 +420,7 @@ entratool config edit -p myprofile
 
 When deleting a profile:
 
-```bash
+```bash {linenos=inline}
 entratool config delete -p myprofile
 # ✓ Profile removed from profiles.json
 # ✓ Associated secrets removed from secure storage
@@ -433,18 +433,18 @@ entratool config delete -p myprofile
 ### Checking What's Stored
 
 #### List Profiles
-```bash
+```bash {linenos=inline}
 entratool config list
 ```
 
 #### View Profile Details
-```bash
+```bash {linenos=inline}
 # View non-sensitive profile data
 cat ~/.entratool/profiles.json | jq
 ```
 
 #### Check Keychain (macOS)
-```bash
+```bash {linenos=inline}
 security find-generic-password -s entratool -g
 ```
 

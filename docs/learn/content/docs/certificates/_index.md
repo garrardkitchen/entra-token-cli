@@ -90,7 +90,7 @@ Advanced topics for managing certificates in production.
 
 ## Quick Start
 
-```bash
+```bash {linenos=inline}
 # 1. Create a self-signed certificate (development only)
 openssl req -x509 -newkey rsa:4096 \
   -keyout key.pem -out cert.pem \

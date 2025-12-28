@@ -10,7 +10,7 @@ Quickly validate tokens and display essential information without full decoding.
 
 ## Synopsis
 
-```bash
+```bash {linenos=inline}
 entratool discover [flags]
 ```
 
@@ -32,7 +32,7 @@ This command is lighter than `inspect` and focuses on:
 
 Check token from a profile.
 
-```bash
+```bash {linenos=inline}
 entratool discover --profile production
 entratool discover -p dev
 ```
@@ -41,7 +41,7 @@ entratool discover -p dev
 
 Check a specific token string.
 
-```bash
+```bash {linenos=inline}
 entratool discover --token "eyJ0eXAiOiJKV1QiLCJh..."
 ```
 
@@ -49,7 +49,7 @@ entratool discover --token "eyJ0eXAiOiJKV1QiLCJh..."
 
 Read token from a file.
 
-```bash
+```bash {linenos=inline}
 entratool discover --file token.txt
 ```
 
@@ -59,7 +59,7 @@ entratool discover --file token.txt
 
 Output format.
 
-```bash
+```bash {linenos=inline}
 entratool discover --output json
 entratool discover -o yaml
 ```
@@ -73,7 +73,7 @@ entratool discover -o yaml
 
 Only output validation result (exit code only).
 
-```bash
+```bash {linenos=inline}
 if entratool discover --profile myapp --quiet; then
     echo "Token is valid"
 fi
@@ -83,7 +83,7 @@ fi
 
 ### Basic Usage
 
-```bash
+```bash {linenos=inline}
 # Check token from profile
 entratool discover --profile myapp
 
@@ -99,7 +99,7 @@ entratool get-token | entratool discover
 
 ### Output Formats
 
-```bash
+```bash {linenos=inline}
 # Text output (default)
 entratool discover --profile myapp
 
@@ -113,7 +113,7 @@ echo $?  # 0 = valid, 1 = invalid
 
 ### Script Usage
 
-```bash
+```bash {linenos=inline}
 # Quick validation check
 if entratool discover --profile production --quiet; then
     echo "Token valid, proceeding..."
@@ -201,7 +201,7 @@ The discover command validates:
 
 ### Pre-Flight Validation
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Validate before expensive operation
@@ -217,7 +217,7 @@ TOKEN=$(entratool get-token --profile prod --silent)
 
 ### Health Check Script
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 profiles=("production" "staging" "development")
@@ -240,7 +240,7 @@ done
 
 ### Monitoring Integration
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Prometheus metrics format
@@ -267,7 +267,7 @@ done
 
 ### CI/CD Pipeline Check
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -295,7 +295,7 @@ echo "All tokens valid. Proceeding with deployment."
 
 ### Quick Expiration Check
 
-```bash
+```bash {linenos=inline}
 # Get time until expiration
 get_ttl() {
     local profile="$1"
@@ -355,7 +355,7 @@ Use `inspect` for:
 
 `discover` is optimized for speed:
 
-```bash
+```bash {linenos=inline}
 # Benchmark comparison
 time entratool discover --profile prod --quiet
 # ~10ms
@@ -377,7 +377,7 @@ done
 
 ## Error Handling
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 discover_token() {
@@ -414,7 +414,7 @@ fi
 
 ### Cron Job Validation
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 # /etc/cron.hourly/check-tokens
 
@@ -486,7 +486,7 @@ spec:
 
 ### Combine with Other Commands
 
-```bash
+```bash {linenos=inline}
 # Discover + get-token (with automatic refresh)
 if ! entratool discover --profile prod --quiet; then
     entratool get-token --profile prod --force
@@ -505,7 +505,7 @@ TOKEN=$(entratool get-token --profile prod --silent)
 
 ### Batch Checking
 
-```bash
+```bash {linenos=inline}
 # Check all profiles
 for profile in $(entratool config list); do
     if entratool discover --profile "$profile" --quiet; then
@@ -518,7 +518,7 @@ done
 
 ### JSON Processing
 
-```bash
+```bash {linenos=inline}
 # Extract specific fields
 EXPIRES_IN=$(entratool discover --profile prod --output json | jq -r .expires_in)
 EXPIRED=$(entratool discover --profile prod --output json | jq -r .expired)

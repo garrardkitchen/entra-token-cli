@@ -27,7 +27,7 @@ The Azure Management API provides programmatic access to:
 
 ### Setup Profile
 
-```bash
+```bash {linenos=inline}
 entratool config create
 # Name: azure-mgmt
 # Client ID: <your-app-id>
@@ -37,7 +37,7 @@ entratool config create
 
 ### Get Token and Call API
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p azure-mgmt --silent)
 curl -H "Authorization: Bearer $TOKEN" \
      'https://management.azure.com/subscriptions?api-version=2020-01-01' | jq
@@ -49,7 +49,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Retrieve all Azure subscriptions.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p azure-mgmt --silent \
   --scope "https://management.azure.com/.default")
@@ -64,7 +64,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 List resource groups in a subscription.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
@@ -79,7 +79,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Create a new resource group.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
@@ -101,7 +101,7 @@ curl -X PUT \
 
 List all VMs in a resource group.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
@@ -117,7 +117,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Create a new virtual machine.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p azure-admin --silent)
 SUBSCRIPTION_ID="..."
@@ -169,7 +169,7 @@ curl -X PUT \
 
 List storage accounts in a subscription.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
@@ -186,7 +186,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 For automation, use a service principal with appropriate RBAC roles:
 
-```bash
+```bash {linenos=inline}
 # Create service principal
 az ad sp create-for-rbac --name "entratool-automation" \
   --role "Contributor" \
@@ -209,7 +209,7 @@ Assign minimum required roles:
 
 ### Handle Long-Running Operations
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p azure-mgmt --silent)
 

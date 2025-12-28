@@ -21,7 +21,7 @@ Entra Token CLI provides secure token storage and management on Linux:
 
 ### Debian/Ubuntu (APT)
 
-```bash
+```bash {linenos=inline}
 # Download .deb package
 wget https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool_amd64.deb
 
@@ -39,7 +39,7 @@ entratool --version
 
 ### RHEL/CentOS/Fedora (RPM)
 
-```bash
+```bash {linenos=inline}
 # Download .rpm package
 wget https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-1.0.0-1.x86_64.rpm
 
@@ -55,7 +55,7 @@ entratool --version
 
 ### Arch Linux (AUR)
 
-```bash
+```bash {linenos=inline}
 # Using yay
 yay -S entratool-cli
 
@@ -70,7 +70,7 @@ makepkg -si
 
 ### Universal Binary
 
-```bash
+```bash {linenos=inline}
 # Download binary
 curl -L https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64 \
   -o /usr/local/bin/entratool
@@ -84,7 +84,7 @@ entratool --version
 
 ### From Source
 
-```bash
+```bash {linenos=inline}
 # Prerequisites
 sudo apt-get install golang-go  # Debian/Ubuntu
 sudo dnf install golang          # Fedora/RHEL
@@ -103,7 +103,7 @@ sudo mv entratool /usr/local/bin/
 
 ### Storage Location
 
-```bash
+```bash {linenos=inline}
 # Tokens stored in user's home directory
 ~/.entratool/
 ├── profiles/
@@ -121,7 +121,7 @@ ls -la ~/.entratool/profiles/
 
 Tokens are encrypted using XOR with a user-specific key:
 
-```bash
+```bash {linenos=inline}
 # Key derived from:
 # - User ID (UID)
 # - Machine ID (/etc/machine-id)
@@ -141,7 +141,7 @@ id -u
 
 ### File Permissions
 
-```bash
+```bash {linenos=inline}
 # Verify secure permissions
 ls -la ~/.entratool/profiles/
 
@@ -156,7 +156,7 @@ chmod 600 ~/.entratool/profiles/*
 
 ### SELinux Context
 
-```bash
+```bash {linenos=inline}
 # For SELinux-enabled systems (RHEL/CentOS/Fedora)
 
 # Check context
@@ -174,7 +174,7 @@ restorecon -R ~/.entratool/
 
 ### Bash
 
-```bash
+```bash {linenos=inline}
 # Add to ~/.bashrc
 
 # Completion
@@ -297,7 +297,7 @@ Unit=entratool-refresh.service
 WantedBy=timers.target
 ```
 
-```bash
+```bash {linenos=inline}
 # Enable and start
 sudo systemctl daemon-reload
 sudo systemctl enable entratool-refresh@$USER.timer
@@ -313,7 +313,7 @@ journalctl -u entratool-refresh@$USER.service
 
 ### Cron Jobs
 
-```bash
+```bash {linenos=inline}
 # Add to crontab
 crontab -e
 
@@ -329,7 +329,7 @@ crontab -e
 
 ### Environment Modules
 
-```bash
+```bash {linenos=inline}
 # For HPC/cluster environments with environment modules
 
 # /opt/modulefiles/entratool/1.0
@@ -377,7 +377,7 @@ COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 ```
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 # entrypoint.sh
 
@@ -559,7 +559,7 @@ pipeline {
 
 ### SSH Remote Execution
 
-```bash
+```bash {linenos=inline}
 # Execute on remote server with token
 ssh user@server "$(cat <<'EOF'
 TOKEN=$(entratool get-token --profile production --output json | jq -r .access_token)
@@ -615,7 +615,7 @@ ssh user@server 'bash -s' < local-script.sh
 
 ### File System Permissions
 
-```bash
+```bash {linenos=inline}
 # Secure home directory
 chmod 700 ~
 
@@ -630,7 +630,7 @@ ls -la ~/.entratool/profiles/
 
 ### AppArmor Profile
 
-```bash
+```bash {linenos=inline}
 # /etc/apparmor.d/usr.local.bin.entratool
 #include <tunables/global>
 
@@ -657,7 +657,7 @@ sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.entratool
 
 ### Firewall Rules
 
-```bash
+```bash {linenos=inline}
 # Allow outbound HTTPS to Microsoft Entra ID
 sudo ufw allow out 443/tcp
 
@@ -674,7 +674,7 @@ sudo iptables -A OUTPUT -p tcp --dport 443 -j DROP
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Check ownership
 ls -la ~/.entratool/profiles/
 
@@ -692,7 +692,7 @@ chmod 600 ~/.entratool/profiles/*
 
 **Solution:**
 
-```bash
+```bash {linenos=inline}
 # Machine ID changed, tokens are invalid
 # Delete old tokens and re-authenticate
 rm ~/.entratool/profiles/*.token
@@ -707,7 +707,7 @@ entratool get-token --flow interactive
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Check denials
 sudo ausearch -m avc -ts recent | grep entratool
 
@@ -725,7 +725,7 @@ sudo chcon -R -t user_home_t ~/.entratool/
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Ubuntu/Debian
 sudo apt-get install jq
 
@@ -740,7 +740,7 @@ sudo pacman -S jq
 
 ### Token Caching
 
-```bash
+```bash {linenos=inline}
 # Cache token in tmpfs (RAM disk)
 CACHE_DIR="/dev/shm/entratool-$$"
 mkdir -p "$CACHE_DIR"
@@ -758,7 +758,7 @@ trap "rm -rf $CACHE_DIR" EXIT
 
 ### Parallel Processing
 
-```bash
+```bash {linenos=inline}
 # Parallel API calls with GNU parallel
 TOKEN=$(entratool get-token --output json | jq -r .access_token)
 

@@ -114,7 +114,7 @@ Inspect, validate, refresh, and use tokens effectively.
 
 ### Daily Development
 
-```bash
+```bash {linenos=inline}
 # Morning: Get fresh token
 entratool get-token -p dev-graph --silent > ~/.cache/token.txt
 
@@ -125,7 +125,7 @@ curl -H "Authorization: Bearer $TOKEN" https://graph.microsoft.com/v1.0/me
 
 ### Multi-Environment Testing
 
-```bash
+```bash {linenos=inline}
 # Test in dev
 entratool get-token -p dev-api -f ClientCredentials
 
@@ -138,7 +138,7 @@ entratool get-token -p prod-api -f ClientCredentials
 
 ### Secret Rotation
 
-```bash
+```bash {linenos=inline}
 # 1. Generate new secret in Azure Portal
 # 2. Update profile
 entratool config edit -p my-service-principal
@@ -153,7 +153,7 @@ entratool get-token -p my-service-principal
 
 ### Team Onboarding
 
-```bash
+```bash {linenos=inline}
 # Team lead: Export profiles (without secrets)
 entratool config export -o team-profiles.json
 

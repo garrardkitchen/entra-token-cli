@@ -58,7 +58,7 @@ Solutions to common problems and error messages.
 
 ### Profile Not Found
 
-```bash
+```bash {linenos=inline}
 # List available profiles
 entratool config list
 
@@ -68,7 +68,7 @@ entratool get-token -p correct-profile-name
 
 ### Authentication Failed
 
-```bash
+```bash {linenos=inline}
 # Verify credentials are correct
 entratool config show -p my-profile
 
@@ -79,7 +79,7 @@ entratool config create
 
 ### Certificate Issues
 
-```bash
+```bash {linenos=inline}
 # Verify certificate file exists
 ls -l /path/to/certificate.pfx
 
@@ -89,7 +89,7 @@ ls -l /path/to/certificate.pfx
 
 ### Token Expired
 
-```bash
+```bash {linenos=inline}
 # Simply request a new token
 entratool get-token -p my-profile
 
@@ -103,7 +103,7 @@ entratool refresh -p my-profile
 
 ### Check Configuration
 
-```bash
+```bash {linenos=inline}
 # List profiles
 entratool config list
 
@@ -116,7 +116,7 @@ entratool get-token -p my-profile
 
 ### Inspect Tokens
 
-```bash
+```bash {linenos=inline}
 # Get token and inspect
 TOKEN=$(entratool get-token -p my-profile --silent)
 entratool inspect -t "$TOKEN"
@@ -127,7 +127,7 @@ entratool discover -t "$TOKEN"
 
 ### Validate Certificate
 
-```bash
+```bash {linenos=inline}
 # Check certificate file
 openssl pkcs12 -info -in certificate.pfx -noout
 
@@ -165,7 +165,7 @@ openssl pkcs12 -in certificate.pfx -nokeys | \
 
 ### Check Logs
 
-```bash
+```bash {linenos=inline}
 # Enable verbose logging (if supported)
 entratool get-token -p my-profile --verbose
 

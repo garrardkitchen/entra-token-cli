@@ -10,7 +10,7 @@ Refresh expired or expiring access tokens using refresh tokens.
 
 ## Synopsis
 
-```bash
+```bash {linenos=inline}
 entratool refresh [flags]
 ```
 
@@ -28,7 +28,7 @@ Refresh tokens are only available when using delegated permissions (user authent
 
 Profile name to refresh tokens for.
 
-```bash
+```bash {linenos=inline}
 entratool refresh --profile production
 entratool refresh -p dev
 ```
@@ -39,7 +39,7 @@ entratool refresh -p dev
 
 Output format for the new token.
 
-```bash
+```bash {linenos=inline}
 entratool refresh --output json
 entratool refresh -o yaml
 ```
@@ -53,7 +53,7 @@ entratool refresh -o yaml
 
 Suppress all output except the token.
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool refresh --silent)
 ```
 
@@ -61,7 +61,7 @@ TOKEN=$(entratool refresh --silent)
 
 ### Basic Usage
 
-```bash
+```bash {linenos=inline}
 # Refresh default profile
 entratool refresh
 
@@ -71,7 +71,7 @@ entratool refresh --profile production
 
 ### Output Formats
 
-```bash
+```bash {linenos=inline}
 # Token only
 entratool refresh
 
@@ -84,7 +84,7 @@ TOKEN=$(entratool refresh --silent)
 
 ### Script Usage
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Check if token needs refresh
@@ -113,7 +113,7 @@ Refresh tokens are **NOT** available with:
 
 For refresh tokens to work, the `offline_access` scope must be included:
 
-```bash
+```bash {linenos=inline}
 # When creating profile
 entratool config create --scope "User.Read offline_access"
 
@@ -167,7 +167,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1yNS1BVW...
 
 ### Long-Running Process
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -199,7 +199,7 @@ done
 
 ### Proactive Refresh
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 # Refresh before token expires
@@ -229,7 +229,7 @@ TOKEN=$(entratool get-token --profile production --silent)
 
 ### Scheduled Refresh
 
-```bash
+```bash {linenos=inline}
 # Cron job to refresh tokens periodically
 # Add to crontab: crontab -e
 
@@ -245,7 +245,7 @@ TOKEN=$(entratool get-token --profile production --silent)
 ### No Refresh Token Available
 
 **Problem:**
-```bash
+```bash {linenos=inline}
 $ entratool refresh --profile myapp
 Error: no refresh token available for profile 'myapp'
 ```
@@ -253,7 +253,7 @@ Error: no refresh token available for profile 'myapp'
 **Cause:** Profile uses client credentials flow (no refresh tokens)
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Client credentials profiles don't need refresh
 # Just get a new token instead
 entratool get-token --profile myapp
@@ -262,14 +262,14 @@ entratool get-token --profile myapp
 ### Refresh Token Expired
 
 **Problem:**
-```bash
+```bash {linenos=inline}
 $ entratool refresh --profile user-app
 Error: refresh token expired or invalid
 ```
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # 1. Re-authenticate with user flow
 entratool get-token --profile user-app --flow interactive --force
 
@@ -284,7 +284,7 @@ entratool get-token --profile user-app --flow interactive
 **Problem:** Refresh token not provided by Entra ID
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Include offline_access scope
 entratool get-token --profile myapp \
   --scope "User.Read offline_access" \
@@ -302,7 +302,7 @@ The CLI automatically refreshes tokens when calling `get-token` if:
 2. Refresh token is available
 3. Profile was authenticated with user flow
 
-```bash
+```bash {linenos=inline}
 # First call - token expired, automatically refreshes
 entratool get-token --profile myapp
 
@@ -359,7 +359,7 @@ Refresh token lifetimes vary based on configuration:
 
 ### Refresh Token Security
 
-```bash
+```bash {linenos=inline}
 # Refresh tokens are sensitive credentials
 # - Never log or expose them
 # - Store securely (CLI handles this)
@@ -374,7 +374,7 @@ export REFRESH_TOKEN=$(...)  # Don't do this
 
 ### Token Rotation
 
-```bash
+```bash {linenos=inline}
 # Some configurations rotate refresh tokens
 # Old refresh token becomes invalid after use
 # CLI handles this automatically

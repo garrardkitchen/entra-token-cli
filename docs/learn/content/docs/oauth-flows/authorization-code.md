@@ -89,7 +89,7 @@ After successful authentication, user is redirected:
 
 Application exchanges code for tokens:
 
-```bash
+```bash {linenos=inline}
 POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token
 
 client_id={client-id}
@@ -119,7 +119,7 @@ client_id={client-id}
 
 ### Implementation
 
-```bash
+```bash {linenos=inline}
 # 1. Generate code verifier (random string)
 CODE_VERIFIER=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-43)
 
@@ -277,7 +277,7 @@ if __name__ == '__main__':
 
 Authorization Code flow provides refresh tokens for long-lived sessions:
 
-```bash
+```bash {linenos=inline}
 # Exchange refresh token for new access token
 POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token
 
@@ -382,7 +382,7 @@ session.tokens = { access_token, refresh_token };
 
 For command-line tools, use **Interactive Browser Flow** instead:
 
-```bash
+```bash {linenos=inline}
 # Interactive Browser (recommended for CLI)
 entratool get-token --flow interactive
 

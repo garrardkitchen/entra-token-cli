@@ -16,25 +16,25 @@ Entra Token CLI can be installed as a .NET global tool or downloaded as a self-c
 
 ### Install
 
-```bash
+```bash {linenos=inline}
 dotnet tool install -g EntraTokenCli
 ```
 
 ### Update
 
-```bash
+```bash {linenos=inline}
 dotnet tool update -g EntraTokenCli
 ```
 
 ### Uninstall
 
-```bash
+```bash {linenos=inline}
 dotnet tool uninstall -g EntraTokenCli
 ```
 
 ### Verify Installation
 
-```bash
+```bash {linenos=inline}
 entratool --version
 ```
 
@@ -59,14 +59,14 @@ entratool --version
 1. Download `entratool-osx-arm64`
 2. Make executable and move to PATH:
 
-```bash
+```bash {linenos=inline}
 chmod +x entratool-osx-arm64
 sudo mv entratool-osx-arm64 /usr/local/bin/entratool
 ```
 
 3. Verify:
 
-```bash
+```bash {linenos=inline}
 entratool --version
 ```
 
@@ -75,14 +75,14 @@ entratool --version
 1. Download `entratool-osx-x64`
 2. Make executable and move to PATH:
 
-```bash
+```bash {linenos=inline}
 chmod +x entratool-osx-x64
 sudo mv entratool-osx-x64 /usr/local/bin/entratool
 ```
 
 3. Verify:
 
-```bash
+```bash {linenos=inline}
 entratool --version
 ```
 
@@ -91,14 +91,14 @@ entratool --version
 1. Download `entratool-linux-x64`
 2. Make executable and move to PATH:
 
-```bash
+```bash {linenos=inline}
 chmod +x entratool-linux-x64
 sudo mv entratool-linux-x64 /usr/local/bin/entratool
 ```
 
 3. Verify:
 
-```bash
+```bash {linenos=inline}
 entratool --version
 ```
 

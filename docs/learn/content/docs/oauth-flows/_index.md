@@ -75,25 +75,25 @@ Entra Token CLI supports four OAuth2 authentication flows, each designed for spe
 
 ### Client Credentials
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p service-principal -f ClientCredentials
 ```
 
 ### Interactive Browser
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p desktop-app -f InteractiveBrowser
 ```
 
 ### Device Code
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p iot-device -f DeviceCode
 ```
 
 ### Authorization Code
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p webapp -f AuthorizationCode
 ```
 
@@ -108,7 +108,7 @@ The tool automatically selects the appropriate flow based on your profile config
 
 ### Manual Override
 
-```bash
+```bash {linenos=inline}
 # Override automatic selection
 entratool get-token -p myprofile -f DeviceCode
 ```

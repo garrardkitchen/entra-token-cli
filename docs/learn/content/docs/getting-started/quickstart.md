@@ -12,7 +12,7 @@ Generate your first Entra ID access token in just a few minutes!
 
 ## Step 1: Install the Tool
 
-```bash
+```bash {linenos=inline}
 dotnet tool install -g EntraTokenCli
 ```
 
@@ -24,7 +24,7 @@ dotnet tool install -g EntraTokenCli
 
 Run the interactive profile creation:
 
-```bash
+```bash {linenos=inline}
 entratool config create
 ```
 
@@ -54,7 +54,7 @@ Client secret: ****
 
 ## Step 3: Generate a Token
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile
 ```
 
@@ -80,7 +80,7 @@ The tool will:
 
 The token is now in your clipboard. Use it to call APIs:
 
-```bash
+```bash {linenos=inline}
 # Example: Get current user info from Microsoft Graph
 curl -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   https://graph.microsoft.com/v1.0/me
@@ -88,7 +88,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN_HERE" \
 
 Or read from the token file in headless environments:
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(cat ~/.config/entratool/last-token.txt)
 curl -H "Authorization: Bearer $TOKEN" \
   https://graph.microsoft.com/v1.0/me
@@ -100,7 +100,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Want to see what's inside your token?
 
-```bash
+```bash {linenos=inline}
 entratool inspect $(cat ~/.config/entratool/last-token.txt)
 ```
 

@@ -27,7 +27,7 @@ Microsoft Graph is the unified API for Microsoft 365, providing access to:
 
 ### Setup Profile
 
-```bash
+```bash {linenos=inline}
 entratool config create
 # Name: graph-readonly
 # Client ID: <your-app-id>
@@ -37,7 +37,7 @@ entratool config create
 
 ### Get Token and Call API
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p graph-readonly --silent)
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me | jq
@@ -49,7 +49,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Retrieve information about the authenticated user.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p graph-readonly --silent)
 
@@ -65,7 +65,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Retrieve a list of users in your organization.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p graph-admin --silent \
   --scope "https://graph.microsoft.com/User.Read.All")
@@ -82,7 +82,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Send an email via Microsoft Graph.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p graph-mail --silent \
   --scope "https://graph.microsoft.com/Mail.Send")
@@ -118,7 +118,7 @@ curl -X POST \
 
 Retrieve calendar events for the authenticated user.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p graph-calendar --silent \
   --scope "https://graph.microsoft.com/Calendars.Read")
@@ -135,7 +135,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 Create a new calendar event.
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p graph-calendar --silent \
   --scope "https://graph.microsoft.com/Calendars.ReadWrite")
@@ -184,7 +184,7 @@ curl -X POST \
 
 ### Use Specific Scopes
 
-```bash
+```bash {linenos=inline}
 # Good: Specific scope
 entratool get-token -p graph --scope "https://graph.microsoft.com/User.Read"
 
@@ -194,7 +194,7 @@ entratool get-token -p graph --scope "https://graph.microsoft.com/.default"
 
 ### Cache Tokens
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN_CACHE="/tmp/graph-token.txt"
 
@@ -212,7 +212,7 @@ TOKEN=$(get_graph_token)
 
 ### Handle Pagination
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 TOKEN=$(entratool get-token -p graph-admin --silent)
 URL="https://graph.microsoft.com/v1.0/users"

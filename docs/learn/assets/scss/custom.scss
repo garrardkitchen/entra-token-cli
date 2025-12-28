@@ -1,0 +1,35 @@
+// Enable line numbers globally for all code blocks with Prism
+pre[class*="language-"] {
+    position: relative;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"] > code {
+    white-space: inherit;
+}
+
+pre[class*="language-"] > code .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em;
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+    user-select: none;
+}
+
+pre[class*="language-"] > code .line-numbers-rows > span {
+    pointer-events: none;
+    display: block;
+    counter-increment: linenumber;
+}
+
+pre[class*="language-"] > code .line-numbers-rows > span:before {
+    content: counter(linenumber);
+    color: #999;
+    display: block;
+    padding-right: 0.8em;
+    text-align: right;
+}

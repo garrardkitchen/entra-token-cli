@@ -256,7 +256,7 @@ pipeline {
 
 Create dedicated service principals for CI/CD:
 
-```bash
+```bash {linenos=inline}
 az ad sp create-for-rbac --name "cicd-deployment" \
   --role "Contributor" \
   --scopes "/subscriptions/YOUR_SUBSCRIPTION_ID"
@@ -284,7 +284,7 @@ az ad sp create-for-rbac --name "cicd-deployment" \
 
 Always use `--silent` flag in CI/CD to get clean token output:
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p cicd --silent)
 ```
 
@@ -292,7 +292,7 @@ TOKEN=$(entratool get-token -p cicd --silent)
 
 Test token validity before use:
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p cicd --silent)
 if entratool inspect <<< "$TOKEN" &>/dev/null; then
   echo "Token valid"
@@ -311,7 +311,7 @@ fi
 
 Ensure .NET tools are in PATH:
 
-```bash
+```bash {linenos=inline}
 export PATH="$PATH:$HOME/.dotnet/tools"
 ```
 
@@ -319,7 +319,7 @@ export PATH="$PATH:$HOME/.dotnet/tools"
 
 Profile creation may have failed. Check logs and recreate:
 
-```bash
+```bash {linenos=inline}
 entratool config list
 entratool config create ...
 ```
@@ -328,7 +328,7 @@ entratool config create ...
 
 Verify secrets are correctly configured:
 
-```bash
+```bash {linenos=inline}
 echo "Client ID: $CLIENT_ID"
 echo "Tenant ID: $TENANT_ID"
 # Don't echo secrets!

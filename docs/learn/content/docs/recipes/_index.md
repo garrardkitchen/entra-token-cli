@@ -95,7 +95,7 @@ Advanced techniques for complex scenarios.
 
 ### Microsoft Graph API
 
-```bash
+```bash {linenos=inline}
 # Read user profile
 TOKEN=$(entratool get-token -p graph-readonly --silent)
 curl -H "Authorization: Bearer $TOKEN" \
@@ -104,7 +104,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Azure Management API
 
-```bash
+```bash {linenos=inline}
 # List subscriptions
 TOKEN=$(entratool get-token -p azure-mgmt --silent)
 curl -H "Authorization: Bearer $TOKEN" \
@@ -113,7 +113,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Shell Scripting
 
-```bash
+```bash {linenos=inline}
 # Token caching
 get_token() {
   local cache="/tmp/token-cache.txt"

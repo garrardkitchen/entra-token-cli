@@ -24,7 +24,7 @@ The Device Code flow enables authentication on devices that lack a web browser o
 
 ## Quick Start
 
-```bash
+```bash {linenos=inline}
 # Start device code authentication
 entratool get-token --flow device-code --profile myapp
 ```
@@ -45,7 +45,7 @@ Waiting for authentication...
 
 Create a profile for device code flow:
 
-```bash
+```bash {linenos=inline}
 entratool create-profile --name device-app
 ```
 
@@ -67,7 +67,7 @@ Configure your app registration for device code flow:
    - Add delegated permissions (not application permissions)
    - Example: `User.Read`, `Mail.Read`
 
-```bash
+```bash {linenos=inline}
 # Create public client app
 az ad app create \
   --display-name "Device Code App" \
@@ -84,7 +84,7 @@ az ad app update \
 
 ### Basic Authentication
 
-```bash
+```bash {linenos=inline}
 # Using default profile
 entratool get-token --flow device-code
 
@@ -98,7 +98,7 @@ entratool get-token --flow device-code \
 
 ### In Scripts
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -128,7 +128,7 @@ curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
 
 Perfect for remote terminal sessions:
 
-```bash
+```bash {linenos=inline}
 # On remote server via SSH
 ssh user@server
 
@@ -181,7 +181,7 @@ User navigates to https://microsoft.com/devicelogin:
 
 Device codes expire after 15 minutes by default:
 
-```bash
+```bash {linenos=inline}
 # Check token expiry
 entratool get-token --flow device-code --output json \
   | jq '.expires_at'
@@ -202,7 +202,7 @@ The CLI polls Microsoft Entra ID while waiting for user authentication:
 
 User can cancel at any time:
 
-```bash
+```bash {linenos=inline}
 # Press Ctrl+C during polling
 ^C
 Authentication cancelled by user
@@ -228,7 +228,7 @@ RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 ```
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 # entrypoint.sh
 
@@ -287,7 +287,7 @@ if __name__ == "__main__":
 
 ### Raspberry Pi
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 # raspberry-pi-auth.sh
 
@@ -329,7 +329,7 @@ Device code flow uses public client apps:
 
 Users must consent to permissions:
 
-```bash
+```bash {linenos=inline}
 # First-time authentication requires consent
 entratool get-token --flow device-code
 
@@ -342,7 +342,7 @@ entratool get-token --flow device-code
 
 Protect access tokens after authentication:
 
-```bash
+```bash {linenos=inline}
 # ❌ Bad - token exposed in command
 curl -H "Authorization: Bearer $(entratool get-token --output json | jq -r .access_token)" ...
 
@@ -365,7 +365,7 @@ TOKEN=$(entratool get-token --output json | jq -r .access_token)
 
 **Solution:** Run the command again to get a new code:
 
-```bash
+```bash {linenos=inline}
 # Code expires after 15 minutes
 entratool get-token --flow device-code
 ```
@@ -384,7 +384,7 @@ entratool get-token --flow device-code
 **Problem:** Polling stopped but didn't complete sign-in
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Start over with fresh code
 entratool get-token --flow device-code
 ```
@@ -398,7 +398,7 @@ entratool get-token --flow device-code
 2. Ensure delegated permissions (not application)
 3. User must have required role/permissions in Entra ID
 
-```bash
+```bash {linenos=inline}
 # Verify required permissions in Azure
 az ad app permission list --id <app-id>
 ```
@@ -420,7 +420,7 @@ az ad app permission list --id <app-id>
 
 Provide clear guidance to users:
 
-```bash
+```bash {linenos=inline}
 cat << 'EOF'
 ╔════════════════════════════════════════════════════╗
 ║             DEVICE AUTHENTICATION                  ║
@@ -440,7 +440,7 @@ entratool get-token --flow device-code
 
 ### Error Handling
 
-```bash
+```bash {linenos=inline}
 authenticate_with_retry() {
     local max_attempts=3
     local attempt=1
@@ -472,7 +472,7 @@ authenticate_with_retry "myapp"
 
 Keep users informed during polling:
 
-```bash
+```bash {linenos=inline}
 # CLI provides automatic progress indicators
 # Example output:
 Waiting for authentication... ⠋

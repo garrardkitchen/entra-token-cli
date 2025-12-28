@@ -32,7 +32,7 @@ https://management.azure.com/user_impersonation
 
 ### Microsoft Graph API
 
-```bash
+```bash {linenos=inline}
 # Read user profile
 https://graph.microsoft.com/User.Read
 
@@ -46,7 +46,7 @@ https://graph.microsoft.com/.default
 
 ### Azure Management API
 
-```bash
+```bash {linenos=inline}
 # Azure Resource Manager access
 https://management.azure.com/.default
 
@@ -56,7 +56,7 @@ https://management.azure.com/user_impersonation
 
 ### Custom APIs
 
-```bash
+```bash {linenos=inline}
 # Your custom API
 https://api.contoso.com/.default
 
@@ -66,13 +66,13 @@ api://12345678-1234-1234-1234-123456789abc/access_as_user
 
 ### Azure Key Vault
 
-```bash
+```bash {linenos=inline}
 https://vault.azure.net/.default
 ```
 
 ### Azure Storage
 
-```bash
+```bash {linenos=inline}
 https://storage.azure.com/.default
 ```
 
@@ -106,7 +106,7 @@ Then requesting `https://graph.microsoft.com/.default` includes all three.
 
 ### Example
 
-```bash
+```bash {linenos=inline}
 # Request all configured Graph permissions
 entratool get-token -p service-principal \
   --scope "https://graph.microsoft.com/.default"
@@ -128,7 +128,7 @@ Scopes stored in your profile configuration:
 ```
 
 **Used by default** when running:
-```bash
+```bash {linenos=inline}
 entratool get-token -p my-profile
 ```
 
@@ -136,7 +136,7 @@ entratool get-token -p my-profile
 
 Override profile scopes with `--scope` or `-s`:
 
-```bash
+```bash {linenos=inline}
 # Override to request different scope
 entratool get-token -p my-profile \
   --scope "https://graph.microsoft.com/Calendar.Read"
@@ -153,14 +153,14 @@ entratool get-token -p my-profile \
 
 ### Space-Separated Format
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read Mail.Read Calendars.Read"
 ```
 
 ### Comma-Separated Format
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read,Mail.Read,Calendars.Read"
 ```
@@ -175,14 +175,14 @@ The tool normalizes both formats automatically.
 
 **Requires:** Application permissions configured in Azure Portal
 
-```bash
+```bash {linenos=inline}
 # App registration → API permissions → Add permission
 # Select: Application permissions (not Delegated)
 # Grant admin consent ✓
 ```
 
 **Example scopes:**
-```bash
+```bash {linenos=inline}
 https://graph.microsoft.com/.default
 https://management.azure.com/.default
 ```
@@ -191,14 +191,14 @@ https://management.azure.com/.default
 
 **Requires:** Delegated permissions configured in Azure Portal
 
-```bash
+```bash {linenos=inline}
 # App registration → API permissions → Add permission
 # Select: Delegated permissions
 # User consent required (or admin consent)
 ```
 
 **Example scopes:**
-```bash
+```bash {linenos=inline}
 https://graph.microsoft.com/User.Read
 https://graph.microsoft.com/Mail.Read
 ```
@@ -209,7 +209,7 @@ https://graph.microsoft.com/Mail.Read
 
 Use `inspect` to see what scopes are included in your token:
 
-```bash
+```bash {linenos=inline}
 entratool inspect -t "eyJ0eXAiOiJKV1QiLCJhbGci..."
 ```
 
@@ -231,7 +231,7 @@ entratool inspect -t "eyJ0eXAiOiJKV1QiLCJhbGci..."
 
 ### Reading User Data
 
-```bash
+```bash {linenos=inline}
 # Microsoft Graph
 https://graph.microsoft.com/User.Read          # Basic profile
 https://graph.microsoft.com/User.Read.All      # All users (admin)
@@ -240,7 +240,7 @@ https://graph.microsoft.com/User.ReadWrite     # Modify profile
 
 ### Email Access
 
-```bash
+```bash {linenos=inline}
 https://graph.microsoft.com/Mail.Read          # Read email
 https://graph.microsoft.com/Mail.Send          # Send email
 https://graph.microsoft.com/Mail.ReadWrite     # Full email access
@@ -248,21 +248,21 @@ https://graph.microsoft.com/Mail.ReadWrite     # Full email access
 
 ### Calendar Access
 
-```bash
+```bash {linenos=inline}
 https://graph.microsoft.com/Calendars.Read
 https://graph.microsoft.com/Calendars.ReadWrite
 ```
 
 ### Azure Resource Management
 
-```bash
+```bash {linenos=inline}
 https://management.azure.com/.default
 https://management.azure.com/user_impersonation
 ```
 
 ### SharePoint
 
-```bash
+```bash {linenos=inline}
 https://graph.microsoft.com/Sites.Read.All
 https://graph.microsoft.com/Files.ReadWrite.All
 ```
@@ -275,7 +275,7 @@ https://graph.microsoft.com/Files.ReadWrite.All
 
 #### During Creation
 
-```bash
+```bash {linenos=inline}
 entratool config create
 # ... prompts ...
 Scope: https://graph.microsoft.com/.default
@@ -283,7 +283,7 @@ Scope: https://graph.microsoft.com/.default
 
 #### During Edit
 
-```bash
+```bash {linenos=inline}
 entratool config edit -p myprofile
 # Select: Scope
 # Enter new: https://management.azure.com/.default
@@ -313,7 +313,7 @@ Edit `~/.entratool/profiles.json`:
 **Cause:** Scope format is incorrect
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # ❌ Wrong
 --scope "User.Read"
 
@@ -357,7 +357,7 @@ Edit `~/.entratool/profiles.json`:
 
 Request only the scopes you need:
 
-```bash
+```bash {linenos=inline}
 # ❌ Over-privileged
 --scope "https://graph.microsoft.com/.default"
 
@@ -369,7 +369,7 @@ Request only the scopes you need:
 
 For user-facing applications, request specific scopes:
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p user-app \
   --scope "https://graph.microsoft.com/User.Read"
 ```
@@ -378,7 +378,7 @@ entratool get-token -p user-app \
 
 For automation and service accounts:
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p automation \
   --scope "https://graph.microsoft.com/.default"
 ```
@@ -387,7 +387,7 @@ entratool get-token -p automation \
 
 Create profiles for different scenarios:
 
-```bash
+```bash {linenos=inline}
 # Profile: graph-readonly
 scope: https://graph.microsoft.com/User.Read
 
@@ -399,7 +399,7 @@ scope: https://graph.microsoft.com/.default
 
 Always request fresh tokens with appropriate scopes:
 
-```bash
+```bash {linenos=inline}
 # ✓ Request token per operation
 TOKEN=$(entratool get-token -p myprofile --scope "...")
 curl -H "Authorization: Bearer $TOKEN" ...
@@ -426,7 +426,7 @@ curl -H "Authorization: Bearer $TOKEN" ...
 
 ### Using `discover` Command
 
-```bash
+```bash {linenos=inline}
 entratool discover -t "eyJ0eXAiOiJKV1Qi..."
 ```
 
@@ -443,17 +443,17 @@ entratool discover -t "eyJ0eXAiOiJKV1Qi..."
 ### Common Combinations
 
 #### Graph API Read-Only Access
-```bash
+```bash {linenos=inline}
 --scope "https://graph.microsoft.com/User.Read Mail.Read Calendars.Read"
 ```
 
 #### Graph API Admin Access
-```bash
+```bash {linenos=inline}
 --scope "https://graph.microsoft.com/.default"
 ```
 
 #### Azure Management + Graph
-```bash
+```bash {linenos=inline}
 # Request separately (different audiences)
 TOKEN_GRAPH=$(entratool get-token -p graph --scope "https://graph.microsoft.com/.default")
 TOKEN_AZURE=$(entratool get-token -p azure --scope "https://management.azure.com/.default")

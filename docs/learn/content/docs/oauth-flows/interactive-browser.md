@@ -24,7 +24,7 @@ The Interactive Browser flow provides seamless user authentication by opening yo
 
 ## Quick Start
 
-```bash
+```bash {linenos=inline}
 # Authenticate with interactive browser
 entratool get-token --flow interactive
 
@@ -72,7 +72,7 @@ sequenceDiagram
 
 Create a profile for interactive browser flow:
 
-```bash
+```bash {linenos=inline}
 entratool create-profile --name interactive-app
 ```
 
@@ -87,7 +87,7 @@ When prompted:
 
 Configure app registration for interactive browser flow:
 
-```bash
+```bash {linenos=inline}
 # Create public client application
 az ad app create \
   --display-name "CLI Interactive App" \
@@ -118,7 +118,7 @@ az ad app update \
 
 ### Basic Authentication
 
-```bash
+```bash {linenos=inline}
 # Default profile, default scopes
 entratool get-token --flow interactive
 
@@ -132,7 +132,7 @@ entratool get-token --flow interactive \
 
 ### With Microsoft Graph
 
-```bash
+```bash {linenos=inline}
 # Get token for Graph API
 TOKEN=$(entratool get-token --flow interactive \
   --scope https://graph.microsoft.com/User.Read \
@@ -145,7 +145,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### In Scripts
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -179,7 +179,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 After initial sign-in, tokens are cached:
 
-```bash
+```bash {linenos=inline}
 # First run - browser opens
 entratool get-token --flow interactive --profile myapp
 
@@ -232,7 +232,7 @@ Token expires: 2025-12-28 16:30:00
 
 The CLI automatically detects and opens your system's default browser:
 
-```bash
+```bash {linenos=inline}
 # macOS - opens Safari/Chrome/Firefox (whatever is default)
 open https://login.microsoftonline.com/...
 
@@ -247,7 +247,7 @@ xdg-open https://login.microsoftonline.com/...
 
 Set environment variable to use specific browser:
 
-```bash
+```bash {linenos=inline}
 # Use Chrome
 BROWSER=google-chrome entratool get-token --flow interactive
 
@@ -263,7 +263,7 @@ BROWSER="/Applications/Firefox.app/Contents/MacOS/firefox" \
 
 If browser cannot open (e.g., SSH session without X11):
 
-```bash
+```bash {linenos=inline}
 # CLI detects no display and falls back to device code
 entratool get-token --flow interactive
 
@@ -278,7 +278,7 @@ And enter code: ABCD-EFGH
 
 The CLI starts a temporary HTTP server for the OAuth callback:
 
-```bash
+```bash {linenos=inline}
 # Random available port (default)
 entratool get-token --flow interactive
 
@@ -340,7 +340,7 @@ Tokens stored securely per platform:
 
 Switch between user accounts:
 
-```bash
+```bash {linenos=inline}
 # Create profiles for different users
 entratool create-profile --name work
 entratool create-profile --name personal
@@ -367,7 +367,7 @@ Supports all Conditional Access policies:
 
 ### Session Persistence
 
-```bash
+```bash {linenos=inline}
 # Check token expiry
 entratool inspect --profile myapp
 
@@ -389,7 +389,7 @@ entratool get-token --flow interactive --profile myapp
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # 1. Check default browser setting
 # macOS
 defaults read com.apple.LaunchServices/com.apple.launchservices.secure | grep -A 2 browser
@@ -410,7 +410,7 @@ entratool get-token --flow device-code
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Use different port
 entratool get-token --flow interactive --port 8081
 
@@ -427,7 +427,7 @@ lsof -i :8080
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # 1. Verify redirect URI in Azure Portal
 # Must include: http://localhost
 
@@ -447,7 +447,7 @@ entratool get-token --flow interactive --port 8080
 
 **Solutions:**
 
-```bash
+```bash {linenos=inline}
 # Clear token cache
 entratool clear-cache --profile myapp
 
@@ -463,7 +463,7 @@ entratool create-profile --name myapp
 
 ### macOS
 
-```bash
+```bash {linenos=inline}
 # Default browser (Safari/Chrome/Firefox)
 entratool get-token --flow interactive
 
@@ -474,7 +474,7 @@ security find-generic-password -s "entratool-cli"
 
 ### Windows
 
-```bash
+```bash {linenos=inline}
 # Default browser (Edge/Chrome/Firefox)
 entratool.exe get-token --flow interactive
 
@@ -484,7 +484,7 @@ entratool.exe get-token --flow interactive
 
 ### Linux
 
-```bash
+```bash {linenos=inline}
 # Default browser (Firefox/Chrome/Chromium)
 entratool get-token --flow interactive
 
@@ -501,7 +501,7 @@ entratool get-token --flow interactive
 
 ### Profile Organization
 
-```bash
+```bash {linenos=inline}
 # Separate profiles by purpose
 entratool create-profile --name graph-reader
 entratool create-profile --name azure-admin
@@ -514,7 +514,7 @@ entratool create-profile --name "dev-testing"
 
 ### Scope Management
 
-```bash
+```bash {linenos=inline}
 # Minimum required scopes
 entratool get-token --flow interactive \
   --scope "https://graph.microsoft.com/User.Read"
@@ -529,7 +529,7 @@ entratool get-token --flow interactive \
 
 ### Error Handling
 
-```bash
+```bash {linenos=inline}
 get_token_safe() {
     local profile="${1:-default}"
     local max_retries=2

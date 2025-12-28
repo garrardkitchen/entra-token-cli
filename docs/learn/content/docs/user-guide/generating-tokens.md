@@ -27,7 +27,7 @@ Learn how to generate access tokens using different OAuth2 flows and configurati
 
 ### Using a Profile
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p my-profile
 ```
 
@@ -49,7 +49,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ij...
 
 Override the default flow:
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p my-profile -f ClientCredentials
 ```
 
@@ -67,7 +67,7 @@ entratool get-token -p my-profile -f ClientCredentials
 
 ### Non-Interactive Service Authentication
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p service-principal -f ClientCredentials
 ```
 
@@ -77,7 +77,7 @@ entratool get-token -p service-principal -f ClientCredentials
 - Admin consent completed
 
 **Example:**
-```bash
+```bash {linenos=inline}
 # Service principal for Graph API
 entratool get-token -p graph-sp -f ClientCredentials
 ```
@@ -96,7 +96,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 
 ### User Authentication with Browser
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p user-app -f InteractiveBrowser
 ```
 
@@ -108,7 +108,7 @@ entratool get-token -p user-app -f InteractiveBrowser
 5. Tool exchanges code for token
 
 **Example:**
-```bash
+```bash {linenos=inline}
 entratool get-token -p personal-graph -f InteractiveBrowser
 ```
 
@@ -129,7 +129,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 
 ### Authentication on Limited-Input Devices
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p iot-device -f DeviceCode
 ```
 
@@ -141,7 +141,7 @@ entratool get-token -p iot-device -f DeviceCode
 5. Tool polls and receives token
 
 **Example:**
-```bash
+```bash {linenos=inline}
 entratool get-token -p headless-server -f DeviceCode
 ```
 
@@ -164,7 +164,7 @@ Waiting for authentication...
 
 ### Web Application Authentication
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p webapp -f AuthorizationCode
 ```
 
@@ -174,7 +174,7 @@ entratool get-token -p webapp -f AuthorizationCode
 - User credentials
 
 **Example:**
-```bash
+```bash {linenos=inline}
 entratool get-token -p web-backend -f AuthorizationCode
 ```
 
@@ -198,7 +198,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 
 Override profile's default scope:
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read Mail.Read"
 ```
@@ -211,13 +211,13 @@ entratool get-token -p myprofile \
 ### Multiple Scopes
 
 **Space-separated:**
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read Mail.Read Calendars.Read"
 ```
 
 **Comma-separated:**
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read,Mail.Read,Calendars.Read"
 ```
@@ -226,7 +226,7 @@ entratool get-token -p myprofile \
 
 Request all configured permissions:
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile \
   --scope "https://graph.microsoft.com/.default"
 ```
@@ -239,7 +239,7 @@ entratool get-token -p myprofile \
 
 ### Using Certificates Instead of Secrets
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p cert-profile -f ClientCredentials
 ```
 
@@ -276,7 +276,7 @@ entratool get-token -p cert-profile -f ClientCredentials
 
 Suppress all output except the token:
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile --silent
 ```
 
@@ -286,14 +286,14 @@ eyJ0eXAiOiJKV1QiLCJh...
 ```
 
 **Use in scripts:**
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p myprofile --silent)
 curl -H "Authorization: Bearer $TOKEN" https://graph.microsoft.com/v1.0/me
 ```
 
 ### Save to File
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile -o token.txt
 ```
 
@@ -303,14 +303,14 @@ entratool get-token -p myprofile -o token.txt
 ```
 
 **Use later:**
-```bash
+```bash {linenos=inline}
 TOKEN=$(cat token.txt)
 curl -H "Authorization: Bearer $TOKEN" ...
 ```
 
 ### JSON Output
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile --json
 ```
 
@@ -330,13 +330,13 @@ entratool get-token -p myprofile --json
 
 ### Inspect Token Claims
 
-```bash
+```bash {linenos=inline}
 # Generate and inspect in one command
 entratool get-token -p myprofile --silent | entratool inspect
 ```
 
 **Or separately:**
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token -p myprofile --silent)
 entratool inspect -t "$TOKEN"
 ```
@@ -364,7 +364,7 @@ entratool inspect -t "$TOKEN"
 
 If you have a refresh token:
 
-```bash
+```bash {linenos=inline}
 entratool refresh -p myprofile
 ```
 
@@ -390,7 +390,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 
 ### Pattern 1: Script Automation
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -e
 
@@ -405,7 +405,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Pattern 2: Environment Variable
 
-```bash
+```bash {linenos=inline}
 export ACCESS_TOKEN=$(entratool get-token -p myprofile --silent)
 
 # Use in multiple commands
@@ -415,7 +415,7 @@ curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api2.example.com
 
 ### Pattern 3: Token Caching
 
-```bash
+```bash {linenos=inline}
 TOKEN_FILE=~/.cache/entratool-token.txt
 
 # Check if token exists and is valid
@@ -428,7 +428,7 @@ TOKEN=$(cat "$TOKEN_FILE")
 
 ### Pattern 4: Multi-API Access
 
-```bash
+```bash {linenos=inline}
 # Get tokens for different APIs
 TOKEN_GRAPH=$(entratool get-token -p graph-profile --silent)
 TOKEN_AZURE=$(entratool get-token -p azure-profile --silent)
@@ -447,7 +447,7 @@ curl -H "Authorization: Bearer $TOKEN_AZURE" https://management.azure.com/subscr
 **Cause:** Profile name is incorrect
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # List profiles
 entratool config list
 
@@ -470,7 +470,7 @@ entratool get-token -p correct-name
 **Cause:** Client secret is expired or incorrect
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # Rotate secret in Azure Portal
 # Update profile
 entratool config edit -p myprofile
@@ -512,7 +512,7 @@ entratool config edit -p myprofile
 
 ### ✅ Request Minimal Scopes
 
-```bash
+```bash {linenos=inline}
 # ❌ Over-privileged
 --scope "https://graph.microsoft.com/.default"
 
@@ -522,7 +522,7 @@ entratool config edit -p myprofile
 
 ### ✅ Handle Token Expiration
 
-```bash
+```bash {linenos=inline}
 # Check expiration before use
 entratool discover -f token.txt
 
@@ -534,7 +534,7 @@ fi
 
 ### ✅ Secure Token Storage
 
-```bash
+```bash {linenos=inline}
 # Set restrictive permissions
 TOKEN_FILE=~/.cache/my-token.txt
 entratool get-token -p myprofile --silent > "$TOKEN_FILE"

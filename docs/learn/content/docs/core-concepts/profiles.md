@@ -112,35 +112,35 @@ Secrets (client secrets and certificate passwords) are stored separately using *
 ## Profile Lifecycle
 
 ### 1. Create
-```bash
+```bash {linenos=inline}
 entratool config create
 ```
 
 Interactive prompts guide you through setup.
 
 ### 2. Use
-```bash
+```bash {linenos=inline}
 entratool get-token -p myprofile
 ```
 
 Reference the profile by name when generating tokens.
 
 ### 3. Update
-```bash
+```bash {linenos=inline}
 entratool config edit -p myprofile
 ```
 
 Modify settings or rotate credentials.
 
 ### 4. Share
-```bash
+```bash {linenos=inline}
 entratool config export -p myprofile --include-secrets -o myprofile.enc
 ```
 
 Export with AES-256 encryption for team sharing.
 
 ### 5. Delete
-```bash
+```bash {linenos=inline}
 entratool config delete -p myprofile
 ```
 

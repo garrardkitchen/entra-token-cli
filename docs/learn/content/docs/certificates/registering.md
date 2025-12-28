@@ -50,7 +50,7 @@ Before registering a certificate:
 Azure requires only the public key (.cer or .pem), not the private key.
 
 **macOS / Linux:**
-```bash
+```bash {linenos=inline}
 # Extract public key from PFX
 openssl pkcs12 -in certificate.pfx \
   -clcerts -nokeys \
@@ -78,7 +78,7 @@ certutil -dump certificate.cer
 
 ### Upload Certificate
 
-```bash
+```bash {linenos=inline}
 # Login to Azure
 az login
 
@@ -97,7 +97,7 @@ az ad app credential reset \
 
 ### List Certificates
 
-```bash
+```bash {linenos=inline}
 # List all credentials for app
 az ad app credential list \
   --id <application-id>
@@ -110,7 +110,7 @@ az ad app credential list \
 
 ### Delete Certificate
 
-```bash
+```bash {linenos=inline}
 # Delete by key ID
 az ad app credential delete \
   --id <application-id> \
@@ -166,7 +166,7 @@ $app.KeyCredentials | Format-Table CustomKeyIdentifier, KeyId, EndDate
 3. Note the thumbprint value
 
 **Compare with local certificate:**
-```bash
+```bash {linenos=inline}
 # macOS/Linux
 openssl pkcs12 -in certificate.pfx \
   -nokeys -passin pass:YourPassword | \
@@ -179,7 +179,7 @@ $cert.Thumbprint
 
 ### Test Authentication
 
-```bash
+```bash {linenos=inline}
 # Create test profile with certificate
 entratool config create
 # Name: cert-test
@@ -209,7 +209,7 @@ entratool get-token -p cert-test
 ### Managing Multiple Certificates
 
 **Add second certificate without removing first:**
-```bash
+```bash {linenos=inline}
 # Azure CLI with --append flag
 az ad app credential reset \
   --id <application-id> \
@@ -270,7 +270,7 @@ Azure stores these certificate properties:
 
 ### Grant Permissions
 
-```bash
+```bash {linenos=inline}
 # Grant user Application Administrator role
 az ad directory-role member add \
   --role "Application Administrator" \
@@ -286,7 +286,7 @@ az ad directory-role member add \
 **Cause:** Missing permissions to modify app registration
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Check your roles
 az ad signed-in-user list-owned-applications
 
@@ -298,7 +298,7 @@ az ad signed-in-user list-owned-applications
 **Cause:** Incorrect certificate format or corrupted file
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Verify certificate is valid
 openssl x509 -in certificate.cer -text -noout
 
@@ -317,7 +317,7 @@ openssl pkcs12 -in certificate.pfx -clcerts -nokeys -out certificate.cer
 ### Wrong certificate uploaded
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Remove incorrect certificate
 az ad app credential delete \
   --id <application-id> \
@@ -336,7 +336,7 @@ az ad app credential reset \
 
 ### Automated Certificate Upload
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 

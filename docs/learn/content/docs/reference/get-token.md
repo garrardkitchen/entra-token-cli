@@ -10,7 +10,7 @@ Generate Microsoft Entra ID access tokens using configured authentication profil
 
 ## Synopsis
 
-```bash
+```bash {linenos=inline}
 entratool get-token [flags]
 ```
 
@@ -28,7 +28,7 @@ Tokens are cached and automatically refreshed when needed, making subsequent cal
 
 Profile name to use for authentication.
 
-```bash
+```bash {linenos=inline}
 entratool get-token --profile production
 entratool get-token -p dev
 ```
@@ -39,7 +39,7 @@ entratool get-token -p dev
 
 Override default scopes for this request.
 
-```bash
+```bash {linenos=inline}
 entratool get-token --scope "https://graph.microsoft.com/User.Read"
 entratool get-token -s "User.Read Mail.Read"
 ```
@@ -50,7 +50,7 @@ entratool get-token -s "User.Read Mail.Read"
 
 OAuth2 flow to use for authentication.
 
-```bash
+```bash {linenos=inline}
 entratool get-token --flow interactive
 entratool get-token -f device-code
 ```
@@ -67,7 +67,7 @@ entratool get-token -f device-code
 
 Output format for the token.
 
-```bash
+```bash {linenos=inline}
 entratool get-token --output json
 entratool get-token -o yaml
 ```
@@ -81,7 +81,7 @@ entratool get-token -o yaml
 
 Save token to file instead of stdout.
 
-```bash
+```bash {linenos=inline}
 entratool get-token --file token.txt
 entratool get-token --output json --file token.json
 ```
@@ -90,7 +90,7 @@ entratool get-token --output json --file token.json
 
 Suppress all output except the token.
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(entratool get-token --silent)
 ```
 
@@ -100,7 +100,7 @@ TOKEN=$(entratool get-token --silent)
 
 Force new token generation (skip cache).
 
-```bash
+```bash {linenos=inline}
 entratool get-token --force
 ```
 
@@ -108,7 +108,7 @@ entratool get-token --force
 
 Don't cache the generated token.
 
-```bash
+```bash {linenos=inline}
 entratool get-token --no-cache
 ```
 
@@ -116,7 +116,7 @@ entratool get-token --no-cache
 
 Maximum time to wait for token generation.
 
-```bash
+```bash {linenos=inline}
 entratool get-token --timeout 30s
 entratool get-token --timeout 2m
 ```
@@ -127,7 +127,7 @@ entratool get-token --timeout 2m
 
 ### Basic Usage
 
-```bash
+```bash {linenos=inline}
 # Default profile and scopes
 entratool get-token
 
@@ -140,7 +140,7 @@ entratool get-token --scope "https://management.azure.com/.default"
 
 ### Output Formats
 
-```bash
+```bash {linenos=inline}
 # Token only (default)
 entratool get-token
 
@@ -153,7 +153,7 @@ entratool get-token --file access_token.txt
 
 ### Different Flows
 
-```bash
+```bash {linenos=inline}
 # Client credentials (service account)
 entratool get-token --profile service-app
 
@@ -166,7 +166,7 @@ entratool get-token --flow device-code
 
 ### Script Usage
 
-```bash
+```bash {linenos=inline}
 # Get token in variable
 TOKEN=$(entratool get-token --silent)
 
@@ -181,7 +181,7 @@ EXPIRES_AT=$(entratool get-token --output json | jq -r .expires_at)
 
 ### Force Refresh
 
-```bash
+```bash {linenos=inline}
 # Skip cache and get fresh token
 entratool get-token --force
 
@@ -245,7 +245,7 @@ Tokens are automatically cached for reuse:
 
 ### Cache Behavior
 
-```bash
+```bash {linenos=inline}
 # First call - generates new token (~500ms)
 entratool get-token --profile prod
 
@@ -260,7 +260,7 @@ entratool get-token --profile prod
 
 ### Microsoft Graph API
 
-```bash
+```bash {linenos=inline}
 # Get token for Graph
 TOKEN=$(entratool get-token \
   --scope "https://graph.microsoft.com/.default" \
@@ -273,7 +273,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### Azure Management API
 
-```bash
+```bash {linenos=inline}
 # Get token for Azure
 TOKEN=$(entratool get-token \
   --scope "https://management.azure.com/.default" \
@@ -286,7 +286,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### CI/CD Pipeline
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -302,7 +302,7 @@ TOKEN=$(entratool get-token \
 
 ### Multiple Scopes
 
-```bash
+```bash {linenos=inline}
 # Request multiple scopes
 entratool get-token \
   --scope "User.Read Mail.Read Calendars.Read" \
@@ -317,7 +317,7 @@ entratool get-token --output json | \
 
 ### Script Example
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 get_token_safe() {
@@ -357,7 +357,7 @@ fi
 
 ### Performance
 
-```bash
+```bash {linenos=inline}
 # Cache tokens in memory for multiple uses
 TOKEN=$(entratool get-token --silent)
 for api in users groups applications; do
@@ -368,7 +368,7 @@ done
 
 ### Debugging
 
-```bash
+```bash {linenos=inline}
 # Verbose output
 entratool get-token --output json | jq .
 
@@ -381,7 +381,7 @@ entratool inspect --profile myapp
 
 ### Security
 
-```bash
+```bash {linenos=inline}
 # Don't expose token in command history
 TOKEN=$(entratool get-token --silent)
 

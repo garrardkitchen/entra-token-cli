@@ -29,7 +29,7 @@ Authentication profiles store your configuration for connecting to Microsoft Ent
 
 The easiest way to create a profile:
 
-```bash
+```bash {linenos=inline}
 entratool config create
 ```
 
@@ -71,7 +71,7 @@ Select: 1
 
 ### View All Profiles
 
-```bash
+```bash {linenos=inline}
 entratool config list
 ```
 
@@ -94,7 +94,7 @@ Available profiles:
 
 ### JSON Output
 
-```bash
+```bash {linenos=inline}
 entratool config list --json
 ```
 
@@ -122,7 +122,7 @@ entratool config list --json
 
 ### Interactive Edit
 
-```bash
+```bash {linenos=inline}
 entratool config edit -p my-graph-app
 ```
 
@@ -147,21 +147,21 @@ New scope: https://graph.microsoft.com/User.Read Mail.Read
 ### Common Edits
 
 **Rotate client secret:**
-```bash
+```bash {linenos=inline}
 entratool config edit -p my-graph-app
 # Select: Client Secret
 # Enter new secret
 ```
 
 **Change scope:**
-```bash
+```bash {linenos=inline}
 entratool config edit -p my-graph-app
 # Select: Scope
 # Enter: new-scope
 ```
 
 **Switch authentication method:**
-```bash
+```bash {linenos=inline}
 entratool config edit -p my-graph-app
 # Select: Authentication Method
 # Choose: Certificate
@@ -176,7 +176,7 @@ entratool config edit -p my-graph-app
 
 ### Delete Single Profile
 
-```bash
+```bash {linenos=inline}
 entratool config delete -p my-graph-app
 ```
 
@@ -194,7 +194,7 @@ Are you sure you want to delete profile 'my-graph-app'? (y/n): y
 
 Skip confirmation:
 
-```bash
+```bash {linenos=inline}
 entratool config delete -p my-graph-app --force
 ```
 
@@ -210,7 +210,7 @@ entratool config delete -p my-graph-app --force
 
 Export profile configuration (without secrets):
 
-```bash
+```bash {linenos=inline}
 entratool config export -p my-graph-app -o my-profile.json
 ```
 
@@ -229,7 +229,7 @@ entratool config export -p my-graph-app -o my-profile.json
 
 ### Export All Profiles
 
-```bash
+```bash {linenos=inline}
 entratool config export -o all-profiles.json
 ```
 
@@ -249,7 +249,7 @@ You must manually transfer secrets to the new location using secure methods.
 
 ### Import Single Profile
 
-```bash
+```bash {linenos=inline}
 entratool config import -f my-profile.json
 ```
 
@@ -276,7 +276,7 @@ Select:
 
 Import multiple profiles:
 
-```bash
+```bash {linenos=inline}
 entratool config import -f team-profiles.json
 ```
 
@@ -323,7 +323,7 @@ entratool config import -f team-profiles.json
 
 You can manually edit `profiles.json`:
 
-```bash
+```bash {linenos=inline}
 # macOS/Linux
 nano ~/.entratool/profiles.json
 
@@ -423,7 +423,7 @@ notepad %USERPROFILE%\.entratool\profiles.json
 
 Use descriptive, hierarchical names:
 
-```bash
+```bash {linenos=inline}
 # Good
 company-graph-prod
 company-graph-dev
@@ -437,7 +437,7 @@ myprofile
 
 ### ✅ Organize by Environment
 
-```bash
+```bash {linenos=inline}
 # Production
 prod-graph-api
 prod-azure-management
@@ -455,7 +455,7 @@ dev-azure-management
 
 Create profiles for different purposes:
 
-```bash
+```bash {linenos=inline}
 # Read-only operations
 readonly-graph-profile
 
@@ -492,7 +492,7 @@ profile-custom-api
 **Cause:** Profile name doesn't exist
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # List available profiles
 entratool config list
 
@@ -505,7 +505,7 @@ entratool get-token -p correct-profile-name
 **Cause:** Creating profile with duplicate name
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # Option 1: Delete existing
 entratool config delete -p duplicate-name
 
@@ -519,7 +519,7 @@ entratool config create
 **Cause:** Corrupted `profiles.json`
 
 **Fix:**
-```bash
+```bash {linenos=inline}
 # Backup current file
 cp ~/.entratool/profiles.json ~/.entratool/profiles.json.bak
 

@@ -24,7 +24,7 @@ The Client Credentials flow is designed for service-to-service authentication wh
 
 ### Using Client Secret
 
-```bash
+```bash {linenos=inline}
 # Create profile with client secret
 entratool create-profile
 
@@ -34,7 +34,7 @@ entratool get-token --profile myapp
 
 ### Using Certificate
 
-```bash
+```bash {linenos=inline}
 # Create profile with certificate
 entratool create-profile --use-certificate
 
@@ -48,7 +48,7 @@ entratool get-token --profile myapp-cert
 
 When creating a profile for client credentials flow:
 
-```bash
+```bash {linenos=inline}
 entratool create-profile
 ```
 
@@ -92,7 +92,7 @@ Required Azure configuration:
 
 ### Basic Token Request
 
-```bash
+```bash {linenos=inline}
 # Using default profile
 entratool get-token
 
@@ -105,7 +105,7 @@ entratool get-token --scope https://graph.microsoft.com/.default
 
 ### With Microsoft Graph
 
-```bash
+```bash {linenos=inline}
 # Get token for Graph API
 TOKEN=$(entratool get-token --scope https://graph.microsoft.com/.default --output json | jq -r .access_token)
 
@@ -116,7 +116,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### With Azure Management
 
-```bash
+```bash {linenos=inline}
 # Get token for Azure Management
 TOKEN=$(entratool get-token --scope https://management.azure.com/.default --output json | jq -r .access_token)
 
@@ -127,7 +127,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ### In Scripts
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 set -euo pipefail
 
@@ -249,7 +249,7 @@ steps:
 
 **Always prefer certificates over client secrets in production:**
 
-```bash
+```bash {linenos=inline}
 # Create certificate
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 
@@ -265,7 +265,7 @@ entratool create-profile \
 
 **Don't hardcode secrets:**
 
-```bash
+```bash {linenos=inline}
 # ❌ Bad - hardcoded
 entratool create-profile --client-secret "my-secret-123"
 
@@ -281,7 +281,7 @@ entratool create-profile --client-secret "${CLIENT_SECRET}"
 
 Only request the permissions you need:
 
-```bash
+```bash {linenos=inline}
 # ❌ Too broad
 entratool get-token --scope https://graph.microsoft.com/.default
 
@@ -301,7 +301,7 @@ entratool get-token --scope https://graph.microsoft.com/User.Read.All
 3. Check token scopes match API requirements
 4. Verify application has correct role assignments
 
-```bash
+```bash {linenos=inline}
 # Inspect token to verify scopes
 entratool inspect --profile myapp
 ```
@@ -315,7 +315,7 @@ entratool inspect --profile myapp
 2. Check file permissions (readable by user)
 3. Ensure certificate format is correct (PEM/PFX)
 
-```bash
+```bash {linenos=inline}
 # Verify certificate
 openssl x509 -in cert.pem -text -noout
 ```
@@ -326,7 +326,7 @@ openssl x509 -in cert.pem -text -noout
 
 **Solution:** Tokens expire after 1 hour. Implement refresh logic:
 
-```bash
+```bash {linenos=inline}
 # Check if token is still valid
 is_token_valid() {
     local token="$1"
@@ -347,7 +347,7 @@ fi
 
 Entra Token CLI automatically caches tokens. Reuse tokens within their lifetime:
 
-```bash
+```bash {linenos=inline}
 # First call gets new token
 entratool get-token --profile myapp  # ~500ms
 
@@ -359,7 +359,7 @@ entratool get-token --profile myapp  # ~50ms
 
 When making multiple API calls with the same token:
 
-```bash
+```bash {linenos=inline}
 # Get token once
 TOKEN=$(entratool get-token --output json | jq -r .access_token)
 

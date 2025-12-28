@@ -91,7 +91,7 @@ After registration, save these values:
 
 Now that your Azure app is configured, create a profile in entratool:
 
-```bash
+```bash {linenos=inline}
 entratool config create
 ```
 
@@ -114,7 +114,7 @@ Configure custom redirect URI? n
 
 ## Step 5: Generate Your First Token
 
-```bash
+```bash {linenos=inline}
 entratool get-token -p demo-profile
 ```
 
@@ -134,7 +134,7 @@ You should see output like:
 
 ### 6.1 Inspect the Token
 
-```bash
+```bash {linenos=inline}
 entratool inspect $(cat ~/.config/entratool/last-token.txt)
 ```
 
@@ -150,7 +150,7 @@ This shows the decoded JWT claims, including:
 
 Test your token with Microsoft Graph:
 
-```bash
+```bash {linenos=inline}
 TOKEN=$(cat ~/.config/entratool/last-token.txt)
 curl -H "Authorization: Bearer $TOKEN" \
   https://graph.microsoft.com/v1.0/users?$top=5

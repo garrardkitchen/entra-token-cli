@@ -10,7 +10,7 @@ Decode and inspect JWT (JSON Web Token) access tokens to view claims, expiration
 
 ## Synopsis
 
-```bash
+```bash {linenos=inline}
 entratool inspect [flags]
 ```
 
@@ -32,7 +32,7 @@ The command can inspect:
 
 Inspect token from a profile.
 
-```bash
+```bash {linenos=inline}
 entratool inspect --profile production
 entratool inspect -p dev
 ```
@@ -41,7 +41,7 @@ entratool inspect -p dev
 
 Inspect a specific token string.
 
-```bash
+```bash {linenos=inline}
 entratool inspect --token "eyJ0eXAiOiJKV1QiLCJh..."
 ```
 
@@ -49,7 +49,7 @@ entratool inspect --token "eyJ0eXAiOiJKV1QiLCJh..."
 
 Read token from a file.
 
-```bash
+```bash {linenos=inline}
 entratool inspect --file token.txt
 ```
 
@@ -59,7 +59,7 @@ entratool inspect --file token.txt
 
 Output format.
 
-```bash
+```bash {linenos=inline}
 entratool inspect --output json
 entratool inspect -o yaml
 ```
@@ -73,7 +73,7 @@ entratool inspect -o yaml
 
 Show only the claims (payload).
 
-```bash
+```bash {linenos=inline}
 entratool inspect --claims
 ```
 
@@ -81,7 +81,7 @@ entratool inspect --claims
 
 Show only the token header.
 
-```bash
+```bash {linenos=inline}
 entratool inspect --header
 ```
 
@@ -89,7 +89,7 @@ entratool inspect --header
 
 ### Basic Usage
 
-```bash
+```bash {linenos=inline}
 # Inspect token from profile
 entratool inspect --profile myapp
 
@@ -105,7 +105,7 @@ entratool get-token | entratool inspect
 
 ### Output Formats
 
-```bash
+```bash {linenos=inline}
 # Human-readable (default)
 entratool inspect --profile myapp
 
@@ -124,7 +124,7 @@ entratool inspect --profile myapp --header
 
 ### Script Usage
 
-```bash
+```bash {linenos=inline}
 # Check token expiration
 EXPIRY=$(entratool inspect --profile myapp --output json | jq -r .exp)
 NOW=$(date +%s)
@@ -235,7 +235,7 @@ Expiration:
 
 ### Verify Token Expiration
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 check_token_valid() {
@@ -270,7 +270,7 @@ fi
 
 ### Extract Specific Claims
 
-```bash
+```bash {linenos=inline}
 # Get tenant ID
 TENANT_ID=$(entratool inspect --profile myapp --output json | jq -r .tid)
 
@@ -288,7 +288,7 @@ echo "Token expires: $EXPIRES_HR"
 
 ### Validate Required Permissions
 
-```bash
+```bash {linenos=inline}
 #!/bin/bash
 
 has_permission() {
@@ -316,7 +316,7 @@ fi
 
 ### Debug Authentication Issues
 
-```bash
+```bash {linenos=inline}
 # Full token inspection for debugging
 entratool inspect --profile problematic-app
 
@@ -333,7 +333,7 @@ entratool inspect --profile myapp --output json | \
 
 ### Compare Tokens
 
-```bash
+```bash {linenos=inline}
 # Compare tokens from different profiles
 echo "Production token:"
 entratool inspect --profile production --claims
@@ -352,13 +352,13 @@ diff \
 ### Invalid Token Format
 
 **Problem:**
-```bash
+```bash {linenos=inline}
 $ entratool inspect --token "invalid-token"
 Error: invalid token format
 ```
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Verify token is a JWT (three parts separated by dots)
 echo "$TOKEN" | grep -E '^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$'
 
@@ -370,13 +370,13 @@ entratool inspect --token "$TOKEN"
 ### Token Not Found
 
 **Problem:**
-```bash
+```bash {linenos=inline}
 $ entratool inspect --profile myapp
 Error: no token found for profile 'myapp'
 ```
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Generate token first
 entratool get-token --profile myapp
 
@@ -389,7 +389,7 @@ entratool inspect --profile myapp
 **Problem:** Token shows as expired
 
 **Solution:**
-```bash
+```bash {linenos=inline}
 # Get fresh token
 entratool get-token --profile myapp --force
 
@@ -451,7 +451,7 @@ Cryptographic signature to verify token integrity (not decoded).
 - Use only for debugging and informational purposes
 
 **Token Security:**
-```bash
+```bash {linenos=inline}
 # ✅ Good - inspect cached token
 entratool inspect --profile myapp
 
