@@ -176,7 +176,7 @@ Include:
 - Clear, descriptive title
 - Steps to reproduce
 - Expected vs actual behavior
-- Version information (`entratool --version`)
+- Version information (`entra-auth-cli --version`)
 - Platform and OS version
 - Relevant logs or error messages
 - Screenshots if applicable
@@ -201,9 +201,9 @@ dotnet run --project src/EntraTokenCli/EntraTokenCli.csproj -- get-token -p test
 ### Testing Secure Storage
 
 Each platform has different secure storage:
-- **Windows**: Check `%APPDATA%\entratool\secure\`
+- **Windows**: Check `%APPDATA%\entra-auth-cli\secure\`
 - **macOS**: Use Keychain Access app to view entries
-- **Linux**: Check `~/.config/entratool/secure/`
+- **Linux**: Check `~/.config/entra-auth-cli/secure/`
 
 ### Testing Multi-Platform
 

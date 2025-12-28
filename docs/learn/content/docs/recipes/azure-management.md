@@ -6,7 +6,7 @@ weight: 2
 
 # Azure Management API
 
-Learn how to use Entra Token CLI to authenticate and manage Azure resources.
+Learn how to use Entra Auth Cli to authenticate and manage Azure resources.
 
 ---
 
@@ -28,7 +28,7 @@ The Azure Management API provides programmatic access to:
 ### Setup Profile
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 # Name: azure-mgmt
 # Client ID: <your-app-id>
 # Tenant ID: <your-tenant-id>
@@ -38,7 +38,7 @@ entratool config create
 ### Get Token and Call API
 
 ```bash {linenos=inline}
-TOKEN=$(entratool get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
 curl -H "Authorization: Bearer $TOKEN" \
      'https://management.azure.com/subscriptions?api-version=2020-01-01' | jq
 ```
@@ -51,7 +51,7 @@ Retrieve all Azure subscriptions.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p azure-mgmt --silent \
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent \
   --scope "https://management.azure.com/.default")
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -66,7 +66,7 @@ List resource groups in a subscription.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -81,7 +81,7 @@ Create a new resource group.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 RESOURCE_GROUP="my-resource-group"
 LOCATION="eastus"
@@ -103,7 +103,7 @@ List all VMs in a resource group.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 RESOURCE_GROUP="my-rg"
 
@@ -119,7 +119,7 @@ Create a new virtual machine.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p azure-admin --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-admin --silent)
 SUBSCRIPTION_ID="..."
 RESOURCE_GROUP="my-rg"
 VM_NAME="my-vm"
@@ -171,7 +171,7 @@ List storage accounts in a subscription.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -188,12 +188,12 @@ For automation, use a service principal with appropriate RBAC roles:
 
 ```bash {linenos=inline}
 # Create service principal
-az ad sp create-for-rbac --name "entratool-automation" \
+az ad sp create-for-rbac --name "entra-auth-cli-automation" \
   --role "Contributor" \
   --scopes "/subscriptions/YOUR_SUBSCRIPTION_ID"
 
 # Configure profile
-entratool config create
+entra-auth-cli config create
 # Client ID: <from output>
 # Client Secret: <from output>
 # Tenant ID: <from output>
@@ -211,7 +211,7 @@ Assign minimum required roles:
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
 
 # Start operation
 response=$(curl -X PUT \

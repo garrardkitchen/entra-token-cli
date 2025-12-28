@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Entra Token CLI (entratool)** - A cross-platform .NET 10 CLI tool for generating Microsoft Entra ID access tokens via multiple OAuth2 flows. Built with Spectre.Console for rich terminal UX and MSAL for authentication.
+**Entra Auth Cli (entra-auth-cli)** - A cross-platform .NET 10 CLI tool for generating Microsoft Entra ID access tokens via multiple OAuth2 flows. Built with Spectre.Console for rich terminal UX and MSAL for authentication.
 
 ## Build and Development Commands
 
@@ -83,10 +83,10 @@ When user doesn't specify `-f/--flow`, the tool infers from the profile's auth m
 Location: `GetTokenCommand.cs` lines ~80-110
 
 ### Data Storage Locations
-- **Profiles**: `~/.config/entratool/profiles.json` (macOS/Linux) or `%APPDATA%\entratool\profiles.json` (Windows)
-- **Secrets**: Platform-native secure storage with keys: `entratool:{profileName}:{secretType}`
+- **Profiles**: `~/.config/entra-auth-cli/profiles.json` (macOS/Linux) or `%APPDATA%\entra-auth-cli\profiles.json` (Windows)
+- **Secrets**: Platform-native secure storage with keys: `entra-auth-cli:{profileName}:{secretType}`
 - **Token cache**: MSAL's built-in cache (encrypted)
-- **Last token fallback**: `~/.config/entratool/last-token.txt` when clipboard unavailable
+- **Last token fallback**: `~/.config/entra-auth-cli/last-token.txt` when clipboard unavailable
 
 ## Important Patterns
 
@@ -104,7 +104,7 @@ Location: `GetTokenCommand.cs` lines ~80-110
 ### Certificate Handling
 - Use `X509CertificateLoader` (.NET 10+ API) in `CertificateLoader.cs`
 - Support three modes: always prompt, cached password, passwordless
-- Certificate passwords stored as `entratool:{profileName}:cert-password`
+- Certificate passwords stored as `entra-auth-cli:{profileName}:cert-password`
 
 ### Scope Management
 - Profiles store default scopes
@@ -113,26 +113,26 @@ Location: `GetTokenCommand.cs` lines ~80-110
 
 ## Naming Conventions
 
-- **CLI command**: `entratool` (user invokes this)
+- **CLI command**: `entra-auth-cli` (user invokes this)
 - **Package ID**: `EntraTokenCli` (NuGet package name)
 - **Namespace**: `EntraTokenCli.*` (all C# code)
-- **Config directory**: `entratool` (filesystem storage)
-- **Keychain service**: `entratool` (macOS Keychain service name)
+- **Config directory**: `entra-auth-cli` (filesystem storage)
+- **Keychain service**: `entra-auth-cli` (macOS Keychain service name)
 
 ## Platform-Specific Notes
 
 ### Windows
 - DPAPI scoped to current user
-- Secure storage in `%APPDATA%\entratool\secure\`
+- Secure storage in `%APPDATA%\entra-auth-cli\secure\`
 
 ### macOS
 - Keychain integration via `security` CLI tool
-- Keychain items searchable by prefix: `entratool:`
+- Keychain items searchable by prefix: `entra-auth-cli:`
 - May prompt for keychain access on first use
 
 ### Linux
 - **Security Warning**: XOR obfuscation only, not cryptographic encryption
-- Fallback storage in `~/.config/entratool/secure/`
+- Fallback storage in `~/.config/entra-auth-cli/secure/`
 - Not suitable for production secrets
 
 ## Dependencies

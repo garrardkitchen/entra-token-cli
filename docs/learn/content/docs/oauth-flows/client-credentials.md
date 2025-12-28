@@ -26,20 +26,20 @@ The Client Credentials flow is designed for service-to-service authentication wh
 
 ```bash {linenos=inline}
 # Create profile with client secret
-entratool create-profile
+entra-auth-cli create-profile
 
 # Generate token
-entratool get-token --profile myapp
+entra-auth-cli get-token --profile myapp
 ```
 
 ### Using Certificate
 
 ```bash {linenos=inline}
 # Create profile with certificate
-entratool create-profile --use-certificate
+entra-auth-cli create-profile --use-certificate
 
 # Generate token
-entratool get-token --profile myapp-cert
+entra-auth-cli get-token --profile myapp-cert
 ```
 
 ## Configuration
@@ -49,7 +49,7 @@ entratool get-token --profile myapp-cert
 When creating a profile for client credentials flow:
 
 ```bash {linenos=inline}
-entratool create-profile
+entra-auth-cli create-profile
 ```
 
 You'll be prompted for:
@@ -94,20 +94,20 @@ Required Azure configuration:
 
 ```bash {linenos=inline}
 # Using default profile
-entratool get-token
+entra-auth-cli get-token
 
 # Using specific profile
-entratool get-token --profile production
+entra-auth-cli get-token --profile production
 
 # Override scopes
-entratool get-token --scope https://graph.microsoft.com/.default
+entra-auth-cli get-token --scope https://graph.microsoft.com/.default
 ```
 
 ### With Microsoft Graph
 
 ```bash {linenos=inline}
 # Get token for Graph API
-TOKEN=$(entratool get-token --scope https://graph.microsoft.com/.default --output json | jq -r .access_token)
+TOKEN=$(entra-auth-cli get-token --scope https://graph.microsoft.com/.default --output json | jq -r .access_token)
 
 # Use token
 curl -H "Authorization: Bearer $TOKEN" \
@@ -118,7 +118,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ```bash {linenos=inline}
 # Get token for Azure Management
-TOKEN=$(entratool get-token --scope https://management.azure.com/.default --output json | jq -r .access_token)
+TOKEN=$(entra-auth-cli get-token --scope https://management.azure.com/.default --output json | jq -r .access_token)
 
 # List subscriptions
 curl -H "Authorization: Bearer $TOKEN" \
@@ -138,7 +138,7 @@ get_token() {
     local retry=0
     
     while [ $retry -lt $max_retries ]; do
-        if TOKEN=$(entratool get-token --scope "$scope" --output json 2>/dev/null); then
+        if TOKEN=$(entra-auth-cli get-token --scope "$scope" --output json 2>/dev/null); then
             echo "$TOKEN" | jq -r .access_token
             return 0
         fi
@@ -172,11 +172,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Install Entra Token CLI
+      - name: Install Entra Auth Cli
         run: |
-          wget https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64
-          chmod +x entratool-linux-amd64
-          sudo mv entratool-linux-amd64 /usr/local/bin/entratool
+          wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64
+          chmod +x entra-auth-cli-linux-amd64
+          sudo mv entra-auth-cli-linux-amd64 /usr/local/bin/entra-auth-cli
       
       - name: Create Profile
         env:
@@ -184,7 +184,7 @@ jobs:
           CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: |
-          entratool create-profile \
+          entra-auth-cli create-profile \
             --name ci \
             --tenant-id "$TENANT_ID" \
             --client-id "$CLIENT_ID" \
@@ -193,7 +193,7 @@ jobs:
       
       - name: Get Token and Deploy
         run: |
-          TOKEN=$(entratool get-token --profile ci --output json | jq -r .access_token)
+          TOKEN=$(entra-auth-cli get-token --profile ci --output json | jq -r .access_token)
           # Use token for deployment
 ```
 
@@ -208,13 +208,13 @@ pool:
 
 steps:
 - task: Bash@3
-  displayName: 'Install Entra Token CLI'
+  displayName: 'Install Entra Auth Cli'
   inputs:
     targetType: 'inline'
     script: |
-      wget https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64
-      chmod +x entratool-linux-amd64
-      sudo mv entratool-linux-amd64 /usr/local/bin/entratool
+      wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64
+      chmod +x entra-auth-cli-linux-amd64
+      sudo mv entra-auth-cli-linux-amd64 /usr/local/bin/entra-auth-cli
 
 - task: Bash@3
   displayName: 'Get Token'
@@ -225,13 +225,13 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      entratool create-profile \
+      entra-auth-cli create-profile \
         --name pipeline \
         --tenant-id "$TENANT_ID" \
         --client-id "$CLIENT_ID" \
         --client-secret "$CLIENT_SECRET"
       
-      TOKEN=$(entratool get-token --profile pipeline --output json | jq -r .access_token)
+      TOKEN=$(entra-auth-cli get-token --profile pipeline --output json | jq -r .access_token)
       echo "##vso[task.setvariable variable=ACCESS_TOKEN;isSecret=true]$TOKEN"
 
 - task: Bash@3
@@ -254,7 +254,7 @@ steps:
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 
 # Create profile with certificate
-entratool create-profile \
+entra-auth-cli create-profile \
   --name secure-app \
   --use-certificate \
   --certificate-path cert.pem \
@@ -267,14 +267,14 @@ entratool create-profile \
 
 ```bash {linenos=inline}
 # ❌ Bad - hardcoded
-entratool create-profile --client-secret "my-secret-123"
+entra-auth-cli create-profile --client-secret "my-secret-123"
 
 # ✅ Good - from environment
-entratool create-profile --client-secret "${CLIENT_SECRET}"
+entra-auth-cli create-profile --client-secret "${CLIENT_SECRET}"
 
 # ✅ Better - from secure vault
 CLIENT_SECRET=$(az keyvault secret show --vault-name myvault --name client-secret --query value -o tsv)
-entratool create-profile --client-secret "${CLIENT_SECRET}"
+entra-auth-cli create-profile --client-secret "${CLIENT_SECRET}"
 ```
 
 ### Least Privilege
@@ -283,10 +283,10 @@ Only request the permissions you need:
 
 ```bash {linenos=inline}
 # ❌ Too broad
-entratool get-token --scope https://graph.microsoft.com/.default
+entra-auth-cli get-token --scope https://graph.microsoft.com/.default
 
 # ✅ Specific permission
-entratool get-token --scope https://graph.microsoft.com/User.Read.All
+entra-auth-cli get-token --scope https://graph.microsoft.com/User.Read.All
 ```
 
 ## Troubleshooting
@@ -303,7 +303,7 @@ entratool get-token --scope https://graph.microsoft.com/User.Read.All
 
 ```bash {linenos=inline}
 # Inspect token to verify scopes
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 ```
 
 ### Certificate Not Found
@@ -337,7 +337,7 @@ is_token_valid() {
 
 # Get new token if expired
 if ! is_token_valid "$TOKEN"; then
-    TOKEN=$(entratool get-token --profile myapp --output json | jq -r .access_token)
+    TOKEN=$(entra-auth-cli get-token --profile myapp --output json | jq -r .access_token)
 fi
 ```
 
@@ -345,14 +345,14 @@ fi
 
 ### Token Caching
 
-Entra Token CLI automatically caches tokens. Reuse tokens within their lifetime:
+Entra Auth Cli automatically caches tokens. Reuse tokens within their lifetime:
 
 ```bash {linenos=inline}
 # First call gets new token
-entratool get-token --profile myapp  # ~500ms
+entra-auth-cli get-token --profile myapp  # ~500ms
 
 # Subsequent calls use cached token
-entratool get-token --profile myapp  # ~50ms
+entra-auth-cli get-token --profile myapp  # ~50ms
 ```
 
 ### Parallel Requests
@@ -361,7 +361,7 @@ When making multiple API calls with the same token:
 
 ```bash {linenos=inline}
 # Get token once
-TOKEN=$(entratool get-token --output json | jq -r .access_token)
+TOKEN=$(entra-auth-cli get-token --output json | jq -r .access_token)
 
 # Use for multiple parallel requests
 {

@@ -1,9 +1,9 @@
 ---
-title: "Entra Token CLI"
+title: "Entra Auth CLI"
 description: "Cross-platform CLI for generating Microsoft Entra ID access tokens"
 ---
 
-# Entra Token CLI
+# Entra Auth CLI
 
 A powerful .NET global tool for generating Microsoft Entra ID access tokens with multiple OAuth2 flows, secure storage, and certificate authentication.
 
@@ -55,7 +55,7 @@ Automatic token caching with refresh support. Inspect, validate, and manage toke
 
 ---
 
-## Why Entra Token CLI?
+## Why Entra Auth Cli?
 
 🚀
 ### Fast & Efficient
@@ -91,7 +91,7 @@ dotnet tool install -g EntraTokenCli
 Create an authentication profile interactively with guided prompts for all required settings.
 
 ```bash
-entratool config create
+entra-auth-cli config create
 ```
 
 3
@@ -100,7 +100,7 @@ entratool config create
 Generate an access token using your saved profile with automatic flow selection and secure storage.
 
 ```bash
-entratool get-token -p myprofile
+entra-auth-cli get-token -p myprofile
 ```
 
 4
@@ -109,7 +109,7 @@ entratool get-token -p myprofile
 Decode the JWT token to view claims, expiration, and permissions, or use it in your API calls.
 
 ```bash
-entratool inspect -t "your-token-here"
+entra-auth-cli inspect -t "your-token-here"
 ```
 
 ---
@@ -145,6 +145,6 @@ Decode JWT tokens to view claims, expiration, audience, issuer, and permissions 
 
 ## Ready to Generate Tokens?
 
-Get started with Entra Token CLI or explore specific features and recipes.
+Get started with Entra Auth Cli or explore specific features and recipes.
 
 [Getting Started Guide](/docs/getting-started/installation/) [Browse Recipes](/docs/recipes/)

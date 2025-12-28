@@ -9,7 +9,7 @@ namespace EntraTokenCli.Storage;
 /// </summary>
 public class MacOsSecureStorage : ISecureStorage
 {
-    private const string ServiceName = "entratool";
+    private const string ServiceName = "entra-auth-cli";
     private readonly Dictionary<string, string> _cache = new();
 
     public MacOsSecureStorage()

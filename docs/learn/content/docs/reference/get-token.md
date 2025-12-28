@@ -11,7 +11,7 @@ Generate Microsoft Entra ID access tokens using configured authentication profil
 ## Synopsis
 
 ```bash {linenos=inline}
-entratool get-token [flags]
+entra-auth-cli get-token [flags]
 ```
 
 ## Description
@@ -29,8 +29,8 @@ Tokens are cached and automatically refreshed when needed, making subsequent cal
 Profile name to use for authentication.
 
 ```bash {linenos=inline}
-entratool get-token --profile production
-entratool get-token -p dev
+entra-auth-cli get-token --profile production
+entra-auth-cli get-token -p dev
 ```
 
 **Default:** `default`
@@ -40,8 +40,8 @@ entratool get-token -p dev
 Override default scopes for this request.
 
 ```bash {linenos=inline}
-entratool get-token --scope "https://graph.microsoft.com/User.Read"
-entratool get-token -s "User.Read Mail.Read"
+entra-auth-cli get-token --scope "https://graph.microsoft.com/User.Read"
+entra-auth-cli get-token -s "User.Read Mail.Read"
 ```
 
 **Format:** Space-separated list of scopes
@@ -51,8 +51,8 @@ entratool get-token -s "User.Read Mail.Read"
 OAuth2 flow to use for authentication.
 
 ```bash {linenos=inline}
-entratool get-token --flow interactive
-entratool get-token -f device-code
+entra-auth-cli get-token --flow interactive
+entra-auth-cli get-token -f device-code
 ```
 
 **Options:**
@@ -68,8 +68,8 @@ entratool get-token -f device-code
 Output format for the token.
 
 ```bash {linenos=inline}
-entratool get-token --output json
-entratool get-token -o yaml
+entra-auth-cli get-token --output json
+entra-auth-cli get-token -o yaml
 ```
 
 **Options:**
@@ -82,8 +82,8 @@ entratool get-token -o yaml
 Save token to file instead of stdout.
 
 ```bash {linenos=inline}
-entratool get-token --file token.txt
-entratool get-token --output json --file token.json
+entra-auth-cli get-token --file token.txt
+entra-auth-cli get-token --output json --file token.json
 ```
 
 #### `--silent`, `-q`
@@ -91,7 +91,7 @@ entratool get-token --output json --file token.json
 Suppress all output except the token.
 
 ```bash {linenos=inline}
-TOKEN=$(entratool get-token --silent)
+TOKEN=$(entra-auth-cli get-token --silent)
 ```
 
 ### Behavior Options
@@ -101,7 +101,7 @@ TOKEN=$(entratool get-token --silent)
 Force new token generation (skip cache).
 
 ```bash {linenos=inline}
-entratool get-token --force
+entra-auth-cli get-token --force
 ```
 
 #### `--no-cache`
@@ -109,7 +109,7 @@ entratool get-token --force
 Don't cache the generated token.
 
 ```bash {linenos=inline}
-entratool get-token --no-cache
+entra-auth-cli get-token --no-cache
 ```
 
 #### `--timeout`
@@ -117,8 +117,8 @@ entratool get-token --no-cache
 Maximum time to wait for token generation.
 
 ```bash {linenos=inline}
-entratool get-token --timeout 30s
-entratool get-token --timeout 2m
+entra-auth-cli get-token --timeout 30s
+entra-auth-cli get-token --timeout 2m
 ```
 
 **Default:** `60s`
@@ -129,64 +129,64 @@ entratool get-token --timeout 2m
 
 ```bash {linenos=inline}
 # Default profile and scopes
-entratool get-token
+entra-auth-cli get-token
 
 # Specific profile
-entratool get-token --profile production
+entra-auth-cli get-token --profile production
 
 # With custom scope
-entratool get-token --scope "https://management.azure.com/.default"
+entra-auth-cli get-token --scope "https://management.azure.com/.default"
 ```
 
 ### Output Formats
 
 ```bash {linenos=inline}
 # Token only (default)
-entratool get-token
+entra-auth-cli get-token
 
 # Full JSON response
-entratool get-token --output json
+entra-auth-cli get-token --output json
 
 # Save to file
-entratool get-token --file access_token.txt
+entra-auth-cli get-token --file access_token.txt
 ```
 
 ### Different Flows
 
 ```bash {linenos=inline}
 # Client credentials (service account)
-entratool get-token --profile service-app
+entra-auth-cli get-token --profile service-app
 
 # Interactive browser (user auth)
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # Device code (headless/SSH)
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 ```
 
 ### Script Usage
 
 ```bash {linenos=inline}
 # Get token in variable
-TOKEN=$(entratool get-token --silent)
+TOKEN=$(entra-auth-cli get-token --silent)
 
 # Use in API call
 curl -H "Authorization: Bearer $TOKEN" \
   https://graph.microsoft.com/v1.0/me
 
 # JSON parsing
-ACCESS_TOKEN=$(entratool get-token --output json | jq -r .access_token)
-EXPIRES_AT=$(entratool get-token --output json | jq -r .expires_at)
+ACCESS_TOKEN=$(entra-auth-cli get-token --output json | jq -r .access_token)
+EXPIRES_AT=$(entra-auth-cli get-token --output json | jq -r .expires_at)
 ```
 
 ### Force Refresh
 
 ```bash {linenos=inline}
 # Skip cache and get fresh token
-entratool get-token --force
+entra-auth-cli get-token --force
 
 # Useful when token has wrong permissions
-entratool get-token --force --scope "Mail.Read Mail.Send"
+entra-auth-cli get-token --force --scope "Mail.Read Mail.Send"
 ```
 
 ## Output
@@ -247,13 +247,13 @@ Tokens are automatically cached for reuse:
 
 ```bash {linenos=inline}
 # First call - generates new token (~500ms)
-entratool get-token --profile prod
+entra-auth-cli get-token --profile prod
 
 # Subsequent calls - uses cached token (~50ms)
-entratool get-token --profile prod
+entra-auth-cli get-token --profile prod
 
 # After expiration - automatically refreshes
-entratool get-token --profile prod
+entra-auth-cli get-token --profile prod
 ```
 
 ## Common Use Cases
@@ -262,7 +262,7 @@ entratool get-token --profile prod
 
 ```bash {linenos=inline}
 # Get token for Graph
-TOKEN=$(entratool get-token \
+TOKEN=$(entra-auth-cli get-token \
   --scope "https://graph.microsoft.com/.default" \
   --output json | jq -r .access_token)
 
@@ -275,7 +275,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ```bash {linenos=inline}
 # Get token for Azure
-TOKEN=$(entratool get-token \
+TOKEN=$(entra-auth-cli get-token \
   --scope "https://management.azure.com/.default" \
   --output json | jq -r .access_token)
 
@@ -291,7 +291,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 set -euo pipefail
 
 # Get token (exits on failure)
-TOKEN=$(entratool get-token \
+TOKEN=$(entra-auth-cli get-token \
   --profile cicd \
   --silent \
   --timeout 30s)
@@ -304,12 +304,12 @@ TOKEN=$(entratool get-token \
 
 ```bash {linenos=inline}
 # Request multiple scopes
-entratool get-token \
+entra-auth-cli get-token \
   --scope "User.Read Mail.Read Calendars.Read" \
   --output json
 
 # Verify scopes in token
-entratool get-token --output json | \
+entra-auth-cli get-token --output json | \
   jq -r .scope
 ```
 
@@ -326,7 +326,7 @@ get_token_safe() {
     local attempt=0
     
     while [ $attempt -lt $max_retries ]; do
-        if token=$(entratool get-token \
+        if token=$(entra-auth-cli get-token \
             --profile "$profile" \
             --silent 2>/dev/null); then
             echo "$token"
@@ -359,7 +359,7 @@ fi
 
 ```bash {linenos=inline}
 # Cache tokens in memory for multiple uses
-TOKEN=$(entratool get-token --silent)
+TOKEN=$(entra-auth-cli get-token --silent)
 for api in users groups applications; do
     curl -s -H "Authorization: Bearer $TOKEN" \
       "https://graph.microsoft.com/v1.0/$api"
@@ -370,26 +370,26 @@ done
 
 ```bash {linenos=inline}
 # Verbose output
-entratool get-token --output json | jq .
+entra-auth-cli get-token --output json | jq .
 
 # Force fresh token
-entratool get-token --force --output json
+entra-auth-cli get-token --force --output json
 
 # Check what's cached
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 ```
 
 ### Security
 
 ```bash {linenos=inline}
 # Don't expose token in command history
-TOKEN=$(entratool get-token --silent)
+TOKEN=$(entra-auth-cli get-token --silent)
 
 # Use token from variable, not command substitution
 curl -H "Authorization: Bearer $TOKEN" ...
 
 # Not recommended (token visible in ps output)
-curl -H "Authorization: Bearer $(entratool get-token)" ...
+curl -H "Authorization: Bearer $(entra-auth-cli get-token)" ...
 ```
 
 ## See Also

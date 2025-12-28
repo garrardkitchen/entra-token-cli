@@ -1,12 +1,12 @@
 ---
 title: "Installation"
-description: "How to install Entra Token CLI on your platform"
+description: "How to install Entra Auth Cli on your platform"
 weight: 10
 ---
 
 # Installation
 
-Entra Token CLI can be installed as a .NET global tool or downloaded as a self-contained executable for your platform.
+Entra Auth Cli can be installed as a .NET global tool or downloaded as a self-contained executable for your platform.
 
 ---
 
@@ -35,7 +35,7 @@ dotnet tool uninstall -g EntraTokenCli
 ### Verify Installation
 
 ```bash {linenos=inline}
-entratool --version
+entra-auth-cli --version
 ```
 
 ---
@@ -46,60 +46,60 @@ Download the latest release for your platform from the [Releases page](https://g
 
 ### Windows
 
-1. Download `entratool-win-x64.exe`
+1. Download `entra-auth-cli-win-x64.exe`
 2. Place in a directory in your PATH (e.g., `C:\Tools\`)
 3. Run from command prompt:
 
 ```cmd
-entratool --version
+entra-auth-cli --version
 ```
 
 ### macOS (Apple Silicon)
 
-1. Download `entratool-osx-arm64`
+1. Download `entra-auth-cli-osx-arm64`
 2. Make executable and move to PATH:
 
 ```bash {linenos=inline}
-chmod +x entratool-osx-arm64
-sudo mv entratool-osx-arm64 /usr/local/bin/entratool
+chmod +x entra-auth-cli-osx-arm64
+sudo mv entra-auth-cli-osx-arm64 /usr/local/bin/entra-auth-cli
 ```
 
 3. Verify:
 
 ```bash {linenos=inline}
-entratool --version
+entra-auth-cli --version
 ```
 
 ### macOS (Intel)
 
-1. Download `entratool-osx-x64`
+1. Download `entra-auth-cli-osx-x64`
 2. Make executable and move to PATH:
 
 ```bash {linenos=inline}
-chmod +x entratool-osx-x64
-sudo mv entratool-osx-x64 /usr/local/bin/entratool
+chmod +x entra-auth-cli-osx-x64
+sudo mv entra-auth-cli-osx-x64 /usr/local/bin/entra-auth-cli
 ```
 
 3. Verify:
 
 ```bash {linenos=inline}
-entratool --version
+entra-auth-cli --version
 ```
 
 ### Linux
 
-1. Download `entratool-linux-x64`
+1. Download `entra-auth-cli-linux-x64`
 2. Make executable and move to PATH:
 
 ```bash {linenos=inline}
-chmod +x entratool-linux-x64
-sudo mv entratool-linux-x64 /usr/local/bin/entratool
+chmod +x entra-auth-cli-linux-x64
+sudo mv entra-auth-cli-linux-x64 /usr/local/bin/entra-auth-cli
 ```
 
 3. Verify:
 
 ```bash {linenos=inline}
-entratool --version
+entra-auth-cli --version
 ```
 
 > **⚠️ Linux Security Note**: Linux uses XOR obfuscation for secret storage, not cryptographic encryption. Suitable for development only. See [Platform-Specific Guides](/docs/platform-guides/linux/) for production alternatives.

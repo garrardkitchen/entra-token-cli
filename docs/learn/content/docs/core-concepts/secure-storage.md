@@ -6,7 +6,7 @@ weight: 40
 
 # Secure Storage
 
-Entra Token CLI uses platform-specific secure storage mechanisms to protect sensitive authentication data. Understanding how secrets are stored helps you make informed security decisions.
+Entra Auth Cli uses platform-specific secure storage mechanisms to protect sensitive authentication data. Understanding how secrets are stored helps you make informed security decisions.
 
 ---
 
@@ -24,7 +24,7 @@ Entra Token CLI uses platform-specific secure storage mechanisms to protect sens
 
 ### Profile Configuration (Plaintext)
 
-**Location:** `~/.entratool/profiles.json`
+**Location:** `~/.entra-auth-cli/profiles.json`
 
 **Stored in plaintext:**
 - Profile name
@@ -130,12 +130,12 @@ Encrypted data is stored in user-specific Windows data stores. The exact locatio
 Open **Keychain Access** app:
 
 1. Launch: `/Applications/Utilities/Keychain Access.app`
-2. Search for: `entratool`
+2. Search for: `entra-auth-cli`
 3. Double-click item → "Show password"
 4. Authenticate with your login password
 
 **Screenshot:**
-<!-- Screenshot: keychain-access-entratool.png - Keychain Access showing entratool entries -->
+<!-- Screenshot: keychain-access-entra-auth-cli.png - Keychain Access showing entra-auth-cli entries -->
 
 ### Access Control
 
@@ -192,7 +192,7 @@ Secrets are obfuscated using XOR encoding, which provides **no real security**. 
 ### Storage Location
 
 ```bash {linenos=inline}
-~/.entratool/secrets.dat
+~/.entra-auth-cli/secrets.dat
 ```
 
 **Warning:** This file contains your secrets in an easily decodable format.
@@ -214,7 +214,7 @@ Store secrets in environment variables:
 
 ```bash {linenos=inline}
 export AZURE_CLIENT_SECRET="your-secret"
-entratool get-token -p myprofile
+entra-auth-cli get-token -p myprofile
 ```
 
 **Profile without stored secret:**
@@ -235,14 +235,14 @@ Store secrets in Azure Key Vault and retrieve at runtime:
 
 ```bash {linenos=inline}
 SECRET=$(az keyvault secret show --vault-name MyVault --name ClientSecret --query value -o tsv)
-entratool get-token -p myprofile --client-secret "$SECRET"
+entra-auth-cli get-token -p myprofile --client-secret "$SECRET"
 ```
 
 #### 3. HashiCorp Vault
 
 ```bash {linenos=inline}
-SECRET=$(vault kv get -field=client_secret secret/entratool)
-entratool get-token -p myprofile --client-secret "$SECRET"
+SECRET=$(vault kv get -field=client_secret secret/entra-auth-cli)
+entra-auth-cli get-token -p myprofile --client-secret "$SECRET"
 ```
 
 #### 4. Certificate Authentication
@@ -250,7 +250,7 @@ entratool get-token -p myprofile --client-secret "$SECRET"
 Use certificates instead of secrets (more secure):
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 # Select: Certificate
 # Provide: /path/to/cert.pfx
 ```
@@ -268,7 +268,7 @@ On Azure VMs, use Managed Identity (no secrets needed):
 ```bash {linenos=inline}
 # Configure VM with Managed Identity
 # No secrets stored locally
-entratool get-token -p managed-identity-profile
+entra-auth-cli get-token -p managed-identity-profile
 ```
 
 ### Security Recommendations
@@ -283,7 +283,7 @@ entratool get-token -p managed-identity-profile
 5. **Rotate secrets frequently**
 6. **Monitor secret access**
 
-**DO NOT** rely on `~/.entratool/secrets.dat` for production security.
+**DO NOT** rely on `~/.entra-auth-cli/secrets.dat` for production security.
 {{% /alert %}}
 
 ---
@@ -336,20 +336,20 @@ openssl pkcs12 -export -in cert.pem -inkey key.pem \
 **macOS:**
 ```bash {linenos=inline}
 # Store in user-protected directory
-~/Library/Application Support/entratool/certs/
+~/Library/Application Support/entra-auth-cli/certs/
 ```
 
 **Windows:**
 ```bash {linenos=inline}
 # Store in user profile
-%USERPROFILE%\.entratool\certs\
+%USERPROFILE%\.entra-auth-cli\certs\
 ```
 
 **Linux:**
 ```bash {linenos=inline}
 # Store with restricted permissions
-~/.entratool/certs/
-chmod 700 ~/.entratool/certs/
+~/.entra-auth-cli/certs/
+chmod 700 ~/.entra-auth-cli/certs/
 ```
 
 #### 4. Use Certificate Stores
@@ -380,7 +380,7 @@ security import cert.pfx -k login.keychain -P YourPassword
 
 **Client Secret:**
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 # Select: Client Secret
 # Enter: your-secret-here
 # ✓ Encrypted and stored securely
@@ -388,7 +388,7 @@ entratool config create
 
 **Certificate:**
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 # Select: Certificate
 # Enter: /path/to/cert.pfx
 # Enter password: ****
@@ -410,7 +410,7 @@ Update secrets regularly:
 
 ```bash {linenos=inline}
 # Edit profile and update secret
-entratool config edit -p myprofile
+entra-auth-cli config edit -p myprofile
 # Select: Client Secret or Certificate
 # Enter new secret
 # ✓ Old secret overwritten
@@ -421,7 +421,7 @@ entratool config edit -p myprofile
 When deleting a profile:
 
 ```bash {linenos=inline}
-entratool config delete -p myprofile
+entra-auth-cli config delete -p myprofile
 # ✓ Profile removed from profiles.json
 # ✓ Associated secrets removed from secure storage
 ```
@@ -434,18 +434,18 @@ entratool config delete -p myprofile
 
 #### List Profiles
 ```bash {linenos=inline}
-entratool config list
+entra-auth-cli config list
 ```
 
 #### View Profile Details
 ```bash {linenos=inline}
 # View non-sensitive profile data
-cat ~/.entratool/profiles.json | jq
+cat ~/.entra-auth-cli/profiles.json | jq
 ```
 
 #### Check Keychain (macOS)
 ```bash {linenos=inline}
-security find-generic-password -s entratool -g
+security find-generic-password -s entra-auth-cli -g
 ```
 
 #### DPAPI Inventory (Windows)
@@ -509,8 +509,8 @@ Use specialized tools like `dpapick` to audit DPAPI-protected data.
 **Cause:** Secret was encrypted on different machine or user account
 
 **Fix:**
-1. Delete profile: `entratool config delete -p myprofile`
-2. Recreate profile: `entratool config create`
+1. Delete profile: `entra-auth-cli config delete -p myprofile`
+2. Recreate profile: `entra-auth-cli config create`
 3. Re-enter secret
 
 ### Migrating Secrets
@@ -519,12 +519,12 @@ Secrets are tied to user accounts and machines. To migrate:
 
 1. Export profile configuration (plaintext):
    ```bash
-   cat ~/.entratool/profiles.json
+   cat ~/.entra-auth-cli/profiles.json
    ```
 
 2. On new machine, recreate profile:
    ```bash
-   entratool config create
+   entra-auth-cli config create
    # Re-enter all secrets
    ```
 

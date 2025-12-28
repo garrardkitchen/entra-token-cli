@@ -168,7 +168,7 @@ public static class ConsoleUi
         if (profiles.Count == 0)
         {
             throw new InvalidOperationException(
-                "No profiles found. Create a profile first using 'entratool config create'.");
+                "No profiles found. Create a profile first using 'entra-auth-cli config create'.");
         }
 
         if (profiles.Count == 1)

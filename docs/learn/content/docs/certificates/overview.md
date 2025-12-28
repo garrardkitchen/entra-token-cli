@@ -96,7 +96,7 @@ certificate.pem  # Public key
 private-key.pem  # Private key
 ```
 
-**To use with Entra Token CLI:**
+**To use with Entra Auth Cli:**
 Convert to PFX format:
 
 ```bash {linenos=inline}

@@ -11,7 +11,7 @@ Quickly validate tokens and display essential information without full decoding.
 ## Synopsis
 
 ```bash {linenos=inline}
-entratool discover [flags]
+entra-auth-cli discover [flags]
 ```
 
 ## Description
@@ -33,8 +33,8 @@ This command is lighter than `inspect` and focuses on:
 Check token from a profile.
 
 ```bash {linenos=inline}
-entratool discover --profile production
-entratool discover -p dev
+entra-auth-cli discover --profile production
+entra-auth-cli discover -p dev
 ```
 
 #### `--token`, `-t`
@@ -42,7 +42,7 @@ entratool discover -p dev
 Check a specific token string.
 
 ```bash {linenos=inline}
-entratool discover --token "eyJ0eXAiOiJKV1QiLCJh..."
+entra-auth-cli discover --token "eyJ0eXAiOiJKV1QiLCJh..."
 ```
 
 #### `--file`, `-f`
@@ -50,7 +50,7 @@ entratool discover --token "eyJ0eXAiOiJKV1QiLCJh..."
 Read token from a file.
 
 ```bash {linenos=inline}
-entratool discover --file token.txt
+entra-auth-cli discover --file token.txt
 ```
 
 ### Output Options
@@ -60,8 +60,8 @@ entratool discover --file token.txt
 Output format.
 
 ```bash {linenos=inline}
-entratool discover --output json
-entratool discover -o yaml
+entra-auth-cli discover --output json
+entra-auth-cli discover -o yaml
 ```
 
 **Options:**
@@ -74,7 +74,7 @@ entratool discover -o yaml
 Only output validation result (exit code only).
 
 ```bash {linenos=inline}
-if entratool discover --profile myapp --quiet; then
+if entra-auth-cli discover --profile myapp --quiet; then
     echo "Token is valid"
 fi
 ```
@@ -85,29 +85,29 @@ fi
 
 ```bash {linenos=inline}
 # Check token from profile
-entratool discover --profile myapp
+entra-auth-cli discover --profile myapp
 
 # Check specific token
-entratool discover --token "eyJ0eXAiOiJKV1Qi..."
+entra-auth-cli discover --token "eyJ0eXAiOiJKV1Qi..."
 
 # Check token from file
-entratool discover --file access_token.txt
+entra-auth-cli discover --file access_token.txt
 
 # Check token from stdin
-entratool get-token | entratool discover
+entra-auth-cli get-token | entra-auth-cli discover
 ```
 
 ### Output Formats
 
 ```bash {linenos=inline}
 # Text output (default)
-entratool discover --profile myapp
+entra-auth-cli discover --profile myapp
 
 # JSON output
-entratool discover --profile myapp --output json
+entra-auth-cli discover --profile myapp --output json
 
 # Quiet mode (exit code only)
-entratool discover --profile myapp --quiet
+entra-auth-cli discover --profile myapp --quiet
 echo $?  # 0 = valid, 1 = invalid
 ```
 
@@ -115,18 +115,18 @@ echo $?  # 0 = valid, 1 = invalid
 
 ```bash {linenos=inline}
 # Quick validation check
-if entratool discover --profile production --quiet; then
+if entra-auth-cli discover --profile production --quiet; then
     echo "Token valid, proceeding..."
     ./deploy.sh
 else
     echo "Token invalid, refreshing..."
-    entratool refresh --profile production
+    entra-auth-cli refresh --profile production
 fi
 
 # Check before API call
 validate_token() {
     local profile="$1"
-    if ! entratool discover --profile "$profile" --quiet 2>/dev/null; then
+    if ! entra-auth-cli discover --profile "$profile" --quiet 2>/dev/null; then
         echo "Invalid token for $profile" >&2
         return 1
     fi
@@ -205,13 +205,13 @@ The discover command validates:
 #!/bin/bash
 
 # Validate before expensive operation
-if ! entratool discover --profile prod --quiet; then
+if ! entra-auth-cli discover --profile prod --quiet; then
     echo "Getting fresh token..."
-    entratool get-token --profile prod --force
+    entra-auth-cli get-token --profile prod --force
 fi
 
 # Proceed with validated token
-TOKEN=$(entratool get-token --profile prod --silent)
+TOKEN=$(entra-auth-cli get-token --profile prod --silent)
 ./expensive-operation.sh "$TOKEN"
 ```
 
@@ -226,9 +226,9 @@ echo "Token Health Check"
 echo "===================="
 
 for profile in "${profiles[@]}"; do
-    if entratool discover --profile "$profile" --quiet 2>/dev/null; then
+    if entra-auth-cli discover --profile "$profile" --quiet 2>/dev/null; then
         status="✓ Valid"
-        expiry=$(entratool discover --profile "$profile" --output json | jq -r .expires_at)
+        expiry=$(entra-auth-cli discover --profile "$profile" --output json | jq -r .expires_at)
     else
         status="✗ Invalid"
         expiry="N/A"
@@ -247,7 +247,7 @@ done
 check_token_validity() {
     local profile="$1"
     
-    if output=$(entratool discover --profile "$profile" --output json 2>/dev/null); then
+    if output=$(entra-auth-cli discover --profile "$profile" --output json 2>/dev/null); then
         local expires_in=$(echo "$output" | jq -r .expires_in)
         local expired=$(echo "$output" | jq -r .expired)
         
@@ -277,7 +277,7 @@ profiles=("cicd-deploy" "cicd-test" "cicd-prod")
 failed=0
 
 for profile in "${profiles[@]}"; do
-    if entratool discover --profile "$profile" --quiet; then
+    if entra-auth-cli discover --profile "$profile" --quiet; then
         echo "✓ $profile: Valid"
     else
         echo "✗ $profile: Invalid or expired"
@@ -299,7 +299,7 @@ echo "All tokens valid. Proceeding with deployment."
 # Get time until expiration
 get_ttl() {
     local profile="$1"
-    local ttl=$(entratool discover --profile "$profile" --output json 2>/dev/null | jq -r .expires_in)
+    local ttl=$(entra-auth-cli discover --profile "$profile" --output json 2>/dev/null | jq -r .expires_in)
     
     if [ "$ttl" != "null" ] && [ -n "$ttl" ]; then
         echo "$ttl"
@@ -315,7 +315,7 @@ if ttl=$(get_ttl production); then
     
     if [ $ttl -lt 300 ]; then
         echo "Token expiring soon, refreshing..."
-        entratool refresh --profile production
+        entra-auth-cli refresh --profile production
     fi
 fi
 ```
@@ -357,20 +357,20 @@ Use `inspect` for:
 
 ```bash {linenos=inline}
 # Benchmark comparison
-time entratool discover --profile prod --quiet
+time entra-auth-cli discover --profile prod --quiet
 # ~10ms
 
-time entratool inspect --profile prod > /dev/null
+time entra-auth-cli inspect --profile prod > /dev/null
 # ~50ms
 
 # In tight loops, discover is significantly faster
 for i in {1..100}; do
-    entratool discover --profile prod --quiet
+    entra-auth-cli discover --profile prod --quiet
 done
 # ~1 second
 
 for i in {1..100}; do
-    entratool inspect --profile prod > /dev/null
+    entra-auth-cli inspect --profile prod > /dev/null
 done
 # ~5 seconds
 ```
@@ -386,14 +386,14 @@ discover_token() {
     local attempt=0
     
     while [ $attempt -lt $max_retries ]; do
-        if entratool discover --profile "$profile" --quiet 2>/dev/null; then
+        if entra-auth-cli discover --profile "$profile" --quiet 2>/dev/null; then
             return 0
         fi
         
         attempt=$((attempt + 1))
         if [ $attempt -lt $max_retries ]; then
             echo "Token invalid, attempt $attempt of $max_retries" >&2
-            entratool refresh --profile "$profile" 2>/dev/null || entratool get-token --profile "$profile" --force
+            entra-auth-cli refresh --profile "$profile" 2>/dev/null || entra-auth-cli get-token --profile "$profile" --force
             sleep 2
         fi
     done
@@ -425,11 +425,11 @@ LOG_FILE="/var/log/token-check.log"
     echo "=== Token Check: $(date) ==="
     
     for profile in "${PROFILES[@]}"; do
-        if entratool discover --profile "$profile" --quiet; then
+        if entra-auth-cli discover --profile "$profile" --quiet; then
             echo "$profile: OK"
         else
             echo "$profile: INVALID - Attempting refresh"
-            if entratool refresh --profile "$profile" 2>&1; then
+            if entra-auth-cli refresh --profile "$profile" 2>&1; then
                 echo "$profile: Refreshed successfully"
             else
                 echo "$profile: FAILED to refresh - Manual intervention needed"
@@ -446,13 +446,13 @@ LOG_FILE="/var/log/token-check.log"
 ```dockerfile
 FROM ubuntu:22.04
 
-# Install entratool
-RUN curl -L https://github.com/garrardkitchen/entra-token-cli/releases/latest/download/entratool-linux-amd64 \
-    -o /usr/local/bin/entratool && chmod +x /usr/local/bin/entratool
+# Install entra-auth-cli
+RUN curl -L https://github.com/garrardkitchen/entra-token-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+    -o /usr/local/bin/entra-auth-cli && chmod +x /usr/local/bin/entra-auth-cli
 
 # Healthcheck using discover
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
-    CMD entratool discover --profile app --quiet || exit 1
+    CMD entra-auth-cli discover --profile app --quiet || exit 1
 
 CMD ["/app/start.sh"]
 ```
@@ -471,7 +471,7 @@ spec:
     livenessProbe:
       exec:
         command:
-        - /usr/local/bin/entratool
+        - /usr/local/bin/entra-auth-cli
         - discover
         - --profile
         - k8s-app
@@ -488,27 +488,27 @@ spec:
 
 ```bash {linenos=inline}
 # Discover + get-token (with automatic refresh)
-if ! entratool discover --profile prod --quiet; then
-    entratool get-token --profile prod --force
+if ! entra-auth-cli discover --profile prod --quiet; then
+    entra-auth-cli get-token --profile prod --force
 fi
 
 # Discover + inspect (conditional detailed check)
-if ! entratool discover --profile prod --quiet; then
+if ! entra-auth-cli discover --profile prod --quiet; then
     echo "Token invalid. Details:"
-    entratool inspect --profile prod
+    entra-auth-cli inspect --profile prod
 fi
 
 # Pipeline: discover → refresh → use
-entratool discover --profile prod --quiet || entratool refresh --profile prod
-TOKEN=$(entratool get-token --profile prod --silent)
+entra-auth-cli discover --profile prod --quiet || entra-auth-cli refresh --profile prod
+TOKEN=$(entra-auth-cli get-token --profile prod --silent)
 ```
 
 ### Batch Checking
 
 ```bash {linenos=inline}
 # Check all profiles
-for profile in $(entratool config list); do
-    if entratool discover --profile "$profile" --quiet; then
+for profile in $(entra-auth-cli config list); do
+    if entra-auth-cli discover --profile "$profile" --quiet; then
         echo "✓ $profile"
     else
         echo "✗ $profile"
@@ -520,12 +520,12 @@ done
 
 ```bash {linenos=inline}
 # Extract specific fields
-EXPIRES_IN=$(entratool discover --profile prod --output json | jq -r .expires_in)
-EXPIRED=$(entratool discover --profile prod --output json | jq -r .expired)
+EXPIRES_IN=$(entra-auth-cli discover --profile prod --output json | jq -r .expires_in)
+EXPIRED=$(entra-auth-cli discover --profile prod --output json | jq -r .expired)
 
 # Conditional logic based on fields
-if [ "$(entratool discover --profile prod --output json | jq -r .expired)" == "true" ]; then
-    entratool refresh --profile prod
+if [ "$(entra-auth-cli discover --profile prod --output json | jq -r .expired)" == "true" ]; then
+    entra-auth-cli refresh --profile prod
 fi
 ```
 

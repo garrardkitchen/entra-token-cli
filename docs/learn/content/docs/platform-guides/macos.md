@@ -6,11 +6,11 @@ weight: 20
 
 # macOS Platform Guide
 
-Complete guide for using Entra Token CLI on macOS, including Keychain integration, Homebrew installation, and macOS-specific features.
+Complete guide for using Entra Auth Cli on macOS, including Keychain integration, Homebrew installation, and macOS-specific features.
 
 ## Overview
 
-Entra Token CLI integrates seamlessly with macOS security features:
+Entra Auth Cli integrates seamlessly with macOS security features:
 
 - **Keychain Integration**: Secure token storage in macOS Keychain
 - **Native Security**: Leverages macOS security framework
@@ -23,13 +23,13 @@ Entra Token CLI integrates seamlessly with macOS security features:
 
 ```bash {linenos=inline}
 # Add tap (if not already added)
-brew tap garrardkitchen/entratool
+brew tap garrardkitchen/entra-auth-cli
 
 # Install
-brew install entratool-cli
+brew install entra-auth-cli-cli
 
 # Update
-brew upgrade entratool-cli
+brew upgrade entra-auth-cli-cli
 ```
 
 ### Manual Installation
@@ -37,30 +37,30 @@ brew upgrade entratool-cli
 ```bash {linenos=inline}
 # Download latest release
 VERSION="1.0.0"
-curl -L "https://github.com/garrardkitchen/entratool-cli/releases/download/v${VERSION}/entratool-darwin-amd64" \
-  -o /usr/local/bin/entratool
+curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/download/v${VERSION}/entra-auth-cli-darwin-amd64" \
+  -o /usr/local/bin/entra-auth-cli
 
 # Make executable
-chmod +x /usr/local/bin/entratool
+chmod +x /usr/local/bin/entra-auth-cli
 
 # Verify installation
-entratool --version
+entra-auth-cli --version
 ```
 
 ### Intel vs Apple Silicon
 
 ```bash {linenos=inline}
 # Apple Silicon (M1/M2/M3)
-curl -L "https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-darwin-arm64" \
-  -o /usr/local/bin/entratool
+curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-darwin-arm64" \
+  -o /usr/local/bin/entra-auth-cli
 
 # Intel (x86_64)
-curl -L "https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-darwin-amd64" \
-  -o /usr/local/bin/entratool
+curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-darwin-amd64" \
+  -o /usr/local/bin/entra-auth-cli
 
 # Universal Binary (works on both)
-curl -L "https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-darwin-universal" \
-  -o /usr/local/bin/entratool
+curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-darwin-universal" \
+  -o /usr/local/bin/entra-auth-cli
 ```
 
 ## Token Storage
@@ -71,13 +71,13 @@ Tokens are securely stored in macOS Keychain:
 
 ```bash {linenos=inline}
 # Tokens stored in Keychain with:
-# - Service: com.garrardkitchen.entratool-cli
+# - Service: com.garrardkitchen.entra-auth-cli-cli
 # - Account: profile-name
 # - Kind: Application password
 
 # View in Keychain Access app
 open -a "Keychain Access"
-# Search for: entratool-cli
+# Search for: entra-auth-cli-cli
 ```
 
 **Security characteristics:**
@@ -89,14 +89,14 @@ open -a "Keychain Access"
 ### Keychain Access Management
 
 ```bash {linenos=inline}
-# List Entra Token CLI keychains
-security find-generic-password -s "com.garrardkitchen.entratool-cli"
+# List Entra Auth Cli keychains
+security find-generic-password -s "com.garrardkitchen.entra-auth-cli-cli"
 
 # View specific profile
-security find-generic-password -s "com.garrardkitchen.entratool-cli" -a "default"
+security find-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "default"
 
 # Delete keychain entry
-security delete-generic-password -s "com.garrardkitchen.entratool-cli" -a "default"
+security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "default"
 
 # Export keychain item (requires authorization)
 security export -k ~/Library/Keychains/login.keychain-db \
@@ -117,7 +117,7 @@ security show-keychain-info ~/Library/Keychains/login.keychain-db
 # 3. Two-factor authentication enabled
 
 # View synced items
-# System Settings > Passwords > entratool-cli
+# System Settings > Passwords > entra-auth-cli-cli
 ```
 
 ## Shell Integration
@@ -129,17 +129,17 @@ security show-keychain-info ~/Library/Keychains/login.keychain-db
 
 # Completion
 autoload -U compinit && compinit
-complete -o nospace -C entratool entratool
+complete -o nospace -C entra-auth-cli entra-auth-cli
 
 # Aliases
-alias et='entratool'
-alias etg='entratool get-token'
-alias etp='entratool list-profiles'
+alias et='entra-auth-cli'
+alias etg='entra-auth-cli get-token'
+alias etp='entra-auth-cli list-profiles'
 
 # Function to get token
 get_token() {
     local profile="${1:-default}"
-    entratool get-token --profile "$profile" --output json | jq -r .access_token
+    entra-auth-cli get-token --profile "$profile" --output json | jq -r .access_token
 }
 
 # Function to call Microsoft Graph
@@ -157,16 +157,16 @@ graph_api() {
 # Add to ~/.bash_profile or ~/.bashrc
 
 # Completion
-complete -C entratool entratool
+complete -C entra-auth-cli entra-auth-cli
 
 # Aliases
-alias et='entratool'
-alias etg='entratool get-token'
+alias et='entra-auth-cli'
+alias etg='entra-auth-cli get-token'
 
 # Token helper
 export_token() {
     local profile="${1:-default}"
-    export ENTRA_TOKEN=$(entratool get-token --profile "$profile" --output json | jq -r .access_token)
+    export ENTRA_TOKEN=$(entra-auth-cli get-token --profile "$profile" --output json | jq -r .access_token)
     echo "Token exported to \$ENTRA_TOKEN"
 }
 ```
@@ -177,16 +177,16 @@ export_token() {
 # Add to ~/.config/fish/config.fish
 
 # Completion
-complete -c entratool -f
+complete -c entra-auth-cli -f
 
 # Aliases
-alias et='entratool'
-alias etg='entratool get-token'
+alias et='entra-auth-cli'
+alias etg='entra-auth-cli get-token'
 
 # Function
 function get_token
     set -l profile (test -n "$argv[1]"; and echo $argv[1]; or echo "default")
-    entratool get-token --profile $profile --output json | jq -r .access_token
+    entra-auth-cli get-token --profile $profile --output json | jq -r .access_token
 end
 ```
 
@@ -197,10 +197,10 @@ end
 ```bash {linenos=inline}
 # Show notification on token refresh
 refresh_with_notification() {
-    if entratool refresh --profile "$1"; then
-        osascript -e 'display notification "Token refreshed successfully" with title "Entra Token CLI"'
+    if entra-auth-cli refresh --profile "$1"; then
+        osascript -e 'display notification "Token refreshed successfully" with title "Entra Auth Cli"'
     else
-        osascript -e 'display notification "Token refresh failed" with title "Entra Token CLI" sound name "Basso"'
+        osascript -e 'display notification "Token refresh failed" with title "Entra Auth Cli" sound name "Basso"'
     fi
 }
 
@@ -213,16 +213,16 @@ refresh_with_notification production
 Automate token refresh using Launch Agent:
 
 ```xml
-<!-- ~/Library/LaunchAgents/com.entratool.refresh.plist -->
+<!-- ~/Library/LaunchAgents/com.entra-auth-cli.refresh.plist -->
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.entratool.refresh</string>
+    <string>com.entra-auth-cli.refresh</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/local/bin/entratool</string>
+        <string>/usr/local/bin/entra-auth-cli</string>
         <string>refresh</string>
         <string>--profile</string>
         <string>production</string>
@@ -232,49 +232,49 @@ Automate token refresh using Launch Agent:
     <key>RunAtLoad</key>
     <true/>
     <key>StandardErrorPath</key>
-    <string>/tmp/entratool-refresh.err</string>
+    <string>/tmp/entra-auth-cli-refresh.err</string>
     <key>StandardOutPath</key>
-    <string>/tmp/entratool-refresh.out</string>
+    <string>/tmp/entra-auth-cli-refresh.out</string>
 </dict>
 </plist>
 ```
 
 ```bash {linenos=inline}
 # Load Launch Agent
-launchctl load ~/Library/LaunchAgents/com.entratool.refresh.plist
+launchctl load ~/Library/LaunchAgents/com.entra-auth-cli.refresh.plist
 
 # Unload
-launchctl unload ~/Library/LaunchAgents/com.entratool.refresh.plist
+launchctl unload ~/Library/LaunchAgents/com.entra-auth-cli.refresh.plist
 
 # Check status
-launchctl list | grep entratool
+launchctl list | grep entra-auth-cli
 
 # View logs
-tail -f /tmp/entratool-refresh.out
+tail -f /tmp/entra-auth-cli-refresh.out
 ```
 
 ### Spotlight Integration
 
 ```bash {linenos=inline}
-# Add entratool to Spotlight search
+# Add entra-auth-cli to Spotlight search
 # Create Alfred/Raycast workflow
 
 # Example: Alfred Workflow Script
-cat << 'EOF' > ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/entratool/get-token.sh
+cat << 'EOF' > ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/entra-auth-cli/get-token.sh
 #!/bin/bash
 profile="${1:-default}"
-token=$(entratool get-token --profile "$profile" --output json | jq -r .access_token)
+token=$(entra-auth-cli get-token --profile "$profile" --output json | jq -r .access_token)
 echo -n "$token" | pbcopy
 echo "Token copied to clipboard!"
 EOF
 
-chmod +x ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/entratool/get-token.sh
+chmod +x ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/entra-auth-cli/get-token.sh
 ```
 
 ### Touch Bar Support
 
 ```bash {linenos=inline}
-# Add Entra Token CLI to Touch Bar using BetterTouchTool
+# Add Entra Auth Cli to Touch Bar using BetterTouchTool
 # Quick actions:
 # - Get Token (copies to clipboard)
 # - Refresh Token
@@ -289,7 +289,7 @@ chmod +x ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflow
 # Copy token to clipboard
 get_token_clipboard() {
     local profile="${1:-default}"
-    entratool get-token --profile "$profile" --output json | \
+    entra-auth-cli get-token --profile "$profile" --output json | \
       jq -r .access_token | \
       pbcopy
     echo "✓ Token copied to clipboard"
@@ -308,7 +308,7 @@ curl -H "Authorization: Bearer $(pbpaste)" \
 ```applescript
 -- Create macOS Shortcut for token retrieval
 on run
-    set token to do shell script "/usr/local/bin/entratool get-token --output json | jq -r .access_token"
+    set token to do shell script "/usr/local/bin/entra-auth-cli get-token --output json | jq -r .access_token"
     return token
 end run
 ```
@@ -325,7 +325,7 @@ end run
 osascript << 'EOF'
 tell application "Terminal"
     activate
-    do script "entratool get-token --flow interactive"
+    do script "entra-auth-cli get-token --flow interactive"
 end tell
 EOF
 ```
@@ -335,10 +335,10 @@ EOF
 ```applescript
 -- Automator Service: Get Entra Token
 on run {input, parameters}
-    set token to do shell script "/usr/local/bin/entratool get-token --output json | jq -r .access_token"
+    set token to do shell script "/usr/local/bin/entra-auth-cli get-token --output json | jq -r .access_token"
     set the clipboard to token
     
-    display notification "Token copied to clipboard" with title "Entra Token CLI"
+    display notification "Token copied to clipboard" with title "Entra Auth Cli"
     
     return input
 end run
@@ -379,7 +379,7 @@ export TENANT_ID=$(security find-generic-password -s "azure-tenant-id" -w)
 export CLIENT_ID=$(security find-generic-password -s "azure-client-id" -w)
 export CLIENT_SECRET=$(security find-generic-password -s "azure-client-secret" -w)
 
-entratool create-profile \
+entra-auth-cli create-profile \
   --name secure-profile \
   --tenant-id "$TENANT_ID" \
   --client-id "$CLIENT_ID" \
@@ -394,7 +394,7 @@ unset TENANT_ID CLIENT_ID CLIENT_SECRET
 ### Docker for Mac
 
 ```bash {linenos=inline}
-# Use Entra Token CLI from Docker container
+# Use Entra Auth Cli from Docker container
 docker run -it --rm \
   -v ~/Library/Keychains:/root/Library/Keychains:ro \
   -e HOME=/root \
@@ -415,10 +415,10 @@ services:
     environment:
       - ENTRA_TOKEN_PROFILE=production
     volumes:
-      - $HOME/.entratool:/root/.entratool:ro
+      - $HOME/.entra-auth-cli:/root/.entra-auth-cli:ro
     command: |
       sh -c "
-        TOKEN=$$(entratool get-token --output json | jq -r .access_token) &&
+        TOKEN=$$(entra-auth-cli get-token --output json | jq -r .access_token) &&
         ./myapp --token $$TOKEN
       "
 ```
@@ -432,35 +432,35 @@ services:
 **Solutions:**
 
 ```bash {linenos=inline}
-# Allow entratool always
+# Allow entra-auth-cli always
 # Click "Always Allow" in Keychain prompt
 
 # Or programmatically:
 security set-generic-password-partition-list \
-  -s com.garrardkitchen.entratool-cli \
+  -s com.garrardkitchen.entra-auth-cli-cli \
   -k ~/Library/Keychains/login.keychain-db
 
 # Reset Keychain permissions
-security delete-generic-password -s "com.garrardkitchen.entratool-cli"
-entratool get-token  # Creates new entry
+security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli"
+entra-auth-cli get-token  # Creates new entry
 ```
 
 ### Gatekeeper Warnings
 
-**Problem:** "entratool cannot be opened because the developer cannot be verified"
+**Problem:** "entra-auth-cli cannot be opened because the developer cannot be verified"
 
 **Solutions:**
 
 ```bash {linenos=inline}
 # Remove quarantine attribute
-xattr -d com.apple.quarantine /usr/local/bin/entratool
+xattr -d com.apple.quarantine /usr/local/bin/entra-auth-cli
 
 # Or allow in System Settings
 # System Settings > Privacy & Security > Security
 # Click "Allow Anyway" next to blocked message
 
 # Verify removal
-xattr -l /usr/local/bin/entratool
+xattr -l /usr/local/bin/entra-auth-cli
 ```
 
 ### Path Issues
@@ -471,7 +471,7 @@ xattr -l /usr/local/bin/entratool
 
 ```bash {linenos=inline}
 # Check if installed
-which entratool
+which entra-auth-cli
 
 # Add to PATH in shell config
 echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.zshrc
@@ -482,7 +482,7 @@ echo 'export PATH="/opt/homebrew/bin:$PATH"' >> ~/.zshrc  # Apple Silicon
 echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.zshrc     # Intel
 
 # Verify
-entratool --version
+entra-auth-cli --version
 ```
 
 ### Architecture Mismatch
@@ -499,13 +499,13 @@ uname -m
 
 # Download correct version
 # Apple Silicon
-curl -L ".../entratool-darwin-arm64" -o /usr/local/bin/entratool
+curl -L ".../entra-auth-cli-darwin-arm64" -o /usr/local/bin/entra-auth-cli
 
 # Intel
-curl -L ".../entratool-darwin-amd64" -o /usr/local/bin/entratool
+curl -L ".../entra-auth-cli-darwin-amd64" -o /usr/local/bin/entra-auth-cli
 
 # Use Rosetta 2 (temporary workaround)
-arch -x86_64 /usr/local/bin/entratool
+arch -x86_64 /usr/local/bin/entra-auth-cli
 ```
 
 ## Performance Optimization
@@ -514,7 +514,7 @@ arch -x86_64 /usr/local/bin/entratool
 
 ```bash {linenos=inline}
 # Cache token in memory for session
-export ENTRA_TOKEN_CACHE=$(entratool get-token --output json)
+export ENTRA_TOKEN_CACHE=$(entra-auth-cli get-token --output json)
 
 # Use cached token
 echo "$ENTRA_TOKEN_CACHE" | jq -r .access_token
@@ -527,7 +527,7 @@ unset ENTRA_TOKEN_CACHE
 
 ```bash {linenos=inline}
 # Parallel API calls with GNU parallel
-TOKEN=$(entratool get-token --output json | jq -r .access_token)
+TOKEN=$(entra-auth-cli get-token --output json | jq -r .access_token)
 
 parallel -j 4 "curl -s -H 'Authorization: Bearer $TOKEN' {}" ::: \
   "https://graph.microsoft.com/v1.0/users" \
@@ -541,13 +541,13 @@ parallel -j 4 "curl -s -H 'Authorization: Bearer $TOKEN' {}" ::: \
 
 ```bash {linenos=inline}
 # Reduce Keychain search time
-# Create separate keychain for entratool
-security create-keychain -p "" entratool.keychain
-security set-keychain-settings entratool.keychain
-security unlock-keychain entratool.keychain
+# Create separate keychain for entra-auth-cli
+security create-keychain -p "" entra-auth-cli.keychain
+security set-keychain-settings entra-auth-cli.keychain
+security unlock-keychain entra-auth-cli.keychain
 
 # Add to search list
-security list-keychains -s entratool.keychain login.keychain
+security list-keychains -s entra-auth-cli.keychain login.keychain
 
 # Move tokens to dedicated keychain
 # (Requires manual reconfiguration)
@@ -592,7 +592,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func getToken() {
         let task = Process()
-        task.launchPath = "/usr/local/bin/entratool"
+        task.launchPath = "/usr/local/bin/entra-auth-cli"
         task.arguments = ["get-token", "--output", "json"]
         
         let pipe = Pipe()

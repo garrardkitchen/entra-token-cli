@@ -13,7 +13,7 @@ This tutorial walks you through the complete process from setting up an app regi
 ## Prerequisites
 
 - Azure subscription with access to create app registrations
-- Entra Token CLI installed ([Installation Guide](/docs/getting-started/installation/))
+- Entra Auth Cli installed ([Installation Guide](/docs/getting-started/installation/))
 - Basic understanding of Azure and authentication concepts
 
 ---
@@ -31,7 +31,7 @@ This tutorial walks you through the complete process from setting up an app regi
 
 Fill in the registration form:
 
-- **Name**: `entratool-demo` (or your preferred name)
+- **Name**: `entra-auth-cli-demo` (or your preferred name)
 - **Supported account types**: 
   - Select "Accounts in this organizational directory only" for single tenant
   - Or choose multi-tenant if needed
@@ -54,7 +54,7 @@ After registration, save these values:
 
 1. In your app registration, go to **Certificates & secrets**
 2. Click **New client secret**
-3. Add a description: `entratool-demo-secret`
+3. Add a description: `entra-auth-cli-demo-secret`
 4. Choose expiration: 
    - **6 months** for testing
    - **24 months** for longer-term use
@@ -89,10 +89,10 @@ After registration, save these values:
 
 ## Step 4: Create Your Profile
 
-Now that your Azure app is configured, create a profile in entratool:
+Now that your Azure app is configured, create a profile in entra-auth-cli:
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 ```
 
 Enter the following when prompted:
@@ -115,7 +115,7 @@ Configure custom redirect URI? n
 ## Step 5: Generate Your First Token
 
 ```bash {linenos=inline}
-entratool get-token -p demo-profile
+entra-auth-cli get-token -p demo-profile
 ```
 
 You should see output like:
@@ -135,7 +135,7 @@ You should see output like:
 ### 6.1 Inspect the Token
 
 ```bash {linenos=inline}
-entratool inspect $(cat ~/.config/entratool/last-token.txt)
+entra-auth-cli inspect $(cat ~/.config/entra-auth-cli/last-token.txt)
 ```
 
 This shows the decoded JWT claims, including:
@@ -151,7 +151,7 @@ This shows the decoded JWT claims, including:
 Test your token with Microsoft Graph:
 
 ```bash {linenos=inline}
-TOKEN=$(cat ~/.config/entratool/last-token.txt)
+TOKEN=$(cat ~/.config/entra-auth-cli/last-token.txt)
 curl -H "Authorization: Bearer $TOKEN" \
   https://graph.microsoft.com/v1.0/users?$top=5
 ```

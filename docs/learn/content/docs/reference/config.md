@@ -11,7 +11,7 @@ Manage authentication profiles for storing connection settings and credentials.
 ## Synopsis
 
 ```bash {linenos=inline}
-entratool config <command> [flags]
+entra-auth-cli config <command> [flags]
 ```
 
 ## Description
@@ -31,7 +31,7 @@ Each profile contains:
 Create a new authentication profile.
 
 ```bash {linenos=inline}
-entratool config create [flags]
+entra-auth-cli config create [flags]
 ```
 
 **Flags:**
@@ -48,17 +48,17 @@ entratool config create [flags]
 
 ```bash {linenos=inline}
 # Interactive creation (recommended)
-entratool config create
+entra-auth-cli config create
 
 # With flags
-entratool config create \
+entra-auth-cli config create \
   --name production \
   --tenant-id "12345678-1234-1234-1234-123456789012" \
   --client-id "87654321-4321-4321-4321-210987654321" \
   --client-secret "your-secret"
 
 # With certificate
-entratool config create \
+entra-auth-cli config create \
   --name secure-app \
   --tenant-id "$TENANT_ID" \
   --client-id "$CLIENT_ID" \
@@ -66,7 +66,7 @@ entratool config create \
   --certificate-password "password"
 
 # With custom scopes
-entratool config create \
+entra-auth-cli config create \
   --name graph-api \
   --scope "User.Read Mail.Read Calendars.Read"
 ```
@@ -75,7 +75,7 @@ entratool config create \
 List all configured profiles.
 
 ```bash {linenos=inline}
-entratool config list [flags]
+entra-auth-cli config list [flags]
 ```
 
 **Flags:**
@@ -86,20 +86,20 @@ entratool config list [flags]
 
 ```bash {linenos=inline}
 # Simple list
-entratool config list
+entra-auth-cli config list
 
 # With details
-entratool config list --verbose
+entra-auth-cli config list --verbose
 
 # JSON output
-entratool config list --output json
+entra-auth-cli config list --output json
 ```
 
 ### show
 Display detailed information about a profile.
 
 ```bash {linenos=inline}
-entratool config show [flags]
+entra-auth-cli config show [flags]
 ```
 
 **Flags:**
@@ -111,20 +111,20 @@ entratool config show [flags]
 
 ```bash {linenos=inline}
 # Show profile details
-entratool config show --name production
+entra-auth-cli config show --name production
 
 # JSON format
-entratool config show --name production --output json
+entra-auth-cli config show --name production --output json
 
 # Show with secrets (sensitive)
-entratool config show --name production --show-secrets
+entra-auth-cli config show --name production --show-secrets
 ```
 
 ### edit
 Edit an existing profile.
 
 ```bash {linenos=inline}
-entratool config edit [flags]
+entra-auth-cli config edit [flags]
 ```
 
 **Flags:**
@@ -140,16 +140,16 @@ entratool config edit [flags]
 
 ```bash {linenos=inline}
 # Interactive edit
-entratool config edit --name production
+entra-auth-cli config edit --name production
 
 # Update specific fields
-entratool config edit --name production --scope "User.Read Mail.Send"
+entra-auth-cli config edit --name production --scope "User.Read Mail.Send"
 
 # Update credentials
-entratool config edit --name production --client-secret "new-secret"
+entra-auth-cli config edit --name production --client-secret "new-secret"
 
 # Switch to certificate auth
-entratool config edit --name production \
+entra-auth-cli config edit --name production \
   --certificate "./new-cert.pfx" \
   --certificate-password "password"
 ```
@@ -158,7 +158,7 @@ entratool config edit --name production \
 Delete a profile.
 
 ```bash {linenos=inline}
-entratool config delete [flags]
+entra-auth-cli config delete [flags]
 ```
 
 **Flags:**
@@ -169,14 +169,14 @@ entratool config delete [flags]
 
 ```bash {linenos=inline}
 # Delete with confirmation
-entratool config delete --name old-profile
+entra-auth-cli config delete --name old-profile
 
 # Force delete (no confirmation)
-entratool config delete --name old-profile --force
+entra-auth-cli config delete --name old-profile --force
 
 # Delete multiple profiles
 for profile in old-dev old-test old-staging; do
-    entratool config delete --name "$profile" --force
+    entra-auth-cli config delete --name "$profile" --force
 done
 ```
 
@@ -184,7 +184,7 @@ done
 Export profile configuration to a file.
 
 ```bash {linenos=inline}
-entratool config export [flags]
+entra-auth-cli config export [flags]
 ```
 
 **Flags:**
@@ -196,20 +196,20 @@ entratool config export [flags]
 
 ```bash {linenos=inline}
 # Export single profile
-entratool config export --name production > production-profile.json
+entra-auth-cli config export --name production > production-profile.json
 
 # Export all profiles
-entratool config export > all-profiles.json
+entra-auth-cli config export > all-profiles.json
 
 # Export with secrets (for backup/migration)
-entratool config export --name production --include-secrets > backup.json
+entra-auth-cli config export --name production --include-secrets > backup.json
 ```
 
 ### import
 Import profile configuration from a file.
 
 ```bash {linenos=inline}
-entratool config import [flags]
+entra-auth-cli config import [flags]
 ```
 
 **Flags:**
@@ -221,16 +221,16 @@ entratool config import [flags]
 
 ```bash {linenos=inline}
 # Import from file
-entratool config import --file production-profile.json
+entra-auth-cli config import --file production-profile.json
 
 # Import from stdin
-cat production-profile.json | entratool config import
+cat production-profile.json | entra-auth-cli config import
 
 # Import with overwrite
-entratool config import --file all-profiles.json --overwrite
+entra-auth-cli config import --file all-profiles.json --overwrite
 
 # Dry run to preview
-entratool config import --file backup.json --dry-run
+entra-auth-cli config import --file backup.json --dry-run
 ```
 
 ## Complete Examples
@@ -241,7 +241,7 @@ entratool config import --file backup.json --dry-run
 
 ```bash {linenos=inline}
 # Interactive (recommended for first-time users)
-entratool config create
+entra-auth-cli config create
 
 # You'll be prompted for:
 # - Profile name: production
@@ -256,7 +256,7 @@ entratool config create
 
 ```bash {linenos=inline}
 # Create with certificate
-entratool config create \
+entra-auth-cli config create \
   --name secure-prod \
   --tenant-id "$TENANT_ID" \
   --client-id "$CLIENT_ID" \
@@ -269,19 +269,19 @@ entratool config create \
 
 ```bash {linenos=inline}
 # Development environment
-entratool config create --name dev \
+entra-auth-cli config create --name dev \
   --tenant-id "$DEV_TENANT_ID" \
   --client-id "$DEV_CLIENT_ID" \
   --client-secret "$DEV_SECRET"
 
 # Staging environment
-entratool config create --name staging \
+entra-auth-cli config create --name staging \
   --tenant-id "$STAGING_TENANT_ID" \
   --client-id "$STAGING_CLIENT_ID" \
   --client-secret "$STAGING_SECRET"
 
 # Production environment
-entratool config create --name production \
+entra-auth-cli config create --name production \
   --tenant-id "$PROD_TENANT_ID" \
   --client-id "$PROD_CLIENT_ID" \
   --certificate "./certs/prod.pfx"
@@ -293,7 +293,7 @@ entratool config create --name production \
 
 ```bash {linenos=inline}
 # List all profiles
-entratool config list
+entra-auth-cli config list
 
 # Output:
 # default
@@ -303,7 +303,7 @@ entratool config list
 # graph-api
 
 # Show details of specific profile
-entratool config show --name production
+entra-auth-cli config show --name production
 
 # Output:
 # Profile: production
@@ -318,15 +318,15 @@ entratool config show --name production
 
 ```bash {linenos=inline}
 # Change default scopes
-entratool config edit --name production \
+entra-auth-cli config edit --name production \
   --scope "User.Read Mail.Read Calendars.Read"
 
 # Rotate client secret
-entratool config edit --name production \
+entra-auth-cli config edit --name production \
   --client-secret "$NEW_SECRET"
 
 # Switch from secret to certificate
-entratool config edit --name production \
+entra-auth-cli config edit --name production \
   --certificate "./new-cert.pfx" \
   --certificate-password "$CERT_PASS"
 ```
@@ -345,9 +345,9 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 mkdir -p "$BACKUP_DIR"
 
 # Export each profile
-for profile in $(entratool config list); do
+for profile in $(entra-auth-cli config list); do
     echo "Backing up profile: $profile"
-    entratool config export --name "$profile" --include-secrets \
+    entra-auth-cli config export --name "$profile" --include-secrets \
       > "$BACKUP_DIR/${profile}_${TIMESTAMP}.json"
 done
 
@@ -358,16 +358,16 @@ echo "Backup complete: $BACKUP_DIR"
 
 ```bash {linenos=inline}
 # On old machine
-entratool config export --include-secrets > profiles-backup.json
+entra-auth-cli config export --include-secrets > profiles-backup.json
 
 # Transfer file to new machine
 scp profiles-backup.json user@newmachine:/tmp/
 
 # On new machine
-entratool config import --file /tmp/profiles-backup.json
+entra-auth-cli config import --file /tmp/profiles-backup.json
 
 # Verify
-entratool config list
+entra-auth-cli config list
 ```
 
 ### Environment-Based Configuration
@@ -384,7 +384,7 @@ create_env_profile() {
     
     echo "Creating profile for $env environment..."
     
-    entratool config create \
+    entra-auth-cli config create \
         --name "$env" \
         --tenant-id "${!tenant_var}" \
         --client-id "${!client_var}" \
@@ -398,7 +398,7 @@ for env in DEV STAGING PRODUCTION; do
 done
 
 echo "All profiles created:"
-entratool config list
+entra-auth-cli config list
 ```
 
 ### Validation Script
@@ -410,10 +410,10 @@ entratool config list
 echo "Validating profiles..."
 
 failed=0
-for profile in $(entratool config list); do
+for profile in $(entra-auth-cli config list); do
     echo -n "Testing $profile... "
     
-    if entratool get-token --profile "$profile" --output json > /dev/null 2>&1; then
+    if entra-auth-cli get-token --profile "$profile" --output json > /dev/null 2>&1; then
         echo "✓ OK"
     else
         echo "✗ FAILED"
@@ -441,12 +441,12 @@ Profiles are stored in platform-specific locations:
 
 ### macOS
 ```
-~/Library/Application Support/entratool/profiles/
+~/Library/Application Support/entra-auth-cli/profiles/
 ```
 
 ### Linux
 ```
-~/.entratool/profiles/
+~/.entra-auth-cli/profiles/
 ```
 
 Each profile consists of:
@@ -460,29 +460,29 @@ Each profile consists of:
 ```bash {linenos=inline}
 # ✅ Good - use environment variables
 export CLIENT_SECRET=$(vault read -field=secret secret/azure/client)
-entratool config create --client-secret "$CLIENT_SECRET"
+entra-auth-cli config create --client-secret "$CLIENT_SECRET"
 
 # ✅ Good - interactive prompt (hides input)
-entratool config create  # Will prompt for secret
+entra-auth-cli config create  # Will prompt for secret
 
 # ❌ Bad - hardcoded in script
-entratool config create --client-secret "my-secret-123"
+entra-auth-cli config create --client-secret "my-secret-123"
 
 # ❌ Bad - visible in command history
-entratool config create --client-secret "$SECRET"  # If $SECRET expands
+entra-auth-cli config create --client-secret "$SECRET"  # If $SECRET expands
 ```
 
 ### Profile Naming
 
 ```bash {linenos=inline}
 # ✅ Good - descriptive names
-entratool config create --name prod-graph-api
-entratool config create --name staging-azure-mgmt
-entratool config create --name dev-user-app
+entra-auth-cli config create --name prod-graph-api
+entra-auth-cli config create --name staging-azure-mgmt
+entra-auth-cli config create --name dev-user-app
 
 # ❌ Avoid - generic names
-entratool config create --name app1
-entratool config create --name test
+entra-auth-cli config create --name app1
+entra-auth-cli config create --name test
 ```
 
 ### Regular Rotation
@@ -491,17 +491,17 @@ entratool config create --name test
 #!/bin/bash
 # Rotate secrets for all profiles
 
-for profile in $(entratool config list); do
+for profile in $(entra-auth-cli config list); do
     echo "Rotating secret for $profile"
     
     # Get new secret from vault
     NEW_SECRET=$(vault read -field=secret "secret/azure/$profile")
     
     # Update profile
-    entratool config edit --name "$profile" --client-secret "$NEW_SECRET"
+    entra-auth-cli config edit --name "$profile" --client-secret "$NEW_SECRET"
     
     # Verify
-    if entratool get-token --profile "$profile" > /dev/null; then
+    if entra-auth-cli get-token --profile "$profile" > /dev/null; then
         echo "✓ $profile updated successfully"
     else
         echo "✗ $profile update failed"
@@ -515,10 +515,10 @@ done
 
 ```bash {linenos=inline}
 # List available profiles
-entratool config list
+entra-auth-cli config list
 
 # Check exact name (case-sensitive)
-entratool config show --name Production  # Won't match "production"
+entra-auth-cli config show --name Production  # Won't match "production"
 ```
 
 ### Cannot Create Profile
@@ -526,8 +526,8 @@ entratool config show --name Production  # Won't match "production"
 ```bash {linenos=inline}
 # Check storage directory permissions
 # Linux/macOS
-ls -la ~/.entratool/profiles/
-chmod 700 ~/.entratool/profiles/
+ls -la ~/.entra-auth-cli/profiles/
+chmod 700 ~/.entra-auth-cli/profiles/
 
 # Windows (PowerShell)
 Test-Path "$env:LOCALAPPDATA\EntraTokenCLI\profiles"
@@ -538,11 +538,11 @@ Test-Path "$env:LOCALAPPDATA\EntraTokenCLI\profiles"
 ```bash {linenos=inline}
 # View raw profile file
 # Linux/macOS
-cat ~/.entratool/profiles/production.json
+cat ~/.entra-auth-cli/profiles/production.json
 
 # If corrupted, delete and recreate
-entratool config delete --name production --force
-entratool config create --name production
+entra-auth-cli config delete --name production --force
+entra-auth-cli config create --name production
 ```
 
 ## See Also

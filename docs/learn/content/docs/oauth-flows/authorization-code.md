@@ -22,7 +22,7 @@ The Authorization Code flow provides secure user authentication by redirecting t
 - Backend exchanges code for tokens
 - Supports refresh tokens for long-lived sessions
 
-> **Note:** Entra Token CLI currently focuses on the **Interactive Browser Flow** for user authentication in CLI scenarios. The Authorization Code flow is typically used in web applications with backend servers. For CLI tools, use [Interactive Browser Flow](/docs/oauth-flows/interactive-browser/) instead.
+> **Note:** Entra Auth Cli currently focuses on the **Interactive Browser Flow** for user authentication in CLI scenarios. The Authorization Code flow is typically used in web applications with backend servers. For CLI tools, use [Interactive Browser Flow](/docs/oauth-flows/interactive-browser/) instead.
 
 ## How It Works
 
@@ -384,7 +384,7 @@ For command-line tools, use **Interactive Browser Flow** instead:
 
 ```bash {linenos=inline}
 # Interactive Browser (recommended for CLI)
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # Opens browser, no redirect URI needed
 # Tokens handled automatically by CLI

@@ -108,7 +108,7 @@ Then requesting `https://graph.microsoft.com/.default` includes all three.
 
 ```bash {linenos=inline}
 # Request all configured Graph permissions
-entratool get-token -p service-principal \
+entra-auth-cli get-token -p service-principal \
   --scope "https://graph.microsoft.com/.default"
 ```
 
@@ -129,7 +129,7 @@ Scopes stored in your profile configuration:
 
 **Used by default** when running:
 ```bash {linenos=inline}
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 ```
 
 ### Runtime Scope Override
@@ -138,7 +138,7 @@ Override profile scopes with `--scope` or `-s`:
 
 ```bash {linenos=inline}
 # Override to request different scope
-entratool get-token -p my-profile \
+entra-auth-cli get-token -p my-profile \
   --scope "https://graph.microsoft.com/Calendar.Read"
 ```
 
@@ -154,14 +154,14 @@ entratool get-token -p my-profile \
 ### Space-Separated Format
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile \
+entra-auth-cli get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read Mail.Read Calendars.Read"
 ```
 
 ### Comma-Separated Format
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile \
+entra-auth-cli get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read,Mail.Read,Calendars.Read"
 ```
 
@@ -210,7 +210,7 @@ https://graph.microsoft.com/Mail.Read
 Use `inspect` to see what scopes are included in your token:
 
 ```bash {linenos=inline}
-entratool inspect -t "eyJ0eXAiOiJKV1QiLCJhbGci..."
+entra-auth-cli inspect -t "eyJ0eXAiOiJKV1QiLCJhbGci..."
 ```
 
 **Output:**
@@ -276,7 +276,7 @@ https://graph.microsoft.com/Files.ReadWrite.All
 #### During Creation
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 # ... prompts ...
 Scope: https://graph.microsoft.com/.default
 ```
@@ -284,14 +284,14 @@ Scope: https://graph.microsoft.com/.default
 #### During Edit
 
 ```bash {linenos=inline}
-entratool config edit -p myprofile
+entra-auth-cli config edit -p myprofile
 # Select: Scope
 # Enter new: https://management.azure.com/.default
 ```
 
 #### Manual JSON Edit
 
-Edit `~/.entratool/profiles.json`:
+Edit `~/.entra-auth-cli/profiles.json`:
 
 ```json
 {
@@ -370,7 +370,7 @@ Request only the scopes you need:
 For user-facing applications, request specific scopes:
 
 ```bash {linenos=inline}
-entratool get-token -p user-app \
+entra-auth-cli get-token -p user-app \
   --scope "https://graph.microsoft.com/User.Read"
 ```
 
@@ -379,7 +379,7 @@ entratool get-token -p user-app \
 For automation and service accounts:
 
 ```bash {linenos=inline}
-entratool get-token -p automation \
+entra-auth-cli get-token -p automation \
   --scope "https://graph.microsoft.com/.default"
 ```
 
@@ -401,7 +401,7 @@ Always request fresh tokens with appropriate scopes:
 
 ```bash {linenos=inline}
 # ✓ Request token per operation
-TOKEN=$(entratool get-token -p myprofile --scope "...")
+TOKEN=$(entra-auth-cli get-token -p myprofile --scope "...")
 curl -H "Authorization: Bearer $TOKEN" ...
 ```
 
@@ -427,7 +427,7 @@ curl -H "Authorization: Bearer $TOKEN" ...
 ### Using `discover` Command
 
 ```bash {linenos=inline}
-entratool discover -t "eyJ0eXAiOiJKV1Qi..."
+entra-auth-cli discover -t "eyJ0eXAiOiJKV1Qi..."
 ```
 
 **Output shows:**
@@ -455,8 +455,8 @@ entratool discover -t "eyJ0eXAiOiJKV1Qi..."
 #### Azure Management + Graph
 ```bash {linenos=inline}
 # Request separately (different audiences)
-TOKEN_GRAPH=$(entratool get-token -p graph --scope "https://graph.microsoft.com/.default")
-TOKEN_AZURE=$(entratool get-token -p azure --scope "https://management.azure.com/.default")
+TOKEN_GRAPH=$(entra-auth-cli get-token -p graph --scope "https://graph.microsoft.com/.default")
+TOKEN_AZURE=$(entra-auth-cli get-token -p azure --scope "https://management.azure.com/.default")
 ```
 
 ---

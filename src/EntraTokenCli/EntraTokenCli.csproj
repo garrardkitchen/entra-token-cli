@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <RuntimeIdentifiers>win-x64;osx-arm64;osx-x64;linux-x64</RuntimeIdentifiers>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>entratool</ToolCommandName>
+    <ToolCommandName>entra-auth-cli</ToolCommandName>
     <PackageId>EntraTokenCli</PackageId>
     <Version>0.0.0</Version>
     <Authors>EntraTokenCli Contributors</Authors>

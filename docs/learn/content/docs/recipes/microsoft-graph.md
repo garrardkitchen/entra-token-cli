@@ -6,7 +6,7 @@ weight: 1
 
 # Microsoft Graph API
 
-Learn how to use Entra Token CLI to authenticate and interact with Microsoft Graph API.
+Learn how to use Entra Auth Cli to authenticate and interact with Microsoft Graph API.
 
 ---
 
@@ -28,7 +28,7 @@ Microsoft Graph is the unified API for Microsoft 365, providing access to:
 ### Setup Profile
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 # Name: graph-readonly
 # Client ID: <your-app-id>
 # Tenant ID: <your-tenant-id>
@@ -38,7 +38,7 @@ entratool config create
 ### Get Token and Call API
 
 ```bash {linenos=inline}
-TOKEN=$(entratool get-token -p graph-readonly --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-readonly --silent)
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me | jq
 ```
@@ -51,7 +51,7 @@ Retrieve information about the authenticated user.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p graph-readonly --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-readonly --silent)
 
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me | jq
@@ -67,7 +67,7 @@ Retrieve a list of users in your organization.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p graph-admin --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-admin --silent \
   --scope "https://graph.microsoft.com/User.Read.All")
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -84,7 +84,7 @@ Send an email via Microsoft Graph.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p graph-mail --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-mail --silent \
   --scope "https://graph.microsoft.com/Mail.Send")
 
 curl -X POST \
@@ -95,7 +95,7 @@ curl -X POST \
          "subject": "Test Email",
          "body": {
            "contentType": "Text",
-           "content": "This is a test email from Entra Token CLI"
+           "content": "This is a test email from Entra Auth Cli"
          },
          "toRecipients": [
            {
@@ -120,7 +120,7 @@ Retrieve calendar events for the authenticated user.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p graph-calendar --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-calendar --silent \
   --scope "https://graph.microsoft.com/Calendars.Read")
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -137,7 +137,7 @@ Create a new calendar event.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p graph-calendar --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-calendar --silent \
   --scope "https://graph.microsoft.com/Calendars.ReadWrite")
 
 curl -X POST \
@@ -186,10 +186,10 @@ curl -X POST \
 
 ```bash {linenos=inline}
 # Good: Specific scope
-entratool get-token -p graph --scope "https://graph.microsoft.com/User.Read"
+entra-auth-cli get-token -p graph --scope "https://graph.microsoft.com/User.Read"
 
 # Avoid: .default in scripts (requests all consented permissions)
-entratool get-token -p graph --scope "https://graph.microsoft.com/.default"
+entra-auth-cli get-token -p graph --scope "https://graph.microsoft.com/.default"
 ```
 
 ### Cache Tokens
@@ -199,10 +199,10 @@ entratool get-token -p graph --scope "https://graph.microsoft.com/.default"
 TOKEN_CACHE="/tmp/graph-token.txt"
 
 get_graph_token() {
-  if [ -f "$TOKEN_CACHE" ] && entratool discover -f "$TOKEN_CACHE" &>/dev/null; then
+  if [ -f "$TOKEN_CACHE" ] && entra-auth-cli discover -f "$TOKEN_CACHE" &>/dev/null; then
     cat "$TOKEN_CACHE"
   else
-    entratool get-token -p graph --silent | tee "$TOKEN_CACHE"
+    entra-auth-cli get-token -p graph --silent | tee "$TOKEN_CACHE"
     chmod 600 "$TOKEN_CACHE"
   fi
 }
@@ -214,7 +214,7 @@ TOKEN=$(get_graph_token)
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entratool get-token -p graph-admin --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-admin --silent)
 URL="https://graph.microsoft.com/v1.0/users"
 
 while [ -n "$URL" ]; do

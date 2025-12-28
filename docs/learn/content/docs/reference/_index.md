@@ -1,12 +1,12 @@
 ---
 title: "Command Reference"
-description: "Complete reference for all Entra Token CLI commands"
+description: "Complete reference for all Entra Auth Cli commands"
 weight: 60
 ---
 
 # Command Reference
 
-Complete documentation for all Entra Token CLI commands, options, and arguments.
+Complete documentation for all Entra Auth Cli commands, options, and arguments.
 
 ---
 
@@ -73,11 +73,11 @@ Display help information for any command.
 
 ```bash {linenos=inline}
 # General help
-entratool --help
+entra-auth-cli --help
 
 # Command-specific help
-entratool get-token --help
-entratool config --help
+entra-auth-cli get-token --help
+entra-auth-cli config --help
 ```
 
 ### --version
@@ -85,7 +85,7 @@ entratool config --help
 Show version information.
 
 ```bash {linenos=inline}
-entratool --version
+entra-auth-cli --version
 ```
 
 ---
@@ -96,28 +96,28 @@ entratool --version
 
 ```bash {linenos=inline}
 # Generate token
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 
 # Generate token (silent mode for scripts)
-TOKEN=$(entratool get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
 
 # Override scope
-entratool get-token -p my-profile --scope "https://graph.microsoft.com/User.Read"
+entra-auth-cli get-token -p my-profile --scope "https://graph.microsoft.com/User.Read"
 
 # Use specific flow
-entratool get-token -p my-profile -f ClientCredentials
+entra-auth-cli get-token -p my-profile -f ClientCredentials
 
 # Inspect token
-entratool inspect -t "eyJ0eXAiOiJKV1Q..."
+entra-auth-cli inspect -t "eyJ0eXAiOiJKV1Q..."
 
 # List profiles
-entratool config list
+entra-auth-cli config list
 
 # Create profile
-entratool config create
+entra-auth-cli config create
 
 # Delete profile
-entratool config delete -p my-profile
+entra-auth-cli config delete -p my-profile
 ```
 
 ---

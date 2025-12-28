@@ -1,16 +1,16 @@
 ---
 title: "Documentation"
-description: "Complete guide to using Entra Token CLI"
+description: "Complete guide to using Entra Auth Cli"
 weight: 1
 ---
 
-# Entra Token CLI Documentation
+# Entra Auth Cli Documentation
 
-Welcome to the comprehensive documentation for Entra Token CLI, a cross-platform tool for generating Microsoft Entra ID access tokens.
+Welcome to the comprehensive documentation for Entra Auth Cli, a cross-platform tool for generating Microsoft Entra ID access tokens.
 
 ## Getting Started
 
-New to Entra Token CLI? Start here:
+New to Entra Auth Cli? Start here:
 
 - [Installation](/docs/getting-started/installation/) - Install the tool on your platform
 - [Quick Start](/docs/getting-started/quickstart/) - Generate your first token in 5 minutes

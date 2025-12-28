@@ -1,4 +1,4 @@
-name: Deploy Documentation entratool-docs
+name: Deploy Documentation entra-auth-cli-docs
 
 on:
   push:
@@ -56,16 +56,16 @@ jobs:
           hugo \
             --gc \
             --minify \
-            --baseURL "https://entratool-docs.garrardkitchen.com/"
+            --baseURL "https://entra-auth-cli-docs.garrardkitchen.com/"
 
-      - name: Deploy to entratool-docs repository
+      - name: Deploy to entra-auth-cli-docs repository
         uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
-          external_repository: garrardkitchen/entratool-docs
+          external_repository: garrardkitchen/entra-auth-cli-docs
           publish_branch: main
           publish_dir: ./docs/learn/public
-          cname: entratool-docs.garrardkitchen.com
+          cname: entra-auth-cli-docs.garrardkitchen.com
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Deploy documentation from ${{ github.sha }}'

@@ -1,18 +1,18 @@
 ---
 title: "User Guide"
-description: "Complete guide to using Entra Token CLI"
+description: "Complete guide to using Entra Auth Cli"
 weight: 20
 ---
 
 # User Guide
 
-Comprehensive guides for day-to-day usage of Entra Token CLI.
+Comprehensive guides for day-to-day usage of Entra Auth Cli.
 
 ---
 
 ## Getting Started
 
-If you're new to Entra Token CLI, start here:
+If you're new to Entra Auth Cli, start here:
 
 - [Installation](/docs/getting-started/installation/) - Install the tool on your platform
 - [Quick Start](/docs/getting-started/quickstart/) - Generate your first token in 5 minutes
@@ -116,7 +116,7 @@ Inspect, validate, refresh, and use tokens effectively.
 
 ```bash {linenos=inline}
 # Morning: Get fresh token
-entratool get-token -p dev-graph --silent > ~/.cache/token.txt
+entra-auth-cli get-token -p dev-graph --silent > ~/.cache/token.txt
 
 # Use throughout the day
 TOKEN=$(cat ~/.cache/token.txt)
@@ -127,13 +127,13 @@ curl -H "Authorization: Bearer $TOKEN" https://graph.microsoft.com/v1.0/me
 
 ```bash {linenos=inline}
 # Test in dev
-entratool get-token -p dev-api -f ClientCredentials
+entra-auth-cli get-token -p dev-api -f ClientCredentials
 
 # Test in staging
-entratool get-token -p staging-api -f ClientCredentials
+entra-auth-cli get-token -p staging-api -f ClientCredentials
 
 # Deploy to prod
-entratool get-token -p prod-api -f ClientCredentials
+entra-auth-cli get-token -p prod-api -f ClientCredentials
 ```
 
 ### Secret Rotation
@@ -141,12 +141,12 @@ entratool get-token -p prod-api -f ClientCredentials
 ```bash {linenos=inline}
 # 1. Generate new secret in Azure Portal
 # 2. Update profile
-entratool config edit -p my-service-principal
+entra-auth-cli config edit -p my-service-principal
 # Select: Client Secret
 # Enter: new-secret-from-portal
 
 # 3. Test
-entratool get-token -p my-service-principal
+entra-auth-cli get-token -p my-service-principal
 
 # 4. Delete old secret in Azure Portal
 ```
@@ -155,16 +155,16 @@ entratool get-token -p my-service-principal
 
 ```bash {linenos=inline}
 # Team lead: Export profiles (without secrets)
-entratool config export -o team-profiles.json
+entra-auth-cli config export -o team-profiles.json
 
 # Share team-profiles.json via secure channel
 # Share secrets via Azure Key Vault or password manager
 
 # New team member: Import
-entratool config import -f team-profiles.json
+entra-auth-cli config import -f team-profiles.json
 
 # Add secrets
-entratool config edit -p profile1
+entra-auth-cli config edit -p profile1
 # Add client secret from Key Vault
 ```
 
@@ -175,23 +175,23 @@ entratool config edit -p profile1
 | Task | Command |
 |------|---------|
 | **Profiles** | |
-| Create profile | `entratool config create` |
-| List profiles | `entratool config list` |
-| Edit profile | `entratool config edit -p NAME` |
-| Delete profile | `entratool config delete -p NAME` |
-| Export profile | `entratool config export -p NAME -o FILE` |
-| Import profile | `entratool config import -f FILE` |
+| Create profile | `entra-auth-cli config create` |
+| List profiles | `entra-auth-cli config list` |
+| Edit profile | `entra-auth-cli config edit -p NAME` |
+| Delete profile | `entra-auth-cli config delete -p NAME` |
+| Export profile | `entra-auth-cli config export -p NAME -o FILE` |
+| Import profile | `entra-auth-cli config import -f FILE` |
 | **Tokens** | |
-| Get token | `entratool get-token -p PROFILE` |
-| Override scope | `entratool get-token -p PROFILE --scope "SCOPE"` |
-| Specify flow | `entratool get-token -p PROFILE -f FLOW` |
-| Silent output | `entratool get-token -p PROFILE --silent` |
-| Save to file | `entratool get-token -p PROFILE -o token.txt` |
-| Refresh token | `entratool refresh -p PROFILE` |
+| Get token | `entra-auth-cli get-token -p PROFILE` |
+| Override scope | `entra-auth-cli get-token -p PROFILE --scope "SCOPE"` |
+| Specify flow | `entra-auth-cli get-token -p PROFILE -f FLOW` |
+| Silent output | `entra-auth-cli get-token -p PROFILE --silent` |
+| Save to file | `entra-auth-cli get-token -p PROFILE -o token.txt` |
+| Refresh token | `entra-auth-cli refresh -p PROFILE` |
 | **Token Info** | |
-| Inspect token | `entratool inspect -t TOKEN` |
-| Discover info | `entratool discover -t TOKEN` |
-| Check expiration | `entratool discover -t TOKEN` |
+| Inspect token | `entra-auth-cli inspect -t TOKEN` |
+| Discover info | `entra-auth-cli discover -t TOKEN` |
+| Check expiration | `entra-auth-cli discover -t TOKEN` |
 
 ---
 

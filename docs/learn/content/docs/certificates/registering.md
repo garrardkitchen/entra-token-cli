@@ -181,7 +181,7 @@ $cert.Thumbprint
 
 ```bash {linenos=inline}
 # Create test profile with certificate
-entratool config create
+entra-auth-cli config create
 # Name: cert-test
 # Client ID: <your-app-id>
 # Tenant ID: <your-tenant-id>
@@ -190,7 +190,7 @@ entratool config create
 # Password: ****
 
 # Test token generation
-entratool get-token -p cert-test
+entra-auth-cli get-token -p cert-test
 
 # If successful, certificate is properly registered
 ```

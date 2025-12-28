@@ -6,7 +6,7 @@ weight: 5
 
 # PowerShell Scripting
 
-Learn how to integrate Entra Token CLI with PowerShell for Windows automation and Azure management.
+Learn how to integrate Entra Auth Cli with PowerShell for Windows automation and Azure management.
 
 ---
 
@@ -14,7 +14,7 @@ Learn how to integrate Entra Token CLI with PowerShell for Windows automation an
 
 ```powershell
 # Get token
-$token = entratool get-token -p my-profile --silent
+$token = entra-auth-cli get-token -p my-profile --silent
 
 # Use with Invoke-RestMethod
 $headers = @{
@@ -37,7 +37,7 @@ $response | ConvertTo-Json
 Implement token caching for better performance.
 
 ```powershell
-$tokenCache = "$env:TEMP\entratool-token.txt"
+$tokenCache = "$env:TEMP\entra-auth-cli-token.txt"
 $tokenMaxAge = 3000  # 50 minutes
 
 function Get-CachedToken {
@@ -45,14 +45,14 @@ function Get-CachedToken {
     
     # Check if cached token is valid
     if (Test-Path $tokenCache) {
-        entratool discover -f $tokenCache 2>$null
+        entra-auth-cli discover -f $tokenCache 2>$null
         if ($LASTEXITCODE -eq 0) {
             return Get-Content $tokenCache -Raw
         }
     }
     
     # Get fresh token
-    $token = entratool get-token -p $Profile --silent
+    $token = entra-auth-cli get-token -p $Profile --silent
     $token | Out-File -FilePath $tokenCache -NoNewline
     return $token
 }
@@ -76,7 +76,7 @@ function Get-TokenWithRetry {
     
     for ($i = 0; $i -lt $MaxRetries; $i++) {
         try {
-            $token = entratool get-token -p $Profile --silent 2>&1
+            $token = entra-auth-cli get-token -p $Profile --silent 2>&1
             if ($LASTEXITCODE -eq 0) {
                 return $token
             }
@@ -107,8 +107,8 @@ Work with multiple APIs using different tokens.
 
 ```powershell
 # Get tokens for different APIs
-$graphToken = entratool get-token -p graph-profile --silent
-$azureToken = entratool get-token -p azure-profile --silent
+$graphToken = entra-auth-cli get-token -p graph-profile --silent
+$azureToken = entra-auth-cli get-token -p azure-profile --silent
 
 # Use Graph API
 Write-Host "Fetching user profile..."
@@ -145,7 +145,7 @@ function Get-ValidToken {
     # Check if token exists
     if (Test-Path $tokenFile) {
         # Check expiration
-        $tokenJson = entratool inspect -f $tokenFile 2>$null | ConvertFrom-Json
+        $tokenJson = entra-auth-cli inspect -f $tokenFile 2>$null | ConvertFrom-Json
         if ($tokenJson) {
             $exp = $tokenJson.payload.exp
             $now = [DateTimeOffset]::Now.ToUnixTimeSeconds()
@@ -158,7 +158,7 @@ function Get-ValidToken {
     }
     
     # Get fresh token
-    $token = entratool get-token -p $Profile --silent
+    $token = entra-auth-cli get-token -p $Profile --silent
     $token | Out-File -FilePath $tokenFile -NoNewline
     return $token
 }
@@ -174,7 +174,7 @@ Make multiple API calls concurrently using PowerShell jobs.
 
 ```powershell
 # Get token once
-$token = entratool get-token -p my-profile --silent
+$token = entra-auth-cli get-token -p my-profile --silent
 $headers = @{ "Authorization" = "Bearer $token" }
 
 # Start parallel jobs
@@ -209,7 +209,7 @@ $results | ForEach-Object { $_ | ConvertTo-Json }
 Handle paginated API responses.
 
 ```powershell
-$token = entratool get-token -p graph-admin --silent
+$token = entra-auth-cli get-token -p graph-admin --silent
 $headers = @{ "Authorization" = "Bearer $token" }
 $url = "https://graph.microsoft.com/v1.0/users"
 
@@ -258,7 +258,7 @@ function Invoke-ApiWithRateLimit {
     throw "Max retries exceeded"
 }
 
-$token = entratool get-token -p my-profile --silent
+$token = entra-auth-cli get-token -p my-profile --silent
 $headers = @{ "Authorization" = "Bearer $token" }
 $result = Invoke-ApiWithRateLimit -Uri "https://graph.microsoft.com/v1.0/users" -Headers $headers
 ```
@@ -292,16 +292,16 @@ function Write-Log {
 function Get-Token {
     param([string]$Profile)
     
-    $tokenCache = "$env:TEMP\entratool-$Profile.token"
+    $tokenCache = "$env:TEMP\entra-auth-cli-$Profile.token"
     
     if (Test-Path $tokenCache) {
-        entratool discover -f $tokenCache 2>$null
+        entra-auth-cli discover -f $tokenCache 2>$null
         if ($LASTEXITCODE -eq 0) {
             return Get-Content $tokenCache -Raw
         }
     }
     
-    $token = entratool get-token -p $Profile --silent
+    $token = entra-auth-cli get-token -p $Profile --silent
     $token | Out-File -FilePath $tokenCache -NoNewline
     return $token
 }
@@ -362,10 +362,10 @@ $ErrorActionPreference = "Stop"
 
 ```powershell
 # Good
-$token = entratool get-token -p my-profile --silent
+$token = entra-auth-cli get-token -p my-profile --silent
 
 # Bad (may include extra output)
-$token = entratool get-token -p my-profile
+$token = entra-auth-cli get-token -p my-profile
 ```
 
 ### Secure Token Storage
@@ -384,7 +384,7 @@ Set-Acl $tokenFile $acl
 ### Check Exit Codes
 
 ```powershell
-entratool get-token -p my-profile --silent
+entra-auth-cli get-token -p my-profile --silent
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Token generation failed"
     exit 1

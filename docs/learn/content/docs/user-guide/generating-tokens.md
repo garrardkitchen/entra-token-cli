@@ -14,12 +14,12 @@ Learn how to generate access tokens using different OAuth2 flows and configurati
 
 | Task | Command |
 |------|---------|
-| Get token with profile | `entratool get-token -p PROFILE` |
-| Override scope | `entratool get-token -p PROFILE --scope "SCOPE"` |
-| Specify flow | `entratool get-token -p PROFILE -f FLOW` |
-| Silent mode | `entratool get-token -p PROFILE --silent` |
-| Save to file | `entratool get-token -p PROFILE -o token.txt` |
-| Refresh token | `entratool refresh -p PROFILE` |
+| Get token with profile | `entra-auth-cli get-token -p PROFILE` |
+| Override scope | `entra-auth-cli get-token -p PROFILE --scope "SCOPE"` |
+| Specify flow | `entra-auth-cli get-token -p PROFILE -f FLOW` |
+| Silent mode | `entra-auth-cli get-token -p PROFILE --silent` |
+| Save to file | `entra-auth-cli get-token -p PROFILE -o token.txt` |
+| Refresh token | `entra-auth-cli refresh -p PROFILE` |
 
 ---
 
@@ -28,7 +28,7 @@ Learn how to generate access tokens using different OAuth2 flows and configurati
 ### Using a Profile
 
 ```bash {linenos=inline}
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 ```
 
 **Output:**
@@ -40,7 +40,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ij...
 ```
 
 **What happens:**
-1. Profile loaded from `~/.entratool/profiles.json`
+1. Profile loaded from `~/.entra-auth-cli/profiles.json`
 2. Secrets retrieved from secure storage
 3. Authentication flow executed
 4. Access token printed to stdout
@@ -50,7 +50,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ij...
 Override the default flow:
 
 ```bash {linenos=inline}
-entratool get-token -p my-profile -f ClientCredentials
+entra-auth-cli get-token -p my-profile -f ClientCredentials
 ```
 
 **Available flows:**
@@ -68,7 +68,7 @@ entratool get-token -p my-profile -f ClientCredentials
 ### Non-Interactive Service Authentication
 
 ```bash {linenos=inline}
-entratool get-token -p service-principal -f ClientCredentials
+entra-auth-cli get-token -p service-principal -f ClientCredentials
 ```
 
 **Requirements:**
@@ -79,7 +79,7 @@ entratool get-token -p service-principal -f ClientCredentials
 **Example:**
 ```bash {linenos=inline}
 # Service principal for Graph API
-entratool get-token -p graph-sp -f ClientCredentials
+entra-auth-cli get-token -p graph-sp -f ClientCredentials
 ```
 
 **Output:**
@@ -97,7 +97,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 ### User Authentication with Browser
 
 ```bash {linenos=inline}
-entratool get-token -p user-app -f InteractiveBrowser
+entra-auth-cli get-token -p user-app -f InteractiveBrowser
 ```
 
 **What happens:**
@@ -109,7 +109,7 @@ entratool get-token -p user-app -f InteractiveBrowser
 
 **Example:**
 ```bash {linenos=inline}
-entratool get-token -p personal-graph -f InteractiveBrowser
+entra-auth-cli get-token -p personal-graph -f InteractiveBrowser
 ```
 
 **Output:**
@@ -130,7 +130,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 ### Authentication on Limited-Input Devices
 
 ```bash {linenos=inline}
-entratool get-token -p iot-device -f DeviceCode
+entra-auth-cli get-token -p iot-device -f DeviceCode
 ```
 
 **What happens:**
@@ -142,7 +142,7 @@ entratool get-token -p iot-device -f DeviceCode
 
 **Example:**
 ```bash {linenos=inline}
-entratool get-token -p headless-server -f DeviceCode
+entra-auth-cli get-token -p headless-server -f DeviceCode
 ```
 
 **Output:**
@@ -165,7 +165,7 @@ Waiting for authentication...
 ### Web Application Authentication
 
 ```bash {linenos=inline}
-entratool get-token -p webapp -f AuthorizationCode
+entra-auth-cli get-token -p webapp -f AuthorizationCode
 ```
 
 **Requirements:**
@@ -175,7 +175,7 @@ entratool get-token -p webapp -f AuthorizationCode
 
 **Example:**
 ```bash {linenos=inline}
-entratool get-token -p web-backend -f AuthorizationCode
+entra-auth-cli get-token -p web-backend -f AuthorizationCode
 ```
 
 **Output:**
@@ -199,7 +199,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 Override profile's default scope:
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile \
+entra-auth-cli get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read Mail.Read"
 ```
 
@@ -212,13 +212,13 @@ entratool get-token -p myprofile \
 
 **Space-separated:**
 ```bash {linenos=inline}
-entratool get-token -p myprofile \
+entra-auth-cli get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read Mail.Read Calendars.Read"
 ```
 
 **Comma-separated:**
 ```bash {linenos=inline}
-entratool get-token -p myprofile \
+entra-auth-cli get-token -p myprofile \
   --scope "https://graph.microsoft.com/User.Read,Mail.Read,Calendars.Read"
 ```
 
@@ -227,7 +227,7 @@ entratool get-token -p myprofile \
 Request all configured permissions:
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile \
+entra-auth-cli get-token -p myprofile \
   --scope "https://graph.microsoft.com/.default"
 ```
 
@@ -240,7 +240,7 @@ entratool get-token -p myprofile \
 ### Using Certificates Instead of Secrets
 
 ```bash {linenos=inline}
-entratool get-token -p cert-profile -f ClientCredentials
+entra-auth-cli get-token -p cert-profile -f ClientCredentials
 ```
 
 **Profile configuration:**
@@ -277,7 +277,7 @@ entratool get-token -p cert-profile -f ClientCredentials
 Suppress all output except the token:
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile --silent
+entra-auth-cli get-token -p myprofile --silent
 ```
 
 **Output:**
@@ -287,14 +287,14 @@ eyJ0eXAiOiJKV1QiLCJh...
 
 **Use in scripts:**
 ```bash {linenos=inline}
-TOKEN=$(entratool get-token -p myprofile --silent)
+TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
 curl -H "Authorization: Bearer $TOKEN" https://graph.microsoft.com/v1.0/me
 ```
 
 ### Save to File
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile -o token.txt
+entra-auth-cli get-token -p myprofile -o token.txt
 ```
 
 **Output:**
@@ -311,7 +311,7 @@ curl -H "Authorization: Bearer $TOKEN" ...
 ### JSON Output
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile --json
+entra-auth-cli get-token -p myprofile --json
 ```
 
 **Output:**
@@ -332,13 +332,13 @@ entratool get-token -p myprofile --json
 
 ```bash {linenos=inline}
 # Generate and inspect in one command
-entratool get-token -p myprofile --silent | entratool inspect
+entra-auth-cli get-token -p myprofile --silent | entra-auth-cli inspect
 ```
 
 **Or separately:**
 ```bash {linenos=inline}
-TOKEN=$(entratool get-token -p myprofile --silent)
-entratool inspect -t "$TOKEN"
+TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+entra-auth-cli inspect -t "$TOKEN"
 ```
 
 **Output:**
@@ -365,7 +365,7 @@ entratool inspect -t "$TOKEN"
 If you have a refresh token:
 
 ```bash {linenos=inline}
-entratool refresh -p myprofile
+entra-auth-cli refresh -p myprofile
 ```
 
 **Requirements:**
@@ -395,7 +395,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 set -e
 
 # Get token
-TOKEN=$(entratool get-token -p automation --silent)
+TOKEN=$(entra-auth-cli get-token -p automation --silent)
 
 # Use token
 curl -H "Authorization: Bearer $TOKEN" \
@@ -406,7 +406,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 ### Pattern 2: Environment Variable
 
 ```bash {linenos=inline}
-export ACCESS_TOKEN=$(entratool get-token -p myprofile --silent)
+export ACCESS_TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
 
 # Use in multiple commands
 curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api1.example.com
@@ -416,11 +416,11 @@ curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api2.example.com
 ### Pattern 3: Token Caching
 
 ```bash {linenos=inline}
-TOKEN_FILE=~/.cache/entratool-token.txt
+TOKEN_FILE=~/.cache/entra-auth-cli-token.txt
 
 # Check if token exists and is valid
-if [ ! -f "$TOKEN_FILE" ] || ! entratool discover -f "$TOKEN_FILE" &>/dev/null; then
-  entratool get-token -p myprofile --silent > "$TOKEN_FILE"
+if [ ! -f "$TOKEN_FILE" ] || ! entra-auth-cli discover -f "$TOKEN_FILE" &>/dev/null; then
+  entra-auth-cli get-token -p myprofile --silent > "$TOKEN_FILE"
 fi
 
 TOKEN=$(cat "$TOKEN_FILE")
@@ -430,8 +430,8 @@ TOKEN=$(cat "$TOKEN_FILE")
 
 ```bash {linenos=inline}
 # Get tokens for different APIs
-TOKEN_GRAPH=$(entratool get-token -p graph-profile --silent)
-TOKEN_AZURE=$(entratool get-token -p azure-profile --silent)
+TOKEN_GRAPH=$(entra-auth-cli get-token -p graph-profile --silent)
+TOKEN_AZURE=$(entra-auth-cli get-token -p azure-profile --silent)
 
 # Use with different APIs
 curl -H "Authorization: Bearer $TOKEN_GRAPH" https://graph.microsoft.com/v1.0/me
@@ -449,10 +449,10 @@ curl -H "Authorization: Bearer $TOKEN_AZURE" https://management.azure.com/subscr
 **Fix:**
 ```bash {linenos=inline}
 # List profiles
-entratool config list
+entra-auth-cli config list
 
 # Use correct name
-entratool get-token -p correct-name
+entra-auth-cli get-token -p correct-name
 ```
 
 ### "AADSTS70011: Invalid scope"
@@ -473,7 +473,7 @@ entratool get-token -p correct-name
 ```bash {linenos=inline}
 # Rotate secret in Azure Portal
 # Update profile
-entratool config edit -p myprofile
+entra-auth-cli config edit -p myprofile
 # Select: Client Secret
 # Enter: new-secret
 ```
@@ -494,7 +494,7 @@ entratool config edit -p myprofile
 **Fix:**
 - Try Device Code flow instead:
   ```bash
-  entratool get-token -p myprofile -f DeviceCode
+  entra-auth-cli get-token -p myprofile -f DeviceCode
   ```
 - Check redirect URI configuration
 - Ensure localhost port is not blocked
@@ -524,11 +524,11 @@ entratool config edit -p myprofile
 
 ```bash {linenos=inline}
 # Check expiration before use
-entratool discover -f token.txt
+entra-auth-cli discover -f token.txt
 
 # Refresh if needed
 if [ $? -ne 0 ]; then
-  entratool get-token -p myprofile --silent > token.txt
+  entra-auth-cli get-token -p myprofile --silent > token.txt
 fi
 ```
 
@@ -537,7 +537,7 @@ fi
 ```bash {linenos=inline}
 # Set restrictive permissions
 TOKEN_FILE=~/.cache/my-token.txt
-entratool get-token -p myprofile --silent > "$TOKEN_FILE"
+entra-auth-cli get-token -p myprofile --silent > "$TOKEN_FILE"
 chmod 600 "$TOKEN_FILE"
 ```
 

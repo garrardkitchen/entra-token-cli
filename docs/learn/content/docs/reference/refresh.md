@@ -11,7 +11,7 @@ Refresh expired or expiring access tokens using refresh tokens.
 ## Synopsis
 
 ```bash {linenos=inline}
-entratool refresh [flags]
+entra-auth-cli refresh [flags]
 ```
 
 ## Description
@@ -29,8 +29,8 @@ Refresh tokens are only available when using delegated permissions (user authent
 Profile name to refresh tokens for.
 
 ```bash {linenos=inline}
-entratool refresh --profile production
-entratool refresh -p dev
+entra-auth-cli refresh --profile production
+entra-auth-cli refresh -p dev
 ```
 
 **Default:** `default`
@@ -40,8 +40,8 @@ entratool refresh -p dev
 Output format for the new token.
 
 ```bash {linenos=inline}
-entratool refresh --output json
-entratool refresh -o yaml
+entra-auth-cli refresh --output json
+entra-auth-cli refresh -o yaml
 ```
 
 **Options:**
@@ -54,7 +54,7 @@ entratool refresh -o yaml
 Suppress all output except the token.
 
 ```bash {linenos=inline}
-TOKEN=$(entratool refresh --silent)
+TOKEN=$(entra-auth-cli refresh --silent)
 ```
 
 ## Examples
@@ -63,23 +63,23 @@ TOKEN=$(entratool refresh --silent)
 
 ```bash {linenos=inline}
 # Refresh default profile
-entratool refresh
+entra-auth-cli refresh
 
 # Refresh specific profile
-entratool refresh --profile production
+entra-auth-cli refresh --profile production
 ```
 
 ### Output Formats
 
 ```bash {linenos=inline}
 # Token only
-entratool refresh
+entra-auth-cli refresh
 
 # Full JSON response
-entratool refresh --output json
+entra-auth-cli refresh --output json
 
 # Get new access token in variable
-TOKEN=$(entratool refresh --silent)
+TOKEN=$(entra-auth-cli refresh --silent)
 ```
 
 ### Script Usage
@@ -88,13 +88,13 @@ TOKEN=$(entratool refresh --silent)
 #!/bin/bash
 
 # Check if token needs refresh
-if ! entratool inspect --profile myapp 2>/dev/null; then
+if ! entra-auth-cli inspect --profile myapp 2>/dev/null; then
     echo "Token expired, refreshing..."
-    entratool refresh --profile myapp
+    entra-auth-cli refresh --profile myapp
 fi
 
 # Use refreshed token
-TOKEN=$(entratool get-token --profile myapp --silent)
+TOKEN=$(entra-auth-cli get-token --profile myapp --silent)
 ```
 
 ## Requirements
@@ -115,10 +115,10 @@ For refresh tokens to work, the `offline_access` scope must be included:
 
 ```bash {linenos=inline}
 # When creating profile
-entratool config create --scope "User.Read offline_access"
+entra-auth-cli config create --scope "User.Read offline_access"
 
 # When getting initial token
-entratool get-token --scope "User.Read offline_access"
+entra-auth-cli get-token --scope "User.Read offline_access"
 ```
 
 ## How It Works
@@ -172,25 +172,25 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1yNS1BVW...
 set -euo pipefail
 
 # Initial authentication
-entratool get-token --profile daemon --flow interactive
+entra-auth-cli get-token --profile daemon --flow interactive
 
 # Main loop
 while true; do
     # Get token (uses cache if valid)
-    TOKEN=$(entratool get-token --profile daemon --silent)
+    TOKEN=$(entra-auth-cli get-token --profile daemon --silent)
     
     # Do work with token
     curl -H "Authorization: Bearer $TOKEN" \
       https://graph.microsoft.com/v1.0/me
     
     # Check if token expires soon
-    EXPIRES=$(entratool inspect --profile daemon --output json | jq -r .exp)
+    EXPIRES=$(entra-auth-cli inspect --profile daemon --output json | jq -r .exp)
     NOW=$(date +%s)
     
     # Refresh if expiring within 5 minutes
     if [ $((EXPIRES - NOW)) -lt 300 ]; then
         echo "Token expiring soon, refreshing..."
-        entratool refresh --profile daemon
+        entra-auth-cli refresh --profile daemon
     fi
     
     sleep 60
@@ -206,25 +206,25 @@ done
 refresh_if_needed() {
     local profile="${1:-default}"
     
-    if entratool inspect --profile "$profile" &>/dev/null; then
-        local expires=$(entratool inspect --profile "$profile" --output json | jq -r .exp)
+    if entra-auth-cli inspect --profile "$profile" &>/dev/null; then
+        local expires=$(entra-auth-cli inspect --profile "$profile" --output json | jq -r .exp)
         local now=$(date +%s)
         local remaining=$((expires - now))
         
         # Refresh if less than 10 minutes remaining
         if [ $remaining -lt 600 ]; then
             echo "Refreshing token (expires in ${remaining}s)..."
-            entratool refresh --profile "$profile"
+            entra-auth-cli refresh --profile "$profile"
         fi
     else
         echo "Token invalid or expired, refreshing..."
-        entratool refresh --profile "$profile"
+        entra-auth-cli refresh --profile "$profile"
     fi
 }
 
 # Usage
 refresh_if_needed production
-TOKEN=$(entratool get-token --profile production --silent)
+TOKEN=$(entra-auth-cli get-token --profile production --silent)
 ```
 
 ### Scheduled Refresh
@@ -234,10 +234,10 @@ TOKEN=$(entratool get-token --profile production --silent)
 # Add to crontab: crontab -e
 
 # Refresh every 30 minutes
-*/30 * * * * /usr/local/bin/entratool refresh --profile background-job
+*/30 * * * * /usr/local/bin/entra-auth-cli refresh --profile background-job
 
 # Refresh at specific times
-0 8,12,17 * * * /usr/local/bin/entratool refresh --profile work-hours
+0 8,12,17 * * * /usr/local/bin/entra-auth-cli refresh --profile work-hours
 ```
 
 ## Troubleshooting
@@ -246,7 +246,7 @@ TOKEN=$(entratool get-token --profile production --silent)
 
 **Problem:**
 ```bash {linenos=inline}
-$ entratool refresh --profile myapp
+$ entra-auth-cli refresh --profile myapp
 Error: no refresh token available for profile 'myapp'
 ```
 
@@ -256,14 +256,14 @@ Error: no refresh token available for profile 'myapp'
 ```bash {linenos=inline}
 # Client credentials profiles don't need refresh
 # Just get a new token instead
-entratool get-token --profile myapp
+entra-auth-cli get-token --profile myapp
 ```
 
 ### Refresh Token Expired
 
 **Problem:**
 ```bash {linenos=inline}
-$ entratool refresh --profile user-app
+$ entra-auth-cli refresh --profile user-app
 Error: refresh token expired or invalid
 ```
 
@@ -271,12 +271,12 @@ Error: refresh token expired or invalid
 
 ```bash {linenos=inline}
 # 1. Re-authenticate with user flow
-entratool get-token --profile user-app --flow interactive --force
+entra-auth-cli get-token --profile user-app --flow interactive --force
 
 # 2. Or recreate profile
-entratool config delete --name user-app
-entratool config create --name user-app
-entratool get-token --profile user-app --flow interactive
+entra-auth-cli config delete --name user-app
+entra-auth-cli config create --name user-app
+entra-auth-cli get-token --profile user-app --flow interactive
 ```
 
 ### Missing offline_access Scope
@@ -286,12 +286,12 @@ entratool get-token --profile user-app --flow interactive
 **Solution:**
 ```bash {linenos=inline}
 # Include offline_access scope
-entratool get-token --profile myapp \
+entra-auth-cli get-token --profile myapp \
   --scope "User.Read offline_access" \
   --flow interactive
 
 # Or update profile default scopes
-entratool config edit --name myapp
+entra-auth-cli config edit --name myapp
 # Add "offline_access" to scopes
 ```
 
@@ -304,7 +304,7 @@ The CLI automatically refreshes tokens when calling `get-token` if:
 
 ```bash {linenos=inline}
 # First call - token expired, automatically refreshes
-entratool get-token --profile myapp
+entra-auth-cli get-token --profile myapp
 
 # You usually don't need to call refresh manually
 # The get-token command handles it automatically
@@ -317,13 +317,13 @@ Explicit `refresh` is useful when:
 1. **Proactive refresh before expiration**
    ```bash
    # Refresh before starting long operation
-   entratool refresh --profile myapp
+   entra-auth-cli refresh --profile myapp
    ./long-running-task.sh
    ```
 
 2. **Testing refresh token validity**
    ```bash
-   if entratool refresh --profile myapp; then
+   if entra-auth-cli refresh --profile myapp; then
        echo "Refresh token is valid"
    else
        echo "Need to re-authenticate"
@@ -334,7 +334,7 @@ Explicit `refresh` is useful when:
    ```bash
    # Keep tokens fresh in background
    while true; do
-       entratool refresh --profile daemon
+       entra-auth-cli refresh --profile daemon
        sleep 1800  # Every 30 minutes
    done
    ```
@@ -366,7 +366,7 @@ Refresh token lifetimes vary based on configuration:
 # - Don't share across systems
 
 # ✅ Good - CLI manages storage
-entratool refresh --profile myapp
+entra-auth-cli refresh --profile myapp
 
 # ❌ Bad - exposing refresh token
 export REFRESH_TOKEN=$(...)  # Don't do this
@@ -379,7 +379,7 @@ export REFRESH_TOKEN=$(...)  # Don't do this
 # Old refresh token becomes invalid after use
 # CLI handles this automatically
 
-entratool refresh --profile myapp
+entra-auth-cli refresh --profile myapp
 # CLI stores new refresh token automatically
 ```
 

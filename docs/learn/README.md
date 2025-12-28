@@ -1,23 +1,23 @@
-# Entra Token CLI Documentation
+# Entra Auth Cli Documentation
 
-This directory contains the Hugo-based documentation site for Entra Token CLI, powered by [Lotus Docs](https://github.com/colinwilson/lotusdocs).
+This directory contains the Hugo-based documentation site for Entra Auth Cli, powered by [Lotus Docs](https://github.com/colinwilson/lotusdocs).
 
 ## Deployment
 
-This documentation is deployed to a separate repository: **[garrardkitchen/entratool-docs](https://github.com/garrardkitchen/entratool-docs)**
+This documentation is deployed to a separate repository: **[garrardkitchen/entra-auth-cli-docs](https://github.com/garrardkitchen/entra-auth-cli-docs)**
 
 ### Setup Instructions
 
 1. **Create the separate docs repository:**
    ```bash
-   # On GitHub, create a new repository: garrardkitchen/entratool-docs
+   # On GitHub, create a new repository: garrardkitchen/entra-auth-cli-docs
    # Enable GitHub Pages in Settings → Pages → Source: GitHub Actions
    ```
 
 2. **Configure DNS:**
    Add a CNAME record for your custom domain:
    ```
-   entratool-docs.garrardkitchen.com → garrardkitchen.github.io
+   entra-auth-cli-docs.garrardkitchen.com → garrardkitchen.github.io
    ```
 
 3. **Push documentation to docs repository:**
@@ -31,12 +31,12 @@ This documentation is deployed to a separate repository: **[garrardkitchen/entra
    git commit -m "Initial documentation site"
    
    # Add remote and push
-   git remote add origin https://github.com/garrardkitchen/entratool-docs.git
+   git remote add origin https://github.com/garrardkitchen/entra-auth-cli-docs.git
    git branch -M main
    git push -u origin main
    ```
 
-4. **Set up GitHub Actions workflow in entratool-docs repository:**
+4. **Set up GitHub Actions workflow in entra-auth-cli-docs repository:**
    
    Create `.github/workflows/hugo.yml`:
    ```yaml
@@ -186,7 +186,7 @@ Use triple backticks with language identifiers:
 
 ````markdown
 ```bash
-entratool get-token -p myprofile
+entra-auth-cli get-token -p myprofile
 ```
 ````
 
@@ -214,7 +214,7 @@ This site uses the [Lotus Docs](https://github.com/colinwilson/lotusdocs) theme 
 
 Configuration in `hugo.yaml`:
 - Primary color: Microsoft Blue (#0078D4)
-- Custom domain: entratool-docs.garrardkitchen.com
+- Custom domain: entra-auth-cli-docs.garrardkitchen.com
 - Emoji support enabled
 - Syntax highlighting with Monokai theme
 
@@ -261,7 +261,7 @@ hugo version
 1. Make changes in the main `entra-token-cli` repository under `docs/learn/`
 2. Test locally with `hugo server`
 3. Commit and push to main repository
-4. Manually sync to `entratool-docs` repository:
+4. Manually sync to `entra-auth-cli-docs` repository:
    ```bash
    cd docs/learn
    git add .

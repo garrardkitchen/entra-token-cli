@@ -1,7 +1,7 @@
-# GitHub Actions Workflow for entratool-docs Repository
+# GitHub Actions Workflow for entra-auth-cli-docs Repository
 # 
 # Copy this file to: .github/workflows/hugo.yml
-# in the garrardkitchen/entratool-docs repository
+# in the garrardkitchen/entra-auth-cli-docs repository
 
 name: Deploy Hugo site to Pages
 

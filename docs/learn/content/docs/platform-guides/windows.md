@@ -6,11 +6,11 @@ weight: 10
 
 # Windows Platform Guide
 
-Complete guide for using Entra Token CLI on Windows, including DPAPI-based secure storage, PowerShell integration, and Windows-specific features.
+Complete guide for using Entra Auth Cli on Windows, including DPAPI-based secure storage, PowerShell integration, and Windows-specific features.
 
 ## Overview
 
-Entra Token CLI leverages Windows security features for optimal token protection:
+Entra Auth Cli leverages Windows security features for optimal token protection:
 
 - **DPAPI Encryption**: Windows Data Protection API for secure token storage
 - **Per-User Isolation**: Tokens encrypted per-user, per-machine
@@ -31,13 +31,13 @@ winget install GarrardKitchen.EntraTokenCLI
 ```powershell {linenos=inline}
 # Download latest release
 $version = "1.0.0"
-$url = "https://github.com/garrardkitchen/entratool-cli/releases/download/v$version/entratool-windows-amd64.exe"
+$url = "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/download/v$version/entra-auth-cli-windows-amd64.exe"
 
 # Download
-Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\entratool.exe"
+Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\entra-auth-cli.exe"
 
 # Move to Program Files
-Move-Item "$env:TEMP\entratool.exe" "C:\Program Files\EntraToken\entratool.exe" -Force
+Move-Item "$env:TEMP\entra-auth-cli.exe" "C:\Program Files\EntraToken\entra-auth-cli.exe" -Force
 
 # Add to PATH
 $path = [Environment]::GetEnvironmentVariable("Path", "User")
@@ -48,10 +48,10 @@ $path = [Environment]::GetEnvironmentVariable("Path", "User")
 
 ```powershell {linenos=inline}
 # Check version
-entratool --version
+entra-auth-cli --version
 
 # Test basic functionality
-entratool --help
+entra-auth-cli --help
 ```
 
 ## Token Storage
@@ -110,7 +110,7 @@ $acl.Access | Where-Object { $_.IdentityReference -eq "$env:USERDOMAIN\$env:USER
 
 ```powershell {linenos=inline}
 # Get token
-$token = entratool get-token --output json | ConvertFrom-Json
+$token = entra-auth-cli get-token --output json | ConvertFrom-Json
 $accessToken = $token.access_token
 
 # Use token in API call
@@ -143,7 +143,7 @@ function Get-EntraToken {
     }
     
     try {
-        $output = & entratool @arguments 2>&1
+        $output = & entra-auth-cli @arguments 2>&1
         if ($LASTEXITCODE -ne 0) {
             throw "Failed to get token: $output"
         }
@@ -175,7 +175,7 @@ function Invoke-EntraTokenCommand {
     $attempt = 0
     while ($attempt -lt $MaxRetries) {
         try {
-            $output = & entratool @Arguments 2>&1
+            $output = & entra-auth-cli @Arguments 2>&1
             if ($LASTEXITCODE -eq 0) {
                 return $output
             }
@@ -211,8 +211,8 @@ $result = Invoke-EntraTokenCommand -Arguments @("get-token", "--output", "json")
 # Install Microsoft Graph PowerShell SDK
 Install-Module Microsoft.Graph -Scope CurrentUser
 
-# Get token from Entra Token CLI
-$token = entratool get-token --scope https://graph.microsoft.com/.default --output json | 
+# Get token from Entra Auth Cli
+$token = entra-auth-cli get-token --scope https://graph.microsoft.com/.default --output json | 
     ConvertFrom-Json | Select-Object -ExpandProperty access_token
 
 # Connect to Microsoft Graph
@@ -233,7 +233,7 @@ Disconnect-MgGraph
 
 ```powershell {linenos=inline}
 # Create scheduled task for token refresh
-$action = New-ScheduledTaskAction -Execute "entratool" -Argument "refresh --profile production"
+$action = New-ScheduledTaskAction -Execute "entra-auth-cli" -Argument "refresh --profile production"
 
 $trigger = New-ScheduledTaskTrigger -Daily -At 6:00AM
 
@@ -253,7 +253,7 @@ Get-ScheduledTaskInfo -TaskName "RefreshEntraToken"
 ### Windows Service Integration
 
 ```powershell {linenos=inline}
-# Example Windows Service using Entra Token CLI
+# Example Windows Service using Entra Auth Cli
 # Service.ps1
 
 Add-Type -TypeDefinition @"
@@ -282,7 +282,7 @@ public class EntraTokenService : ServiceBase {
     
     private void RefreshToken(object sender, ElapsedEventArgs e) {
         Process.Start(new ProcessStartInfo {
-            FileName = "entratool",
+            FileName = "entra-auth-cli",
             Arguments = "refresh --profile production",
             UseShellExecute = false,
             RedirectStandardOutput = true
@@ -300,7 +300,7 @@ Start-Service $serviceName
 ### Event Log Integration
 
 ```powershell {linenos=inline}
-# Log Entra Token CLI operations to Windows Event Log
+# Log Entra Auth Cli operations to Windows Event Log
 function Write-EntraTokenLog {
     param(
         [Parameter(Mandatory)]
@@ -340,7 +340,7 @@ param(
 )
 
 # Create profile
-entratool create-profile `
+entra-auth-cli create-profile `
     --name azdo `
     --tenant-id $TenantId `
     --client-id $ClientId `
@@ -348,7 +348,7 @@ entratool create-profile `
     --scope "https://management.azure.com/.default"
 
 # Get token
-$token = entratool get-token --profile azdo --output json | ConvertFrom-Json
+$token = entra-auth-cli get-token --profile azdo --output json | ConvertFrom-Json
 $accessToken = $token.access_token
 
 # Deploy to Azure
@@ -386,7 +386,7 @@ function Connect-EntraToken {
     $arguments = @("get-token", "--profile", $ProfileName, "--output", "json")
     if ($Force) { $arguments += "--force" }
     
-    $output = & entratool @arguments 2>&1
+    $output = & entra-auth-cli @arguments 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "Authentication failed: $output"
     }
@@ -456,7 +456,7 @@ $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($clientSecr
 $plainSecret = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
 
 try {
-    entratool create-profile `
+    entra-auth-cli create-profile `
         --name "secure-profile" `
         --tenant-id $tenantId `
         --client-id $clientId `
@@ -480,7 +480,7 @@ $credential = Get-StoredCredential -Target "EntraTokenCLI"
 $clientSecret = $credential.GetNetworkCredential().Password
 
 # Use in profile creation
-entratool create-profile `
+entra-auth-cli create-profile `
     --name "from-credman" `
     --client-secret $clientSecret
 ```
@@ -502,13 +502,13 @@ echo $env:USERNAME
 Get-Acl "$env:LOCALAPPDATA\EntraTokenCLI\profiles\default.token" | Select-Object Owner
 
 # Recreate profile if ownership changed
-entratool delete-profile --name default
-entratool create-profile --name default
+entra-auth-cli delete-profile --name default
+entra-auth-cli create-profile --name default
 ```
 
 ### Path Issues
 
-**Problem:** "entratool is not recognized"
+**Problem:** "entra-auth-cli is not recognized"
 
 **Solutions:**
 
@@ -524,7 +524,7 @@ $path = [Environment]::GetEnvironmentVariable("Path", "User")
 $env:Path += ";C:\Program Files\EntraToken"
 
 # Verify
-Get-Command entratool
+Get-Command entra-auth-cli
 ```
 
 ### PowerShell Execution Policy
@@ -564,7 +564,7 @@ function Get-CachedToken {
     }
     
     # Get fresh token
-    $tokenJson = entratool get-token --profile $Profile --output json | ConvertFrom-Json
+    $tokenJson = entra-auth-cli get-token --profile $Profile --output json | ConvertFrom-Json
     $token = $tokenJson.access_token
     $expiresAt = $now.AddSeconds($tokenJson.expires_in)
     

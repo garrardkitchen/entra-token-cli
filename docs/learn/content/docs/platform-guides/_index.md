@@ -12,7 +12,7 @@ Platform-specific configuration, security considerations, and best practices for
 
 ## Platform Overview
 
-Entra Token CLI works across all major platforms, but each has unique characteristics for secure storage and certificate management.
+Entra Auth Cli works across all major platforms, but each has unique characteristics for secure storage and certificate management.
 
 | Platform | Secure Storage | Security Level | Production Ready |
 |----------|---------------|----------------|------------------|
@@ -65,10 +65,10 @@ Entra Token CLI works across all major platforms, but each has unique characteri
 dotnet tool install --global EntraTokenCli
 
 # Create profile (uses DPAPI for secrets)
-entratool config create
+entra-auth-cli config create
 
 # Generate token
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 ```
 
 ### macOS
@@ -78,10 +78,10 @@ entratool get-token -p my-profile
 dotnet tool install --global EntraTokenCli
 
 # Create profile (uses Keychain for secrets)
-entratool config create
+entra-auth-cli config create
 
 # Generate token
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 ```
 
 ### Linux
@@ -91,10 +91,10 @@ entratool get-token -p my-profile
 dotnet tool install --global EntraTokenCli
 
 # Create profile (uses XOR obfuscation - consider alternatives)
-entratool config create
+entra-auth-cli config create
 
 # Generate token
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 
 # For production, use environment variables or external secrets manager
 ```

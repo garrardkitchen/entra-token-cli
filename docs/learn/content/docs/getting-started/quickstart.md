@@ -25,7 +25,7 @@ dotnet tool install -g EntraTokenCli
 Run the interactive profile creation:
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 ```
 
 You'll be prompted for:
@@ -55,7 +55,7 @@ Client secret: ****
 ## Step 3: Generate a Token
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile
+entra-auth-cli get-token -p myprofile
 ```
 
 The tool will:
@@ -89,7 +89,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN_HERE" \
 Or read from the token file in headless environments:
 
 ```bash {linenos=inline}
-TOKEN=$(cat ~/.config/entratool/last-token.txt)
+TOKEN=$(cat ~/.config/entra-auth-cli/last-token.txt)
 curl -H "Authorization: Bearer $TOKEN" \
   https://graph.microsoft.com/v1.0/me
 ```
@@ -101,7 +101,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 Want to see what's inside your token?
 
 ```bash {linenos=inline}
-entratool inspect $(cat ~/.config/entratool/last-token.txt)
+entra-auth-cli inspect $(cat ~/.config/entra-auth-cli/last-token.txt)
 ```
 
 This decodes the JWT and displays claims like:

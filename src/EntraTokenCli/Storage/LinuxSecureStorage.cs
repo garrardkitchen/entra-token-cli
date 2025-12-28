@@ -8,7 +8,7 @@ namespace EntraTokenCli.Storage;
 /// </summary>
 public class LinuxSecureStorage : ISecureStorage
 {
-    private const string ServiceName = "entratool";
+    private const string ServiceName = "entra-auth-cli";
     private readonly Dictionary<string, string> _cache = new();
     private readonly string _fallbackDirectory;
     private bool _usesFallback = false;

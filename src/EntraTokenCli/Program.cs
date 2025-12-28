@@ -25,7 +25,7 @@ class Program
             if (args.Length == 0 || args.Any(a => a == "--help" || a == "-h" || a == "help"))
             {
                 AnsiConsole.Write(
-                    new FigletText("entratool")
+                    new FigletText("entra-auth-cli")
                         .LeftJustified()
                         .Color(Color.Cyan1));
                 AnsiConsole.MarkupLine($"[dim]Version [orange1]{version}[/][/]");
@@ -42,7 +42,7 @@ class Program
 
             app.Configure(config =>
             {
-                config.SetApplicationName("entratool");
+                config.SetApplicationName("entra-auth-cli");
                 config.SetApplicationVersion(version);
 
                 config.AddCommand<GetTokenCommand>("get-token")

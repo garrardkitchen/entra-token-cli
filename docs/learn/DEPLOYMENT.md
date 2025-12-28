@@ -1,6 +1,6 @@
-# 🚀 Deployment Guide for Entra Token CLI Documentation
+# 🚀 Deployment Guide for Entra Auth Cli Documentation
 
-This guide will help you deploy the documentation to the separate `entratool-docs` repository at https://github.com/garrardkitchen/entratool-docs
+This guide will help you deploy the documentation to the separate `entra-auth-cli-docs` repository at https://github.com/garrardkitchen/entra-auth-cli-docs
 
 ## ✅ What's Been Done
 
@@ -15,8 +15,8 @@ This guide will help you deploy the documentation to the separate `entratool-doc
 ### Step 1: Create the Documentation Repository
 
 1. Go to https://github.com/new
-2. Repository name: `entratool-docs`
-3. Description: "Documentation for Entra Token CLI"
+2. Repository name: `entra-auth-cli-docs`
+3. Description: "Documentation for Entra Auth Cli"
 4. Public repository
 5. **Do NOT** initialize with README, .gitignore, or license
 6. Click "Create repository"
@@ -43,7 +43,7 @@ git add .
 git commit -m "Initial documentation site with Hugo and Lotus Docs"
 
 # Add remote
-git remote add origin https://github.com/garrardkitchen/entratool-docs.git
+git remote add origin https://github.com/garrardkitchen/entra-auth-cli-docs.git
 
 # Create main branch and push
 git branch -M main
@@ -52,7 +52,7 @@ git push -u origin main
 
 ### Step 4: Create GitHub Actions Workflow
 
-In the `entratool-docs` repository, create the workflow file:
+In the `entra-auth-cli-docs` repository, create the workflow file:
 
 ```bash
 # Create workflow directory
@@ -75,7 +75,7 @@ Add a CNAME record in your DNS provider:
 
 ```
 Type: CNAME
-Name: entratool-docs
+Name: entra-auth-cli-docs
 Value: garrardkitchen.github.io
 TTL: 3600 (or default)
 ```
@@ -83,7 +83,7 @@ TTL: 3600 (or default)
 ### Step 6: Configure Custom Domain in GitHub
 
 1. Go to repository Settings → Pages
-2. Custom domain: `entratool-docs.garrardkitchen.com`
+2. Custom domain: `entra-auth-cli-docs.garrardkitchen.com`
 3. Check "Enforce HTTPS" (after DNS propagates)
 4. Save
 
@@ -137,7 +137,7 @@ hugo server -D
 
 After deployment, verify:
 
-1. **Homepage**: https://entratool-docs.garrardkitchen.com/
+1. **Homepage**: https://entra-auth-cli-docs.garrardkitchen.com/
    - Hero section displays
    - Feature cards render
    - Platform support badges show
@@ -229,7 +229,7 @@ Main Repository (entra-token-cli)
     ├── go.sum
     └── README.md
 
-Documentation Repository (entratool-docs)
+Documentation Repository (entra-auth-cli-docs)
 ├── .github/workflows/hugo.yml
 ├── content/
 ├── static/
@@ -238,4 +238,4 @@ Documentation Repository (entratool-docs)
 └── go.sum
 ```
 
-All documentation source files in `docs/learn/` should be pushed to the `entratool-docs` repository for deployment.
+All documentation source files in `docs/learn/` should be pushed to the `entra-auth-cli-docs` repository for deployment.

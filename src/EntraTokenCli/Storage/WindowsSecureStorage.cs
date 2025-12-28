@@ -21,7 +21,7 @@ public class WindowsSecureStorage : ISecureStorage
 
         _storageDirectory = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "entratool",
+            "entra-auth-cli",
             "secure"
         );
 

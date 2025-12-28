@@ -41,7 +41,7 @@ public class ConfigService
         {
             return Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "entratool"
+                "entra-auth-cli"
             );
         }
         
@@ -49,7 +49,7 @@ public class ConfigService
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
             ".config",
-            "entratool"
+            "entra-auth-cli"
         );
     }
 

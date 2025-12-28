@@ -26,7 +26,7 @@ The Device Code flow enables authentication on devices that lack a web browser o
 
 ```bash {linenos=inline}
 # Start device code authentication
-entratool get-token --flow device-code --profile myapp
+entra-auth-cli get-token --flow device-code --profile myapp
 ```
 
 Output:
@@ -46,7 +46,7 @@ Waiting for authentication...
 Create a profile for device code flow:
 
 ```bash {linenos=inline}
-entratool create-profile --name device-app
+entra-auth-cli create-profile --name device-app
 ```
 
 Profile configuration:
@@ -86,13 +86,13 @@ az ad app update \
 
 ```bash {linenos=inline}
 # Using default profile
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 
 # Using specific profile
-entratool get-token --flow device-code --profile production
+entra-auth-cli get-token --flow device-code --profile production
 
 # With custom scopes
-entratool get-token --flow device-code \
+entra-auth-cli get-token --flow device-code \
   --scope https://graph.microsoft.com/User.Read
 ```
 
@@ -107,7 +107,7 @@ echo "Please complete the sign-in process on another device."
 echo
 
 # Start device code flow
-if ! TOKEN=$(entratool get-token --flow device-code --output json); then
+if ! TOKEN=$(entra-auth-cli get-token --flow device-code --output json); then
     echo "Authentication failed" >&2
     exit 1
 fi
@@ -133,7 +133,7 @@ Perfect for remote terminal sessions:
 ssh user@server
 
 # Authenticate using device code
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 
 # Complete sign-in on your local computer/phone
 # Remote session receives token automatically
@@ -145,7 +145,7 @@ entratool get-token --flow device-code
 
 ```
 User runs command:
-$ entratool get-token --flow device-code
+$ entra-auth-cli get-token --flow device-code
 
 CLI displays:
 ┌─────────────────────────────────────────────────────┐
@@ -183,7 +183,7 @@ Device codes expire after 15 minutes by default:
 
 ```bash {linenos=inline}
 # Check token expiry
-entratool get-token --flow device-code --output json \
+entra-auth-cli get-token --flow device-code --output json \
   | jq '.expires_at'
 
 # The CLI handles timeout automatically
@@ -217,10 +217,10 @@ FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y curl jq
 
-# Install Entra Token CLI
-RUN curl -L https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64 \
-    -o /usr/local/bin/entratool && \
-    chmod +x /usr/local/bin/entratool
+# Install Entra Auth Cli
+RUN curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+    -o /usr/local/bin/entra-auth-cli && \
+    chmod +x /usr/local/bin/entra-auth-cli
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -233,7 +233,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 # entrypoint.sh
 
 echo "Authenticating container..."
-entratool get-token --flow device-code --profile container
+entra-auth-cli get-token --flow device-code --profile container
 
 # Run application with token
 exec "$@"
@@ -251,7 +251,7 @@ def authenticate_device():
     
     # Start device code flow
     result = subprocess.run(
-        ["entratool", "get-token", "--flow", "device-code", "--output", "json"],
+        ["entra-auth-cli", "get-token", "--flow", "device-code", "--output", "json"],
         capture_output=True,
         text=True
     )
@@ -292,12 +292,12 @@ if __name__ == "__main__":
 # raspberry-pi-auth.sh
 
 PROFILE="raspberry-pi"
-TOKEN_FILE="/home/pi/.entratool-cache"
+TOKEN_FILE="/home/pi/.entra-auth-cli-cache"
 
 # Create profile if it doesn't exist
-if ! entratool list-profiles | grep -q "$PROFILE"; then
+if ! entra-auth-cli list-profiles | grep -q "$PROFILE"; then
     echo "Creating profile for Raspberry Pi..."
-    entratool create-profile \
+    entra-auth-cli create-profile \
         --name "$PROFILE" \
         --tenant-id "$TENANT_ID" \
         --client-id "$CLIENT_ID" \
@@ -306,10 +306,10 @@ fi
 
 # Authenticate using device code
 echo "Please sign in using another device..."
-entratool get-token --flow device-code --profile "$PROFILE"
+entra-auth-cli get-token --flow device-code --profile "$PROFILE"
 
 # Cache token for application
-entratool get-token --profile "$PROFILE" --output json > "$TOKEN_FILE"
+entra-auth-cli get-token --profile "$PROFILE" --output json > "$TOKEN_FILE"
 
 echo "Authentication complete! Starting application..."
 python3 /home/pi/app/main.py
@@ -331,7 +331,7 @@ Users must consent to permissions:
 
 ```bash {linenos=inline}
 # First-time authentication requires consent
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 
 # Subsequent authentications (same user):
 # - No consent required if permissions unchanged
@@ -344,10 +344,10 @@ Protect access tokens after authentication:
 
 ```bash {linenos=inline}
 # ❌ Bad - token exposed in command
-curl -H "Authorization: Bearer $(entratool get-token --output json | jq -r .access_token)" ...
+curl -H "Authorization: Bearer $(entra-auth-cli get-token --output json | jq -r .access_token)" ...
 
 # ✅ Good - token in variable
-TOKEN=$(entratool get-token --output json | jq -r .access_token)
+TOKEN=$(entra-auth-cli get-token --output json | jq -r .access_token)
 # Use $TOKEN in scripts, not exposed in process list
 ```
 
@@ -367,7 +367,7 @@ TOKEN=$(entratool get-token --output json | jq -r .access_token)
 
 ```bash {linenos=inline}
 # Code expires after 15 minutes
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 ```
 
 ### Wrong Code Entered
@@ -386,7 +386,7 @@ entratool get-token --flow device-code
 **Solution:**
 ```bash {linenos=inline}
 # Start over with fresh code
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 ```
 
 ### Permissions Denied
@@ -435,7 +435,7 @@ cat << 'EOF'
 ╚════════════════════════════════════════════════════╝
 EOF
 
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 ```
 
 ### Error Handling
@@ -448,7 +448,7 @@ authenticate_with_retry() {
     while [ $attempt -le $max_attempts ]; do
         echo "Authentication attempt $attempt of $max_attempts..."
         
-        if entratool get-token --flow device-code --profile "$1"; then
+        if entra-auth-cli get-token --flow device-code --profile "$1"; then
             echo "✓ Authentication successful"
             return 0
         fi

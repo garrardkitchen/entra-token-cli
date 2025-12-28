@@ -1,5 +1,5 @@
 ---
-title: "Building EntraTool: A Secure CLI for Microsoft Entra ID Token Management"
+title: "Building entra-auth-cli: A Secure CLI for Microsoft Entra ID Token Management"
 date: 2025-12-18T10:00:00Z
 draft: false
 author: "Kit Cheng"
@@ -28,9 +28,9 @@ After creating my third C# console app to generate tokens (the last one being a 
 
 **There had to be a better way.**
 
-## The Solution: EntraTool - Secure Token Management Made Simple
+## The Solution: entra-auth-cli - Secure Token Management Made Simple
 
-I decided to build `entratool`, a cross-platform CLI that eliminates both the frustration and the security risk. The elevator pitch:
+I decided to build `entra-auth-cli`, a cross-platform CLI that eliminates both the frustration and the security risk. The elevator pitch:
 
 > **Stop manually hunting for credentials across Azure portals. Stop risking accidental secret commits. Store your profiles once with platform-native encryption, and generate tokens with a single command—no matter which OS you're on.**
 
@@ -76,7 +76,7 @@ The service principal is what actually authenticates and gets tokens. This is wh
 - But service principals exist per tenant
 - Multi-tenant apps have one app registration but many service principals
 
-**EntraTool manages both sides:** It stores your client credentials securely and handles the OAuth2 flows to get tokens from those service principals.
+**entra-auth-cli manages both sides:** It stores your client credentials securely and handles the OAuth2 flows to get tokens from those service principals.
 
 ### Four OAuth2 Flows, One Command
 
@@ -84,25 +84,25 @@ EntratTool supports all the major OAuth2 flows:
 
 **1. Client Credentials** (Service-to-Service)
 ```bash
-entratool get-token -p myapi
+entra-auth-cli get-token -p myapi
 ```
 Perfect for service principals, API access, automation. No user interaction needed.
 
 **2. Authorization Code with PKCE** (User-Interactive)
 ```bash
-entratool get-token -p myapp -f AuthorizationCode
+entra-auth-cli get-token -p myapp -f AuthorizationCode
 ```
 Opens a browser, user logs in, token is cached. Great for delegated permissions.
 
 **3. Device Code** (Headless/SSH)
 ```bash
-entratool get-token -p myapp -f DeviceCode
+entra-auth-cli get-token -p myapp -f DeviceCode
 ```
 Displays a code to enter on another device. Perfect for SSH sessions or containers.
 
 **4. Interactive Browser** (Local Development)
 ```bash
-entratool get-token -p myapp -f InteractiveBrowser
+entra-auth-cli get-token -p myapp -f InteractiveBrowser
 ```
 Full browser flow with automatic localhost callback handling.
 
@@ -112,9 +112,9 @@ This is where security meets usability. Secrets are **never stored in plain text
 
 | Platform | Storage Method | Location |
 |----------|---------------|----------|
-| **Windows** | DPAPI (Data Protection API) | `%APPDATA%\entratool\secure\` |
-| **macOS** | System Keychain | Keychain Access (search "entratool") |
-| **Linux** | XOR Obfuscation* | `~/.config/entratool/secure/` |
+| **Windows** | DPAPI (Data Protection API) | `%APPDATA%\entra-auth-cli\secure\` |
+| **macOS** | System Keychain | Keychain Access (search "entra-auth-cli") |
+| **Linux** | XOR Obfuscation* | `~/.config/entra-auth-cli/secure/` |
 
 *Linux fallback is weak; proper libsecret integration planned for future versions.
 
@@ -148,7 +148,7 @@ else
     flow = OAuth2Flow.InteractiveBrowser;  // Otherwise, interactive browser
 ```
 
-**Result:** Just type `entratool get-token -p myprofile` and the tool picks the right flow based on your authentication method. No mental overhead.
+**Result:** Just type `entra-auth-cli get-token -p myprofile` and the tool picks the right flow based on your authentication method. No mental overhead.
 
 ## Key Features That Save Time and Prevent Disasters
 
@@ -156,36 +156,36 @@ else
 Create once, use everywhere:
 ```bash
 # Interactive profile creation
-entratool config create
+entra-auth-cli config create
 
 # List all profiles
-entratool config list
+entra-auth-cli config list
 
 # Edit existing profiles
-entratool config edit -p production-api
+entra-auth-cli config edit -p production-api
 ```
 
 ### 2. Team Sharing (Without Exposing Secrets)
 Export profiles with encryption for team distribution:
 ```bash
 # Export with secrets (AES-256 + PBKDF2)
-entratool config export -p myprofile --include-secrets -o team-profile.enc
+entra-auth-cli config export -p myprofile --include-secrets -o team-profile.enc
 
 # Team member imports
-entratool config import -i team-profile.enc
+entra-auth-cli config import -i team-profile.enc
 ```
 
 ### 3. Token Inspection
 Decode JWTs instantly:
 ```bash
-entratool inspect eyJ0eXAiOiJKV1Qi...
+entra-auth-cli inspect eyJ0eXAiOiJKV1Qi...
 ```
 Shows all claims, expiration, issuer—perfect for debugging permission issues.
 
 ### 4. Clipboard Integration
 Tokens auto-copy to clipboard (with smart fallback to file in headless environments):
 ```bash
-entratool get-token -p myapi
+entra-auth-cli get-token -p myapi
 # Token in clipboard, ready to paste into Postman/curl
 ```
 
@@ -196,13 +196,13 @@ Full support for .pfx certificates with three password strategies:
 - **Passwordless certificates** (when possible)
 
 ```bash
-entratool get-token -p cert-app --cache-cert-password
+entra-auth-cli get-token -p cert-app --cache-cert-password
 ```
 
 ### 6. App Registration Discovery
 Search your tenant for app registrations without leaving the terminal:
 ```bash
-entratool discover -t contoso.onmicrosoft.com -s "MyApp*"
+entra-auth-cli discover -t contoso.onmicrosoft.com -s "MyApp*"
 ```
 Uses Microsoft Graph API with keyboard search filtering and colored output.
 
@@ -251,14 +251,14 @@ Every I/O operation is async, keeping the CLI responsive even during network cal
 ## Real-World Impact: Time Savings and Security Wins
 
 ### Time Savings
-**Before EntraTool:**
+**Before entra-auth-cli:**
 - Hunt for credentials in Azure Portal: **2-3 minutes**
 - Craft token request manually: **1-2 minutes**
 - Copy/paste credentials: **30 seconds**
 - **Total: 4-5 minutes per token request**
 
-**With EntraTool:**
-- `entratool get-token -p myapi`: **3 seconds**
+**With entra-auth-cli:**
+- `entra-auth-cli get-token -p myapi`: **3 seconds**
 
 **For a developer making 10 token requests per day:**
 - Daily savings: ~40 minutes
@@ -313,10 +313,10 @@ dotnet tool install -g EntraTokenCli
 # https://github.com/garrardkitchen/entra-token-cli/releases
 
 # Create your first profile
-entratool config create
+entra-auth-cli config create
 
 # Get a token
-entratool get-token
+entra-auth-cli get-token
 ```
 
 ## What's Next?
@@ -347,9 +347,9 @@ Good CLI UX means:
 ### 4. Cross-Platform Is Hard
 What works on macOS doesn't work on Windows. Testing on all three platforms revealed issues that wouldn't surface otherwise (looking at you, Keychain CLI quirks).
 
-## Conclusion: Stop Committing Secrets, Start Using EntraTool
+## Conclusion: Stop Committing Secrets, Start Using entra-auth-cli
 
-I built `entratool` because I was tired of:
+I built `entra-auth-cli` because I was tired of:
 - **The tedium** of manually generating tokens
 - **The anxiety** of potentially committing secrets
 - **The friction** of context-switching to the Azure Portal
@@ -362,7 +362,7 @@ If you've ever:
 - ✅ Needed tokens across multiple environments
 - ✅ Wished for secure credential storage that "just works"
 
-**Then `entratool` is for you.**
+**Then `entra-auth-cli` is for you.**
 
 It took 1 hour to build with AI assistance, but it will save you **hours every month** and eliminate a major security risk from your workflow.
 

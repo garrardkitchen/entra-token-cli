@@ -16,12 +16,12 @@ public class ConfigCommand : Command<ConfigSettings>
     public override int Execute(CommandContext context, ConfigSettings settings)
     {
         AnsiConsole.MarkupLine("[yellow]Use one of the following subcommands:[/]");
-        AnsiConsole.MarkupLine("  [cyan]entratool config create[/]  - Create a new profile");
-        AnsiConsole.MarkupLine("  [cyan]entratool config list[/]    - List all profiles");
-        AnsiConsole.MarkupLine("  [cyan]entratool config edit[/]    - Edit a profile");
-        AnsiConsole.MarkupLine("  [cyan]entratool config delete[/]  - Delete a profile");
-        AnsiConsole.MarkupLine("  [cyan]entratool config export[/]  - Export a profile");
-        AnsiConsole.MarkupLine("  [cyan]entratool config import[/]  - Import a profile");
+        AnsiConsole.MarkupLine("  [cyan]entra-auth-cli config create[/]  - Create a new profile");
+        AnsiConsole.MarkupLine("  [cyan]entra-auth-cli config list[/]    - List all profiles");
+        AnsiConsole.MarkupLine("  [cyan]entra-auth-cli config edit[/]    - Edit a profile");
+        AnsiConsole.MarkupLine("  [cyan]entra-auth-cli config delete[/]  - Delete a profile");
+        AnsiConsole.MarkupLine("  [cyan]entra-auth-cli config export[/]  - Export a profile");
+        AnsiConsole.MarkupLine("  [cyan]entra-auth-cli config import[/]  - Import a profile");
         return 0;
     }
 }

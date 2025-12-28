@@ -1,12 +1,12 @@
 ---
 title: "Core Concepts"
-description: "Understand the fundamentals of Entra Token CLI"
+description: "Understand the fundamentals of Entra Auth Cli"
 weight: 2
 ---
 
 # Core Concepts
 
-Understanding these fundamental concepts will help you use Entra Token CLI effectively.
+Understanding these fundamental concepts will help you use Entra Auth Cli effectively.
 
 ## Key Topics
 

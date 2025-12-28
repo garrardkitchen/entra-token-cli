@@ -12,7 +12,7 @@ Comprehensive guides for each supported OAuth2 authentication flow.
 
 ## Supported Flows
 
-Entra Token CLI supports four OAuth2 authentication flows, each designed for specific scenarios.
+Entra Auth Cli supports four OAuth2 authentication flows, each designed for specific scenarios.
 
 ### Service-to-Service
 
@@ -76,25 +76,25 @@ Entra Token CLI supports four OAuth2 authentication flows, each designed for spe
 ### Client Credentials
 
 ```bash {linenos=inline}
-entratool get-token -p service-principal -f ClientCredentials
+entra-auth-cli get-token -p service-principal -f ClientCredentials
 ```
 
 ### Interactive Browser
 
 ```bash {linenos=inline}
-entratool get-token -p desktop-app -f InteractiveBrowser
+entra-auth-cli get-token -p desktop-app -f InteractiveBrowser
 ```
 
 ### Device Code
 
 ```bash {linenos=inline}
-entratool get-token -p iot-device -f DeviceCode
+entra-auth-cli get-token -p iot-device -f DeviceCode
 ```
 
 ### Authorization Code
 
 ```bash {linenos=inline}
-entratool get-token -p webapp -f AuthorizationCode
+entra-auth-cli get-token -p webapp -f AuthorizationCode
 ```
 
 ---
@@ -110,7 +110,7 @@ The tool automatically selects the appropriate flow based on your profile config
 
 ```bash {linenos=inline}
 # Override automatic selection
-entratool get-token -p myprofile -f DeviceCode
+entra-auth-cli get-token -p myprofile -f DeviceCode
 ```
 
 ---

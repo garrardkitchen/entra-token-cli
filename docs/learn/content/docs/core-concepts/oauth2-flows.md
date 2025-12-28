@@ -6,7 +6,7 @@ weight: 20
 
 # OAuth2 Flows
 
-Entra Token CLI supports four OAuth2 authentication flows. Each flow is designed for specific scenarios and security requirements.
+Entra Auth Cli supports four OAuth2 authentication flows. Each flow is designed for specific scenarios and security requirements.
 
 ---
 
@@ -45,7 +45,7 @@ Entra Token CLI supports four OAuth2 authentication flows. Each flow is designed
 ### Example
 
 ```bash {linenos=inline}
-entratool get-token -p service-principal -f ClientCredentials
+entra-auth-cli get-token -p service-principal -f ClientCredentials
 ```
 
 [Full guide →](/docs/oauth-flows/client-credentials/)
@@ -77,7 +77,7 @@ entratool get-token -p service-principal -f ClientCredentials
 ### Example
 
 ```bash {linenos=inline}
-entratool get-token -p webapp -f AuthorizationCode
+entra-auth-cli get-token -p webapp -f AuthorizationCode
 ```
 
 [Full guide →](/docs/oauth-flows/authorization-code/)
@@ -109,7 +109,7 @@ entratool get-token -p webapp -f AuthorizationCode
 ### Example
 
 ```bash {linenos=inline}
-entratool get-token -p iot-device -f DeviceCode
+entra-auth-cli get-token -p iot-device -f DeviceCode
 ```
 
 **Output:**
@@ -152,7 +152,7 @@ URL: https://microsoft.com/devicelogin
 ### Example
 
 ```bash {linenos=inline}
-entratool get-token -p desktop-app -f InteractiveBrowser
+entra-auth-cli get-token -p desktop-app -f InteractiveBrowser
 ```
 
 [Full guide →](/docs/oauth-flows/interactive-browser/)
@@ -175,7 +175,7 @@ You can override this by setting a default flow in your profile or using the `-f
 When creating or editing a profile:
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 # ... other prompts ...
 Set default OAuth2 flow? y
 Default OAuth2 flow: ClientCredentials
@@ -184,7 +184,7 @@ Default OAuth2 flow: ClientCredentials
 Or specify at runtime:
 
 ```bash {linenos=inline}
-entratool get-token -p myprofile -f DeviceCode
+entra-auth-cli get-token -p myprofile -f DeviceCode
 ```
 
 ---
@@ -229,7 +229,7 @@ entratool get-token -p myprofile -f DeviceCode
 **Scopes**: `https://management.azure.com/.default`
 
 ```bash {linenos=inline}
-entratool get-token -p azure-automation -f ClientCredentials
+entra-auth-cli get-token -p azure-automation -f ClientCredentials
 ```
 
 ### Scenario: Personal Microsoft Graph Access
@@ -239,7 +239,7 @@ entratool get-token -p azure-automation -f ClientCredentials
 **Scopes**: `https://graph.microsoft.com/User.Read`
 
 ```bash {linenos=inline}
-entratool get-token -p personal-graph -f InteractiveBrowser
+entra-auth-cli get-token -p personal-graph -f InteractiveBrowser
 ```
 
 ### Scenario: CI/CD Pipeline
@@ -249,7 +249,7 @@ entratool get-token -p personal-graph -f InteractiveBrowser
 **Scopes**: API-specific scope
 
 ```bash {linenos=inline}
-entratool get-token -p cicd-deployer -f ClientCredentials
+entra-auth-cli get-token -p cicd-deployer -f ClientCredentials
 ```
 
 ---

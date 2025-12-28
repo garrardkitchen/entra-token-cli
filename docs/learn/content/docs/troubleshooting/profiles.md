@@ -13,7 +13,7 @@ Common problems with profile configuration, access, and management.
 ### Problem
 
 ```bash {linenos=inline}
-$ entratool get-token --profile production
+$ entra-auth-cli get-token --profile production
 Error: profile 'production' not found
 ```
 
@@ -23,30 +23,30 @@ Error: profile 'production' not found
 
 ```bash {linenos=inline}
 # See all configured profiles
-entratool list-profiles
+entra-auth-cli list-profiles
 
 # Check if profile exists with different name
-entratool list-profiles | grep -i prod
+entra-auth-cli list-profiles | grep -i prod
 ```
 
 #### 2. Create Missing Profile
 
 ```bash {linenos=inline}
 # Create the profile
-entratool create-profile --name production
+entra-auth-cli create-profile --name production
 
 # Or use interactive mode
-entratool create-profile
+entra-auth-cli create-profile
 ```
 
 #### 3. Use Default Profile
 
 ```bash {linenos=inline}
 # If you meant to use default profile
-entratool get-token
+entra-auth-cli get-token
 
 # Check default profile
-entratool list-profiles | grep default
+entra-auth-cli list-profiles | grep default
 ```
 
 ## Profile Already Exists
@@ -54,7 +54,7 @@ entratool list-profiles | grep default
 ### Problem
 
 ```bash {linenos=inline}
-$ entratool create-profile --name dev
+$ entra-auth-cli create-profile --name dev
 Error: profile 'dev' already exists
 ```
 
@@ -64,28 +64,28 @@ Error: profile 'dev' already exists
 
 ```bash {linenos=inline}
 # View existing profile
-entratool show-profile --name dev
+entra-auth-cli show-profile --name dev
 
 # Edit if needed
-entratool edit-profile --name dev
+entra-auth-cli edit-profile --name dev
 ```
 
 #### 2. Delete and Recreate
 
 ```bash {linenos=inline}
 # Delete existing profile
-entratool delete-profile --name dev
+entra-auth-cli delete-profile --name dev
 
 # Create new one
-entratool create-profile --name dev
+entra-auth-cli create-profile --name dev
 ```
 
 #### 3. Use Different Name
 
 ```bash {linenos=inline}
 # Create with different name
-entratool create-profile --name dev-new
-entratool create-profile --name dev-v2
+entra-auth-cli create-profile --name dev-new
+entra-auth-cli create-profile --name dev-v2
 ```
 
 ## Invalid Profile Configuration
@@ -93,7 +93,7 @@ entratool create-profile --name dev-v2
 ### Problem
 
 ```bash {linenos=inline}
-$ entratool get-token --profile myapp
+$ entra-auth-cli get-token --profile myapp
 Error: invalid profile configuration: missing tenant_id
 ```
 
@@ -103,7 +103,7 @@ Error: invalid profile configuration: missing tenant_id
 
 ```bash {linenos=inline}
 # View profile details
-entratool show-profile --name myapp
+entra-auth-cli show-profile --name myapp
 
 # Look for missing fields:
 # - tenant_id
@@ -115,11 +115,11 @@ entratool show-profile --name myapp
 
 ```bash {linenos=inline}
 # Interactive edit
-entratool edit-profile --name myapp
+entra-auth-cli edit-profile --name myapp
 
 # Or delete and recreate
-entratool delete-profile --name myapp
-entratool create-profile --name myapp
+entra-auth-cli delete-profile --name myapp
+entra-auth-cli create-profile --name myapp
 ```
 
 #### 3. Validate Required Fields
@@ -157,7 +157,7 @@ Error: failed to access Keychain: user canceled
 
 **Linux:**
 ```bash {linenos=inline}
-Error: permission denied accessing /home/user/.entratool/profiles/
+Error: permission denied accessing /home/user/.entra-auth-cli/profiles/
 ```
 
 ### Solutions
@@ -175,8 +175,8 @@ $env:LOCALAPPDATA\EntraTokenCLI\profiles
 Get-Acl "$env:LOCALAPPDATA\EntraTokenCLI\profiles" | Format-List
 
 # 4. Recreate profile if user changed
-entratool delete-profile --name myapp
-entratool create-profile --name myapp
+entra-auth-cli delete-profile --name myapp
+entra-auth-cli create-profile --name myapp
 ```
 
 #### macOS (Keychain)
@@ -186,12 +186,12 @@ entratool create-profile --name myapp
 # Click "Always Allow" when prompted
 
 # 2. Reset Keychain permissions
-security delete-generic-password -s "com.garrardkitchen.entratool-cli" -a "myapp"
-entratool create-profile --name myapp
+security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "myapp"
+entra-auth-cli create-profile --name myapp
 
 # 3. Check Keychain Access app
 open -a "Keychain Access"
-# Search for: entratool-cli
+# Search for: entra-auth-cli-cli
 
 # 4. Unlock Keychain if locked
 security unlock-keychain ~/Library/Keychains/login.keychain-db
@@ -201,19 +201,19 @@ security unlock-keychain ~/Library/Keychains/login.keychain-db
 
 ```bash {linenos=inline}
 # 1. Check permissions
-ls -la ~/.entratool/profiles/
+ls -la ~/.entra-auth-cli/profiles/
 
 # 2. Fix permissions
-chmod 700 ~/.entratool/profiles/
-chmod 600 ~/.entratool/profiles/*
+chmod 700 ~/.entra-auth-cli/profiles/
+chmod 600 ~/.entra-auth-cli/profiles/*
 
 # 3. Check ownership
-ls -la ~/.entratool/
-chown -R $USER:$USER ~/.entratool/
+ls -la ~/.entra-auth-cli/
+chown -R $USER:$USER ~/.entra-auth-cli/
 
 # 4. Recreate if needed
-rm -rf ~/.entratool/profiles/
-entratool create-profile --name myapp
+rm -rf ~/.entra-auth-cli/profiles/
+entra-auth-cli create-profile --name myapp
 ```
 
 ## Profile Corruption
@@ -221,7 +221,7 @@ entratool create-profile --name myapp
 ### Problem
 
 ```bash {linenos=inline}
-$ entratool get-token --profile prod
+$ entra-auth-cli get-token --profile prod
 Error: failed to parse profile: invalid JSON
 ```
 
@@ -234,27 +234,27 @@ Error: failed to parse profile: invalid JSON
 type %LOCALAPPDATA%\EntraTokenCLI\profiles\prod.json
 
 # macOS/Linux
-cat ~/.entratool/profiles/prod.json
+cat ~/.entra-auth-cli/profiles/prod.json
 ```
 
 #### 2. Delete Corrupted Profile
 
 ```bash {linenos=inline}
 # Delete via CLI
-entratool delete-profile --name prod
+entra-auth-cli delete-profile --name prod
 
 # Or manually
 # Windows
 del %LOCALAPPDATA%\EntraTokenCLI\profiles\prod.*
 
 # macOS/Linux
-rm ~/.entratool/profiles/prod.*
+rm ~/.entra-auth-cli/profiles/prod.*
 ```
 
 #### 3. Recreate Profile
 
 ```bash {linenos=inline}
-entratool create-profile --name prod
+entra-auth-cli create-profile --name prod
 ```
 
 ## Migration Issues
@@ -263,7 +263,7 @@ entratool create-profile --name prod
 
 ```bash {linenos=inline}
 # After moving to new machine
-$ entratool get-token --profile myapp
+$ entra-auth-cli get-token --profile myapp
 Error: cannot decrypt token
 ```
 
@@ -280,20 +280,20 @@ Tokens are encrypted per-machine and per-user:
 
 ```bash {linenos=inline}
 # On old machine - export (configuration only, not tokens)
-entratool export-profile --name myapp > myapp-profile.json
+entra-auth-cli export-profile --name myapp > myapp-profile.json
 
 # On new machine - import
-entratool import-profile < myapp-profile.json
+entra-auth-cli import-profile < myapp-profile.json
 
 # Re-authenticate on new machine
-entratool get-token --profile myapp --force
+entra-auth-cli get-token --profile myapp --force
 ```
 
 #### 3. Recreate Profiles
 
 ```bash {linenos=inline}
 # Easiest solution: recreate profiles on new machine
-entratool create-profile --name myapp
+entra-auth-cli create-profile --name myapp
 # Enter same tenant ID, client ID, etc.
 ```
 
@@ -302,7 +302,7 @@ entratool create-profile --name myapp
 ### Problem
 
 ```bash {linenos=inline}
-$ entratool create-profile
+$ entra-auth-cli create-profile
 Error: permission denied: cannot write to profiles directory
 ```
 
@@ -312,9 +312,9 @@ Error: permission denied: cannot write to profiles directory
 
 ```bash {linenos=inline}
 # Linux/macOS
-ls -ld ~/.entratool/
-mkdir -p ~/.entratool/profiles
-chmod 700 ~/.entratool/profiles
+ls -ld ~/.entra-auth-cli/
+mkdir -p ~/.entra-auth-cli/profiles
+chmod 700 ~/.entra-auth-cli/profiles
 
 # Windows (PowerShell)
 Test-Path "$env:LOCALAPPDATA\EntraTokenCLI"
@@ -335,10 +335,10 @@ Get-PSDrive C
 
 ```bash {linenos=inline}
 # Don't use sudo
-sudo entratool create-profile  # ❌ Wrong
+sudo entra-auth-cli create-profile  # ❌ Wrong
 
 # Run as regular user
-entratool create-profile       # ✅ Correct
+entra-auth-cli create-profile       # ✅ Correct
 ```
 
 ## Profile Name Conflicts
@@ -346,7 +346,7 @@ entratool create-profile       # ✅ Correct
 ### Problem
 
 ```bash {linenos=inline}
-$ entratool create-profile --name "My Profile"
+$ entra-auth-cli create-profile --name "My Profile"
 Error: invalid profile name: spaces not allowed
 ```
 
@@ -356,32 +356,32 @@ Error: invalid profile name: spaces not allowed
 
 ```bash {linenos=inline}
 # Valid profile names:
-entratool create-profile --name my-profile
-entratool create-profile --name my_profile
-entratool create-profile --name myProfile
-entratool create-profile --name myprofile
+entra-auth-cli create-profile --name my-profile
+entra-auth-cli create-profile --name my_profile
+entra-auth-cli create-profile --name myProfile
+entra-auth-cli create-profile --name myprofile
 
 # Invalid (will fail):
-entratool create-profile --name "my profile"  # spaces
-entratool create-profile --name "my/profile"  # slashes
-entratool create-profile --name "my@profile"  # special chars
+entra-auth-cli create-profile --name "my profile"  # spaces
+entra-auth-cli create-profile --name "my/profile"  # slashes
+entra-auth-cli create-profile --name "my@profile"  # special chars
 ```
 
 #### 2. Naming Conventions
 
 ```bash {linenos=inline}
 # Recommended patterns:
-entratool create-profile --name production
-entratool create-profile --name dev
-entratool create-profile --name staging
+entra-auth-cli create-profile --name production
+entra-auth-cli create-profile --name dev
+entra-auth-cli create-profile --name staging
 
 # By purpose:
-entratool create-profile --name graph-reader
-entratool create-profile --name azure-deployer
+entra-auth-cli create-profile --name graph-reader
+entra-auth-cli create-profile --name azure-deployer
 
 # By environment:
-entratool create-profile --name prod-api
-entratool create-profile --name dev-testing
+entra-auth-cli create-profile --name prod-api
+entra-auth-cli create-profile --name dev-testing
 ```
 
 ## Duplicate Tenant/Client Combinations
@@ -396,23 +396,23 @@ Multiple profiles with same tenant/client but different configurations cause con
 
 ```bash {linenos=inline}
 # Instead of:
-entratool create-profile --name app1
-entratool create-profile --name app2
+entra-auth-cli create-profile --name app1
+entra-auth-cli create-profile --name app2
 
 # Use descriptive names:
-entratool create-profile --name graph-readonly
-entratool create-profile --name graph-admin
+entra-auth-cli create-profile --name graph-readonly
+entra-auth-cli create-profile --name graph-admin
 ```
 
 #### 2. List Profiles with Details
 
 ```bash {linenos=inline}
 # Show all profiles with details
-entratool list-profiles --verbose
+entra-auth-cli list-profiles --verbose
 
 # Or manually check
-entratool show-profile --name profile1
-entratool show-profile --name profile2
+entra-auth-cli show-profile --name profile1
+entra-auth-cli show-profile --name profile2
 ```
 
 ## Diagnostic Steps
@@ -421,23 +421,23 @@ entratool show-profile --name profile2
 
 ```bash {linenos=inline}
 # 1. List all profiles
-entratool list-profiles
+entra-auth-cli list-profiles
 
 # 2. Check specific profile
-entratool show-profile --name myapp
+entra-auth-cli show-profile --name myapp
 
 # 3. Verify token generation works
-entratool get-token --profile myapp --output json
+entra-auth-cli get-token --profile myapp --output json
 
 # 4. Check profile file exists
 # Windows
 dir %LOCALAPPDATA%\EntraTokenCLI\profiles\
 
 # macOS/Linux
-ls -la ~/.entratool/profiles/
+ls -la ~/.entra-auth-cli/profiles/
 
 # 5. Test with default profile
-entratool get-token
+entra-auth-cli get-token
 ```
 
 ### Verify Azure Configuration
@@ -459,7 +459,7 @@ az ad app permission list --id YOUR_CLIENT_ID
 
 ```bash {linenos=inline}
 # 1. Use descriptive profile names
-entratool create-profile --name prod-graph-api
+entra-auth-cli create-profile --name prod-graph-api
 
 # 2. Document your profiles
 cat > profiles.md << 'EOF'
@@ -471,10 +471,10 @@ cat > profiles.md << 'EOF'
 EOF
 
 # 3. Backup profile configurations
-entratool export-profile --name production > backup/production.json
+entra-auth-cli export-profile --name production > backup/production.json
 
 # 4. Regular validation
-entratool get-token --profile production --force
+entra-auth-cli get-token --profile production --force
 ```
 
 ## See Also

@@ -14,12 +14,12 @@ Authentication profiles store your configuration for connecting to Microsoft Ent
 
 | Task | Command |
 |------|---------|
-| Create new profile | `entratool config create` |
-| List all profiles | `entratool config list` |
-| Edit existing profile | `entratool config edit -p NAME` |
-| Delete profile | `entratool config delete -p NAME` |
-| Export profile | `entratool config export -p NAME` |
-| Import profile | `entratool config import -f FILE` |
+| Create new profile | `entra-auth-cli config create` |
+| List all profiles | `entra-auth-cli config list` |
+| Edit existing profile | `entra-auth-cli config edit -p NAME` |
+| Delete profile | `entra-auth-cli config delete -p NAME` |
+| Export profile | `entra-auth-cli config export -p NAME` |
+| Import profile | `entra-auth-cli config import -f FILE` |
 
 ---
 
@@ -30,7 +30,7 @@ Authentication profiles store your configuration for connecting to Microsoft Ent
 The easiest way to create a profile:
 
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 ```
 
 **Prompts:**
@@ -72,7 +72,7 @@ Select: 1
 ### View All Profiles
 
 ```bash {linenos=inline}
-entratool config list
+entra-auth-cli config list
 ```
 
 **Output:**
@@ -95,7 +95,7 @@ Available profiles:
 ### JSON Output
 
 ```bash {linenos=inline}
-entratool config list --json
+entra-auth-cli config list --json
 ```
 
 **Output:**
@@ -123,7 +123,7 @@ entratool config list --json
 ### Interactive Edit
 
 ```bash {linenos=inline}
-entratool config edit -p my-graph-app
+entra-auth-cli config edit -p my-graph-app
 ```
 
 **Select what to edit:**
@@ -148,21 +148,21 @@ New scope: https://graph.microsoft.com/User.Read Mail.Read
 
 **Rotate client secret:**
 ```bash {linenos=inline}
-entratool config edit -p my-graph-app
+entra-auth-cli config edit -p my-graph-app
 # Select: Client Secret
 # Enter new secret
 ```
 
 **Change scope:**
 ```bash {linenos=inline}
-entratool config edit -p my-graph-app
+entra-auth-cli config edit -p my-graph-app
 # Select: Scope
 # Enter: new-scope
 ```
 
 **Switch authentication method:**
 ```bash {linenos=inline}
-entratool config edit -p my-graph-app
+entra-auth-cli config edit -p my-graph-app
 # Select: Authentication Method
 # Choose: Certificate
 # Enter certificate path and password
@@ -177,7 +177,7 @@ entratool config edit -p my-graph-app
 ### Delete Single Profile
 
 ```bash {linenos=inline}
-entratool config delete -p my-graph-app
+entra-auth-cli config delete -p my-graph-app
 ```
 
 **Confirmation prompt:**
@@ -195,7 +195,7 @@ Are you sure you want to delete profile 'my-graph-app'? (y/n): y
 Skip confirmation:
 
 ```bash {linenos=inline}
-entratool config delete -p my-graph-app --force
+entra-auth-cli config delete -p my-graph-app --force
 ```
 
 ⚠️ **Warning:** This is permanent. Secrets cannot be recovered.
@@ -211,7 +211,7 @@ entratool config delete -p my-graph-app --force
 Export profile configuration (without secrets):
 
 ```bash {linenos=inline}
-entratool config export -p my-graph-app -o my-profile.json
+entra-auth-cli config export -p my-graph-app -o my-profile.json
 ```
 
 **Output file:**
@@ -230,7 +230,7 @@ entratool config export -p my-graph-app -o my-profile.json
 ### Export All Profiles
 
 ```bash {linenos=inline}
-entratool config export -o all-profiles.json
+entra-auth-cli config export -o all-profiles.json
 ```
 
 ### Security Note
@@ -250,14 +250,14 @@ You must manually transfer secrets to the new location using secure methods.
 ### Import Single Profile
 
 ```bash {linenos=inline}
-entratool config import -f my-profile.json
+entra-auth-cli config import -f my-profile.json
 ```
 
 **Post-import:**
 ```
 ✓ Profile 'my-graph-app' imported successfully
 ⚠ You must set the client secret:
-  entratool config edit -p my-graph-app
+  entra-auth-cli config edit -p my-graph-app
 ```
 
 ### Import with Merge
@@ -277,7 +277,7 @@ Select:
 Import multiple profiles:
 
 ```bash {linenos=inline}
-entratool config import -f team-profiles.json
+entra-auth-cli config import -f team-profiles.json
 ```
 
 **team-profiles.json:**
@@ -298,11 +298,11 @@ entratool config import -f team-profiles.json
 
 ### Storage Location
 
-**File:** `~/.entratool/profiles.json`
+**File:** `~/.entra-auth-cli/profiles.json`
 
 **Platforms:**
-- **Windows:** `%USERPROFILE%\.entratool\profiles.json`
-- **macOS/Linux:** `~/.entratool/profiles.json`
+- **Windows:** `%USERPROFILE%\.entra-auth-cli\profiles.json`
+- **macOS/Linux:** `~/.entra-auth-cli/profiles.json`
 
 ### What's Stored
 
@@ -325,10 +325,10 @@ You can manually edit `profiles.json`:
 
 ```bash {linenos=inline}
 # macOS/Linux
-nano ~/.entratool/profiles.json
+nano ~/.entra-auth-cli/profiles.json
 
 # Windows
-notepad %USERPROFILE%\.entratool\profiles.json
+notepad %USERPROFILE%\.entra-auth-cli\profiles.json
 ```
 
 **Example:**
@@ -359,21 +359,21 @@ notepad %USERPROFILE%\.entratool\profiles.json
 
 1. Export profiles (without secrets):
    ```bash
-   entratool config export -o team-profiles.json
+   entra-auth-cli config export -o team-profiles.json
    ```
 
 2. Share `team-profiles.json` via secure channel
 
 3. Team member imports:
    ```bash
-   entratool config import -f team-profiles.json
+   entra-auth-cli config import -f team-profiles.json
    ```
 
 4. Securely share secrets (use Azure Key Vault or password manager)
 
 5. Team member adds secrets:
    ```bash
-   entratool config edit -p profile1
+   entra-auth-cli config edit -p profile1
    # Add client secret
    ```
 
@@ -383,19 +383,19 @@ notepad %USERPROFILE%\.entratool\profiles.json
 
 1. Export from dev:
    ```bash
-   entratool config export -p prod-profile -o prod.json
+   entra-auth-cli config export -p prod-profile -o prod.json
    ```
 
 2. Transfer file securely (SCP, encrypted USB, etc.)
 
 3. Import on prod:
    ```bash
-   entratool config import -f prod.json
+   entra-auth-cli config import -f prod.json
    ```
 
 4. Add production secret:
    ```bash
-   entratool config edit -p prod-profile
+   entra-auth-cli config edit -p prod-profile
    ```
 
 ### Scenario: Secret Rotation
@@ -405,13 +405,13 @@ notepad %USERPROFILE%\.entratool\profiles.json
 1. Generate new secret in Azure Portal
 2. Update profile:
    ```bash
-   entratool config edit -p compromised-profile
+   entra-auth-cli config edit -p compromised-profile
    # Select: Client Secret
    # Enter: new-secret
    ```
 3. Test:
    ```bash
-   entratool get-token -p compromised-profile
+   entra-auth-cli get-token -p compromised-profile
    ```
 4. Delete old secret from Azure Portal
 
@@ -494,10 +494,10 @@ profile-custom-api
 **Fix:**
 ```bash {linenos=inline}
 # List available profiles
-entratool config list
+entra-auth-cli config list
 
 # Use correct name
-entratool get-token -p correct-profile-name
+entra-auth-cli get-token -p correct-profile-name
 ```
 
 ### "Profile already exists"
@@ -507,10 +507,10 @@ entratool get-token -p correct-profile-name
 **Fix:**
 ```bash {linenos=inline}
 # Option 1: Delete existing
-entratool config delete -p duplicate-name
+entra-auth-cli config delete -p duplicate-name
 
 # Option 2: Use different name
-entratool config create
+entra-auth-cli config create
 # Enter: duplicate-name-2
 ```
 
@@ -521,10 +521,10 @@ entratool config create
 **Fix:**
 ```bash {linenos=inline}
 # Backup current file
-cp ~/.entratool/profiles.json ~/.entratool/profiles.json.bak
+cp ~/.entra-auth-cli/profiles.json ~/.entra-auth-cli/profiles.json.bak
 
 # Validate JSON
-cat ~/.entratool/profiles.json | jq
+cat ~/.entra-auth-cli/profiles.json | jq
 
 # Fix syntax errors or restore from backup
 ```
@@ -536,7 +536,7 @@ cat ~/.entratool/profiles.json | jq
 **Fix:**
 - **Windows:** Ensure user profile is not corrupted
 - **macOS:** Unlock Keychain
-- **Linux:** Check file permissions on `~/.entratool/`
+- **Linux:** Check file permissions on `~/.entra-auth-cli/`
 
 ---
 

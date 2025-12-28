@@ -60,21 +60,21 @@ Solutions to common problems and error messages.
 
 ```bash {linenos=inline}
 # List available profiles
-entratool config list
+entra-auth-cli config list
 
 # Use correct profile name
-entratool get-token -p correct-profile-name
+entra-auth-cli get-token -p correct-profile-name
 ```
 
 ### Authentication Failed
 
 ```bash {linenos=inline}
 # Verify credentials are correct
-entratool config show -p my-profile
+entra-auth-cli config show -p my-profile
 
 # Recreate profile if needed
-entratool config delete -p my-profile
-entratool config create
+entra-auth-cli config delete -p my-profile
+entra-auth-cli config create
 ```
 
 ### Certificate Issues
@@ -91,10 +91,10 @@ ls -l /path/to/certificate.pfx
 
 ```bash {linenos=inline}
 # Simply request a new token
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 
 # Or use refresh if available
-entratool refresh -p my-profile
+entra-auth-cli refresh -p my-profile
 ```
 
 ---
@@ -105,24 +105,24 @@ entratool refresh -p my-profile
 
 ```bash {linenos=inline}
 # List profiles
-entratool config list
+entra-auth-cli config list
 
 # Show profile details
-entratool config show -p my-profile
+entra-auth-cli config show -p my-profile
 
 # Verify token generation
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 ```
 
 ### Inspect Tokens
 
 ```bash {linenos=inline}
 # Get token and inspect
-TOKEN=$(entratool get-token -p my-profile --silent)
-entratool inspect -t "$TOKEN"
+TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+entra-auth-cli inspect -t "$TOKEN"
 
 # Check expiration
-entratool discover -t "$TOKEN"
+entra-auth-cli discover -t "$TOKEN"
 ```
 
 ### Validate Certificate
@@ -167,7 +167,7 @@ openssl pkcs12 -in certificate.pfx -nokeys | \
 
 ```bash {linenos=inline}
 # Enable verbose logging (if supported)
-entratool get-token -p my-profile --verbose
+entra-auth-cli get-token -p my-profile --verbose
 
 # Check system logs
 # Windows: Event Viewer
@@ -177,7 +177,7 @@ entratool get-token -p my-profile --verbose
 
 ### Community Support
 
-- [GitHub Issues](https://github.com/garrardkitchen/entratool-cli/issues)
+- [GitHub Issues](https://github.com/garrardkitchen/entra-auth-cli-cli/issues)
 - [Documentation](/docs/)
 - [Recipes](/docs/recipes/)
 

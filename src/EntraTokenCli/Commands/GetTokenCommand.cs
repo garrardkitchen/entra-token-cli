@@ -145,7 +145,7 @@ public class GetTokenCommand : AsyncCommand<GetTokenSettings>
                 {
                     ConsoleUi.DisplayWarning(
                         $"Token expires in {timeUntilExpiry.TotalMinutes:F1} minutes. " +
-                        $"Consider refreshing using 'entratool refresh -p {profile.Name}'");
+                        $"Consider refreshing using 'entra-auth-cli refresh -p {profile.Name}'");
                 }
             }
 

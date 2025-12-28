@@ -108,13 +108,13 @@ openssl pkcs12 -export \
 openssl pkcs12 -in certificate.pfx -nokeys -out certificate.cer
 
 # 4. Create profile with certificate
-entratool config create
+entra-auth-cli config create
 # Select: Certificate
 # Path: /path/to/certificate.pfx
 # Password: ****
 
 # 5. Generate token
-entratool get-token -p cert-profile
+entra-auth-cli get-token -p cert-profile
 ```
 
 ---

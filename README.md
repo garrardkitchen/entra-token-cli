@@ -1,4 +1,4 @@
-# Entra Token CLI (entratool)
+# Entra Auth Cli (entra-auth-cli)
 
 A cross-platform .NET CLI tool for generating Azure AD access tokens via multiple OAuth2 flows with secure storage, certificate authentication, and rich console UX.
 
@@ -26,27 +26,27 @@ dotnet tool install -g EntraTokenCli
 
 Download the latest release for your platform from the [Releases](https://github.com/yourusername/entratokencli/releases) page:
 
-- **Windows**: `entratool-win-x64.exe`
-- **macOS (Apple Silicon)**: `entratool-osx-arm64`
-- **macOS (Intel)**: `entratool-osx-x64`
-- **Linux**: `entratool-linux-x64`
+- **Windows**: `entra-auth-cli-win-x64.exe`
+- **macOS (Apple Silicon)**: `entra-auth-cli-osx-arm64`
+- **macOS (Intel)**: `entra-auth-cli-osx-x64`
+- **Linux**: `entra-auth-cli-linux-x64`
 
 ### Check Version
 
 ```bash
-entratool --version
+entra-auth-cli --version
 ```
 
 ## Quick Start
-- **macOS (Intel)**: `entratool-osx-x64`
-- **Linux**: `entratool-linux-x64`
+- **macOS (Intel)**: `entra-auth-cli-osx-x64`
+- **Linux**: `entra-auth-cli-linux-x64`
 
 ## Quick Start
 
 ### 1. Create a Profile
 
 ```bash
-entratool config create
+entra-auth-cli config create
 ```
 
 Follow the interactive prompts to configure:
@@ -60,38 +60,38 @@ Follow the interactive prompts to configure:
 
 ```bash
 # Using default/interactive profile selection
-entratool get-token
+entra-auth-cli get-token
 
 # Using a specific profile
-entratool get-token -p myprofile
+entra-auth-cli get-token -p myprofile
 
 # Using a specific OAuth2 flow
-entratool get-token -p myprofile -f DeviceCode
+entra-auth-cli get-token -p myprofile -f DeviceCode
 
 # Override scope for this request (useful for getting tokens for different APIs)
-entratool get-token -p myprofile -s "https://management.azure.com/.default"
+entra-auth-cli get-token -p myprofile -s "https://management.azure.com/.default"
 
 # Get token for custom API
-entratool get-token -p myprofile -s "api://YOUR-API-CLIENT-ID/.default"
+entra-auth-cli get-token -p myprofile -s "api://YOUR-API-CLIENT-ID/.default"
 
 # Without clipboard copy
-entratool get-token -p myprofile --no-clipboard
+entra-auth-cli get-token -p myprofile --no-clipboard
 ```
 
 ### 3. Inspect a Token
 
 ```bash
 # Inspect a token directly
-entratool inspect eyJ0eXAiOiJKV1Qi...
+entra-auth-cli inspect eyJ0eXAiOiJKV1Qi...
 
 # Inspect from stdin
-echo "eyJ0eXAiOiJKV1Qi..." | entratool inspect -
+echo "eyJ0eXAiOiJKV1Qi..." | entra-auth-cli inspect -
 ```
 
 ### 4. Refresh a Token
 
 ```bash
-entratool refresh -p myprofile
+entra-auth-cli refresh -p myprofile
 ```
 
 ## Usage Examples
@@ -100,7 +100,7 @@ entratool refresh -p myprofile
 
 ```bash
 # Create profile
-entratool config create
+entra-auth-cli config create
 # Profile name: myapp
 # Tenant ID: contoso.onmicrosoft.com
 # Client ID: <your-client-id>
@@ -109,14 +109,14 @@ entratool config create
 # Client secret: ****
 
 # Get token
-entratool get-token -p myapp -f ClientCredentials
+entra-auth-cli get-token -p myapp -f ClientCredentials
 ```
 
 ### Authorization Code Flow with Certificate
 
 ```bash
 # Create profile with certificate
-entratool config create
+entra-auth-cli config create
 # Profile name: mycertapp
 # Tenant ID: <tenant-id>
 # Client ID: <client-id>
@@ -127,26 +127,26 @@ entratool config create
 # Certificate password: ****
 
 # Get token with cached certificate password
-entratool get-token -p mycertapp -f AuthorizationCode --cache-cert-password
+entra-auth-cli get-token -p mycertapp -f AuthorizationCode --cache-cert-password
 ```
 
 ### Device Code Flow
 
 ```bash
-entratool get-token -p myprofile -f DeviceCode
+entra-auth-cli get-token -p myprofile -f DeviceCode
 # Displays device code and URL for authentication
 ```
 
 ### Interactive Browser Flow
 
 ```bash
-entratool get-token -p myprofile -f InteractiveBrowser
+entra-auth-cli get-token -p myprofile -f InteractiveBrowser
 
 # With custom port
-entratool get-token -p myprofile -f InteractiveBrowser --port 5000
+entra-auth-cli get-token -p myprofile -f InteractiveBrowser --port 5000
 
 # With custom redirect URI
-entratool get-token -p myprofile --redirect-uri http://localhost:3000
+entra-auth-cli get-token -p myprofile --redirect-uri http://localhost:3000
 ```
 
 ## Scope Management
@@ -165,7 +165,7 @@ Scopes define what resources and permissions your token will have access to. Com
 When creating or editing a profile, you'll be prompted for scopes with helpful examples:
 
 ```bash
-entratool config create
+entra-auth-cli config create
 # ... other prompts ...
 # Examples shown:
 #   - Microsoft Graph API: https://graph.microsoft.com/.default
@@ -180,13 +180,13 @@ You can override the profile's scopes for a single token request using the `--sc
 
 ```bash
 # Get token for Azure Management API (override profile scope)
-entratool get-token -p myprofile -s "https://management.azure.com/.default"
+entra-auth-cli get-token -p myprofile -s "https://management.azure.com/.default"
 
 # Get token for custom API
-entratool get-token -p myprofile -s "api://12345678-1234-1234-1234-123456789abc/.default"
+entra-auth-cli get-token -p myprofile -s "api://12345678-1234-1234-1234-123456789abc/.default"
 
 # Multiple scopes (comma-separated)
-entratool get-token -p myprofile -s "api://my-api/read,api://my-api/write"
+entra-auth-cli get-token -p myprofile -s "api://my-api/read,api://my-api/write"
 ```
 
 ### Use Case: Client App Calling API App
@@ -199,14 +199,14 @@ When you have a client app that needs to call a protected API:
 
 ```bash
 # Configure client app profile with Graph scope (default)
-entratool config create
+entra-auth-cli config create
 # Name: myclient
 # Client ID: <client-app-id>
 # Client Secret: <secret>
 # Scopes: https://graph.microsoft.com/.default
 
 # Get token for the API instead
-entratool get-token -p myclient -s "api://<api-app-id>/.default"
+entra-auth-cli get-token -p myclient -s "api://<api-app-id>/.default"
 ```
 
 ## Profile Management
@@ -214,36 +214,36 @@ entratool get-token -p myclient -s "api://<api-app-id>/.default"
 ### List Profiles
 
 ```bash
-entratool config list
+entra-auth-cli config list
 ```
 
 ### Export a Profile
 
 ```bash
 # Export to stdout (for copying)
-entratool config export -p myprofile
+entra-auth-cli config export -p myprofile
 
 # Export to file with secrets included
-entratool config export -p myprofile --include-secrets -o myprofile.enc
+entra-auth-cli config export -p myprofile --include-secrets -o myprofile.enc
 ```
 
 ### Import a Profile
 
 ```bash
 # Import from file
-entratool config import -i myprofile.enc
+entra-auth-cli config import -i myprofile.enc
 
 # Import with new name
-entratool config import -i myprofile.enc -n newprofile
+entra-auth-cli config import -i myprofile.enc -n newprofile
 
 # Import from clipboard (paste when prompted)
-entratool config import
+entra-auth-cli config import
 ```
 
 ### Delete a Profile
 
 ```bash
-entratool config delete -p myprofile
+entra-auth-cli config delete -p myprofile
 ```
 
 ## Advanced Features
@@ -254,19 +254,19 @@ By default, `get-token` warns when returning cached tokens expiring within 5 min
 
 ```bash
 # Custom expiration warning threshold
-entratool get-token -p myprofile --warn-expiry 10
+entra-auth-cli get-token -p myprofile --warn-expiry 10
 ```
 
 ### Certificate Password Strategies
 
 1. **Always Prompt**: Secure, asks for password each time
    ```bash
-   entratool get-token -p mycertapp
+   entra-auth-cli get-token -p mycertapp
    ```
 
 2. **Use Cached Password**: Convenient, retrieves from secure storage
    ```bash
-   entratool get-token -p mycertapp --cache-cert-password
+   entra-auth-cli get-token -p mycertapp --cache-cert-password
    ```
 
 3. **Passwordless Certificate**: No password required
@@ -277,15 +277,15 @@ entratool get-token -p myprofile --warn-expiry 10
 ### Headless Environment Support
 
 When clipboard is unavailable (SSH sessions, containers), tokens are automatically written to:
-- **Windows**: `%APPDATA%\entratool\last-token.txt`
-- **macOS/Linux**: `~/.config/entratool/last-token.txt`
+- **Windows**: `%APPDATA%\entra-auth-cli\last-token.txt`
+- **macOS/Linux**: `~/.config/entra-auth-cli/last-token.txt`
 
 ```bash
 # Explicit file output
-entratool get-token -p myprofile --no-clipboard
+entra-auth-cli get-token -p myprofile --no-clipboard
 
 # Read token from file
-TOKEN=$(cat ~/.config/entratool/last-token.txt)
+TOKEN=$(cat ~/.config/entra-auth-cli/last-token.txt)
 ```
 
 ## Working with Certificates
@@ -321,7 +321,7 @@ Export-Certificate -Cert $cert -FilePath "myapp.cer"
 openssl req -x509 -newkey rsa:2048 -keyout myapp-key.pem -out myapp-cert.pem -days 730 -nodes \
     -subj "/CN=MyAppName"
 
-# Create .pfx file (for use with entratool)
+# Create .pfx file (for use with entra-auth-cli)
 openssl pkcs12 -export -out myapp.pfx -inkey myapp-key.pem -in myapp-cert.pem \
     -passout pass:YourPassword123!
 
@@ -382,13 +382,13 @@ New-AzureADApplicationKeyCredential `
     -Value $cert.GetRawCertData()
 ```
 
-### Using Certificates with entratool
+### Using Certificates with entra-auth-cli
 
 Once uploaded, configure your profile:
 
 ```bash
 # Create profile with certificate
-entratool config create
+entra-auth-cli config create
 # Profile name: myapp-cert
 # Tenant ID: yourtenant.onmicrosoft.com
 # Client ID: <your-client-id>
@@ -399,14 +399,14 @@ entratool config create
 # Certificate password: YourPassword123!
 
 # Get token
-entratool get-token -p myapp-cert -f ClientCredentials
+entra-auth-cli get-token -p myapp-cert -f ClientCredentials
 ```
 
 ### Important Notes
 
 - **Upload `.cer` file to Azure** (public key only)
 - **Keep `.pfx` file secure locally** (contains private key)
-- **.pfx password** is stored in platform-native secure storage by entratool
+- **.pfx password** is stored in platform-native secure storage by entra-auth-cli
 - **Certificate expiration**: Self-signed certs typically 1-2 years; monitor expiration
 - **Production**: Use proper CA-issued certificates or Azure Key Vault managed certificates
 
@@ -416,7 +416,7 @@ After uploading:
 
 ```bash
 # Test certificate authentication
-entratool get-token -p myapp-cert -f ClientCredentials --cache-cert-password
+entra-auth-cli get-token -p myapp-cert -f ClientCredentials --cache-cert-password
 ```
 
 ## Configuration Files
@@ -425,26 +425,26 @@ entratool get-token -p myapp-cert -f ClientCredentials --cache-cert-password
 
 Authentication profiles are stored in platform-specific locations:
 
-- **Windows**: `%APPDATA%\entratool\profiles.json`
-- **macOS/Linux**: `~/.config/entratool/profiles.json`
+- **Windows**: `%APPDATA%\entra-auth-cli\profiles.json`
+- **macOS/Linux**: `~/.config/entra-auth-cli/profiles.json`
 
 The `profiles.json` file contains profile metadata (tenant ID, client ID, scopes, certificate paths, etc.) but **does not contain secrets**.
 
 Example location on macOS:
 ```bash
-cat ~/.config/entratool/profiles.json
+cat ~/.config/entra-auth-cli/profiles.json
 ```
 
 ### Secure Storage
 
 Secrets (client secrets and certificate passwords) are stored separately using platform-native secure storage:
 
-- **Windows**: DPAPI (Data Protection API) - `%APPDATA%\entratool\secure\`
+- **Windows**: DPAPI (Data Protection API) - `%APPDATA%\entra-auth-cli\secure\`
   - ✅ Strong encryption, scoped to current user
-- **macOS**: Keychain - Service name: `entratool`, account format: `entratool:{profileName}:{secretType}`
+- **macOS**: Keychain - Service name: `entra-auth-cli`, account format: `entra-auth-cli:{profileName}:{secretType}`
   - ✅ Strong encryption, integrated with system security
-  - Secrets can be viewed using Keychain Access app by searching for "entratool"
-- **Linux**: XOR-obfuscated files (fallback) - `~/.config/entratool/secure/`
+  - Secrets can be viewed using Keychain Access app by searching for "entra-auth-cli"
+- **Linux**: XOR-obfuscated files (fallback) - `~/.config/entra-auth-cli/secure/`
   - ⚠️ **SECURITY WARNING**: Uses XOR obfuscation, NOT cryptographic encryption
   - ⚠️ Secrets are easily reversible by anyone with file system access
   - ⚠️ Suitable for development only; avoid storing production credentials on Linux
@@ -462,7 +462,7 @@ The current Linux implementation provides **obfuscation only**, not true encrypt
 
 ### Windows: Access Denied Errors
 
-Ensure your user has permission to write to `%APPDATA%\entratool\`.
+Ensure your user has permission to write to `%APPDATA%\entra-auth-cli\`.
 
 ### macOS: Keychain Access Denied
 
@@ -489,7 +489,7 @@ sudo dnf install libsecret-devel
 
 ```bash
 # Re-authenticate using the original flow
-entratool get-token -p myprofile -f InteractiveBrowser
+entra-auth-cli get-token -p myprofile -f InteractiveBrowser
 ```
 
 ## Platform Requirements

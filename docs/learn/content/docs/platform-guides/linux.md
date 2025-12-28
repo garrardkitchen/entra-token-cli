@@ -6,11 +6,11 @@ weight: 30
 
 # Linux Platform Guide
 
-Complete guide for using Entra Token CLI on Linux, including secure token storage, distribution-specific installation, and Linux-specific features.
+Complete guide for using Entra Auth Cli on Linux, including secure token storage, distribution-specific installation, and Linux-specific features.
 
 ## Overview
 
-Entra Token CLI provides secure token storage and management on Linux:
+Entra Auth Cli provides secure token storage and management on Linux:
 
 - **Encrypted Storage**: XOR-based encryption with user-specific keys
 - **Distribution Support**: Works on Ubuntu, Debian, RHEL, Fedora, Arch, and more
@@ -23,48 +23,48 @@ Entra Token CLI provides secure token storage and management on Linux:
 
 ```bash {linenos=inline}
 # Download .deb package
-wget https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool_amd64.deb
+wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli_amd64.deb
 
 # Install
-sudo dpkg -i entratool_amd64.deb
+sudo dpkg -i entra-auth-cli_amd64.deb
 
 # Or install directly
-curl -L https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool_amd64.deb \
-  -o /tmp/entratool.deb && \
-  sudo dpkg -i /tmp/entratool.deb
+curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli_amd64.deb \
+  -o /tmp/entra-auth-cli.deb && \
+  sudo dpkg -i /tmp/entra-auth-cli.deb
 
 # Verify
-entratool --version
+entra-auth-cli --version
 ```
 
 ### RHEL/CentOS/Fedora (RPM)
 
 ```bash {linenos=inline}
 # Download .rpm package
-wget https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-1.0.0-1.x86_64.rpm
+wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-1.0.0-1.x86_64.rpm
 
 # Install
-sudo rpm -ivh entratool-1.0.0-1.x86_64.rpm
+sudo rpm -ivh entra-auth-cli-1.0.0-1.x86_64.rpm
 
 # Or use dnf
-sudo dnf install https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-1.0.0-1.x86_64.rpm
+sudo dnf install https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-1.0.0-1.x86_64.rpm
 
 # Verify
-entratool --version
+entra-auth-cli --version
 ```
 
 ### Arch Linux (AUR)
 
 ```bash {linenos=inline}
 # Using yay
-yay -S entratool-cli
+yay -S entra-auth-cli-cli
 
 # Using paru
-paru -S entratool-cli
+paru -S entra-auth-cli-cli
 
 # Manual from AUR
-git clone https://aur.archlinux.org/entratool-cli.git
-cd entratool-cli
+git clone https://aur.archlinux.org/entra-auth-cli-cli.git
+cd entra-auth-cli-cli
 makepkg -si
 ```
 
@@ -72,14 +72,14 @@ makepkg -si
 
 ```bash {linenos=inline}
 # Download binary
-curl -L https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64 \
-  -o /usr/local/bin/entratool
+curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+  -o /usr/local/bin/entra-auth-cli
 
 # Make executable
-chmod +x /usr/local/bin/entratool
+chmod +x /usr/local/bin/entra-auth-cli
 
 # Verify
-entratool --version
+entra-auth-cli --version
 ```
 
 ### From Source
@@ -91,12 +91,12 @@ sudo dnf install golang          # Fedora/RHEL
 sudo pacman -S go                # Arch
 
 # Clone and build
-git clone https://github.com/garrardkitchen/entratool-cli.git
-cd entratool-cli
-go build -o entratool ./cmd/entratool
+git clone https://github.com/garrardkitchen/entra-auth-cli-cli.git
+cd entra-auth-cli-cli
+go build -o entra-auth-cli ./cmd/entra-auth-cli
 
 # Install
-sudo mv entratool /usr/local/bin/
+sudo mv entra-auth-cli /usr/local/bin/
 ```
 
 ## Token Storage
@@ -105,7 +105,7 @@ sudo mv entratool /usr/local/bin/
 
 ```bash {linenos=inline}
 # Tokens stored in user's home directory
-~/.entratool/
+~/.entra-auth-cli/
 ├── profiles/
 │   ├── default.json        # Profile configuration
 │   ├── default.token       # Encrypted token
@@ -114,7 +114,7 @@ sudo mv entratool /usr/local/bin/
 └── config.json             # Global configuration
 
 # Check storage
-ls -la ~/.entratool/profiles/
+ls -la ~/.entra-auth-cli/profiles/
 ```
 
 ### Encryption
@@ -143,15 +143,15 @@ id -u
 
 ```bash {linenos=inline}
 # Verify secure permissions
-ls -la ~/.entratool/profiles/
+ls -la ~/.entra-auth-cli/profiles/
 
 # Should show:
 # -rw------- (600) - Only owner can read/write
 # drwx------ (700) - Only owner can access directory
 
 # Fix permissions if needed
-chmod 700 ~/.entratool/profiles/
-chmod 600 ~/.entratool/profiles/*
+chmod 700 ~/.entra-auth-cli/profiles/
+chmod 600 ~/.entra-auth-cli/profiles/*
 ```
 
 ### SELinux Context
@@ -160,14 +160,14 @@ chmod 600 ~/.entratool/profiles/*
 # For SELinux-enabled systems (RHEL/CentOS/Fedora)
 
 # Check context
-ls -Z ~/.entratool/
+ls -Z ~/.entra-auth-cli/
 
 # Set correct context
-chcon -R -t user_home_t ~/.entratool/
+chcon -R -t user_home_t ~/.entra-auth-cli/
 
 # Make permanent
-semanage fcontext -a -t user_home_t "~/.entratool(/.*)?"
-restorecon -R ~/.entratool/
+semanage fcontext -a -t user_home_t "~/.entra-auth-cli(/.*)?"
+restorecon -R ~/.entra-auth-cli/
 ```
 
 ## Shell Integration
@@ -178,17 +178,17 @@ restorecon -R ~/.entratool/
 # Add to ~/.bashrc
 
 # Completion
-complete -C entratool entratool
+complete -C entra-auth-cli entra-auth-cli
 
 # Aliases
-alias et='entratool'
-alias etg='entratool get-token'
-alias etp='entratool list-profiles'
+alias et='entra-auth-cli'
+alias etg='entra-auth-cli get-token'
+alias etp='entra-auth-cli list-profiles'
 
 # Function to get token
 get_token() {
     local profile="${1:-default}"
-    entratool get-token --profile "$profile" --output json | jq -r .access_token
+    entra-auth-cli get-token --profile "$profile" --output json | jq -r .access_token
 }
 
 # Function to export token
@@ -214,20 +214,20 @@ graph() {
 
 # Completion
 autoload -U compinit && compinit
-complete -o nospace -C entratool entratool
+complete -o nospace -C entra-auth-cli entra-auth-cli
 
 # Aliases
-alias et='entratool'
-alias etg='entratool get-token'
+alias et='entra-auth-cli'
+alias etg='entra-auth-cli get-token'
 
 # Functions
 get_token() {
-    entratool get-token --profile "${1:-default}" --output json | jq -r .access_token
+    entra-auth-cli get-token --profile "${1:-default}" --output json | jq -r .access_token
 }
 
 # Prompt integration (show if token is valid)
 precmd() {
-    if entratool inspect &>/dev/null; then
+    if entra-auth-cli inspect &>/dev/null; then
         RPROMPT="%F{green}🔑%f"
     else
         RPROMPT="%F{red}🔑%f"
@@ -241,16 +241,16 @@ precmd() {
 # Add to ~/.config/fish/config.fish
 
 # Completion
-complete -c entratool -f
+complete -c entra-auth-cli -f
 
 # Aliases
-alias et='entratool'
-alias etg='entratool get-token'
+alias et='entra-auth-cli'
+alias etg='entra-auth-cli get-token'
 
 # Function
 function get_token
     set -l profile (test -n "$argv[1]"; and echo $argv[1]; or echo "default")
-    entratool get-token --profile $profile --output json | jq -r .access_token
+    entra-auth-cli get-token --profile $profile --output json | jq -r .access_token
 end
 
 # Export function
@@ -266,15 +266,15 @@ end
 ### Systemd Service
 
 ```ini
-# /etc/systemd/system/entratool-refresh.service
+# /etc/systemd/system/entra-auth-cli-refresh.service
 [Unit]
-Description=Entra Token CLI Token Refresh
+Description=Entra Auth Cli Token Refresh
 After=network.target
 
 [Service]
 Type=oneshot
 User=%i
-ExecStart=/usr/local/bin/entratool refresh --profile production
+ExecStart=/usr/local/bin/entra-auth-cli refresh --profile production
 StandardOutput=journal
 StandardError=journal
 
@@ -283,15 +283,15 @@ WantedBy=multi-user.target
 ```
 
 ```ini
-# /etc/systemd/system/entratool-refresh.timer
+# /etc/systemd/system/entra-auth-cli-refresh.timer
 [Unit]
 Description=Refresh Entra tokens hourly
-Requires=entratool-refresh.service
+Requires=entra-auth-cli-refresh.service
 
 [Timer]
 OnBootSec=5min
 OnUnitActiveSec=1h
-Unit=entratool-refresh.service
+Unit=entra-auth-cli-refresh.service
 
 [Install]
 WantedBy=timers.target
@@ -300,15 +300,15 @@ WantedBy=timers.target
 ```bash {linenos=inline}
 # Enable and start
 sudo systemctl daemon-reload
-sudo systemctl enable entratool-refresh@$USER.timer
-sudo systemctl start entratool-refresh@$USER.timer
+sudo systemctl enable entra-auth-cli-refresh@$USER.timer
+sudo systemctl start entra-auth-cli-refresh@$USER.timer
 
 # Check status
-systemctl status entratool-refresh@$USER.timer
-systemctl list-timers --all | grep entratool
+systemctl status entra-auth-cli-refresh@$USER.timer
+systemctl list-timers --all | grep entra-auth-cli
 
 # View logs
-journalctl -u entratool-refresh@$USER.service
+journalctl -u entra-auth-cli-refresh@$USER.service
 ```
 
 ### Cron Jobs
@@ -318,13 +318,13 @@ journalctl -u entratool-refresh@$USER.service
 crontab -e
 
 # Refresh token every hour
-0 * * * * /usr/local/bin/entratool refresh --profile production >> /var/log/entratool-refresh.log 2>&1
+0 * * * * /usr/local/bin/entra-auth-cli refresh --profile production >> /var/log/entra-auth-cli-refresh.log 2>&1
 
 # Refresh at specific times
-0 8,12,17 * * * /usr/local/bin/entratool refresh --profile work
+0 8,12,17 * * * /usr/local/bin/entra-auth-cli refresh --profile work
 
 # With environment
-0 * * * * . $HOME/.profile; /usr/local/bin/entratool refresh --profile production
+0 * * * * . $HOME/.profile; /usr/local/bin/entra-auth-cli refresh --profile production
 ```
 
 ### Environment Modules
@@ -332,19 +332,19 @@ crontab -e
 ```bash {linenos=inline}
 # For HPC/cluster environments with environment modules
 
-# /opt/modulefiles/entratool/1.0
+# /opt/modulefiles/entra-auth-cli/1.0
 #%Module1.0
 proc ModulesHelp { } {
-    puts stderr "Entra Token CLI - Microsoft Entra ID token management"
+    puts stderr "Entra Auth Cli - Microsoft Entra ID token management"
 }
 
 module-whatis "Microsoft Entra ID token management tool"
 
-prepend-path PATH /opt/entratool/bin
-setenv ENTRA_TOKEN_HOME /opt/entratool
+prepend-path PATH /opt/entra-auth-cli/bin
+setenv ENTRA_TOKEN_HOME /opt/entra-auth-cli
 
 # Load module
-module load entratool
+module load entra-auth-cli
 ```
 
 ### Container Integration
@@ -359,17 +359,17 @@ RUN apt-get update && \
     apt-get install -y curl jq && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Entra Token CLI
-RUN curl -L https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64 \
-    -o /usr/local/bin/entratool && \
-    chmod +x /usr/local/bin/entratool
+# Install Entra Auth Cli
+RUN curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+    -o /usr/local/bin/entra-auth-cli && \
+    chmod +x /usr/local/bin/entra-auth-cli
 
 # Create non-root user
 RUN useradd -m -s /bin/bash appuser
 USER appuser
 
 # Set up profiles directory
-RUN mkdir -p /home/appuser/.entratool/profiles
+RUN mkdir -p /home/appuser/.entra-auth-cli/profiles
 
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh
@@ -383,7 +383,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 # Create profile from environment variables
 if [ -n "$TENANT_ID" ] && [ -n "$CLIENT_ID" ] && [ -n "$CLIENT_SECRET" ]; then
-    entratool create-profile \
+    entra-auth-cli create-profile \
         --name container \
         --tenant-id "$TENANT_ID" \
         --client-id "$CLIENT_ID" \
@@ -392,7 +392,7 @@ if [ -n "$TENANT_ID" ] && [ -n "$CLIENT_ID" ] && [ -n "$CLIENT_SECRET" ]; then
 fi
 
 # Get token
-export TOKEN=$(entratool get-token --profile container --output json | jq -r .access_token)
+export TOKEN=$(entra-auth-cli get-token --profile container --output json | jq -r .access_token)
 
 # Execute main command
 exec "$@"
@@ -404,11 +404,11 @@ exec "$@"
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: entratool-config
+  name: entra-auth-cli-config
 data:
   create-profile.sh: |
     #!/bin/bash
-    entratool create-profile \
+    entra-auth-cli create-profile \
       --name k8s \
       --tenant-id "$TENANT_ID" \
       --client-id "$CLIENT_ID" \
@@ -427,7 +427,7 @@ stringData:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-with-entratool
+  name: app-with-entra-auth-cli
 spec:
   replicas: 1
   selector:
@@ -458,20 +458,20 @@ spec:
               name: azure-credentials
               key: client-secret
         volumeMounts:
-        - name: entratool-config
+        - name: entra-auth-cli-config
           mountPath: /config
         command:
         - /bin/bash
         - -c
         - |
           /config/create-profile.sh
-          TOKEN=$(entratool get-token --output json | jq -r .access_token)
+          TOKEN=$(entra-auth-cli get-token --output json | jq -r .access_token)
           export AUTH_TOKEN=$TOKEN
           exec /app/start.sh
       volumes:
-      - name: entratool-config
+      - name: entra-auth-cli-config
         configMap:
-          name: entratool-config
+          name: entra-auth-cli-config
           defaultMode: 0755
 ```
 
@@ -491,17 +491,17 @@ deploy:
   image: ubuntu:22.04
   before_script:
     - apt-get update && apt-get install -y curl jq
-    - curl -L https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64 
-        -o /usr/local/bin/entratool
-    - chmod +x /usr/local/bin/entratool
+    - curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 
+        -o /usr/local/bin/entra-auth-cli
+    - chmod +x /usr/local/bin/entra-auth-cli
     - |
-      entratool create-profile \
+      entra-auth-cli create-profile \
         --name ci \
         --tenant-id "$AZURE_TENANT_ID" \
         --client-id "$AZURE_CLIENT_ID" \
         --client-secret "$AZURE_CLIENT_SECRET"
   script:
-    - TOKEN=$(entratool get-token --profile ci --output json | jq -r .access_token)
+    - TOKEN=$(entra-auth-cli get-token --profile ci --output json | jq -r .access_token)
     - echo "Deploying with token..."
     - curl -H "Authorization: Bearer $TOKEN" https://api.example.com/deploy
   only:
@@ -525,10 +525,10 @@ pipeline {
         stage('Setup') {
             steps {
                 sh '''
-                    curl -L https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64 \
-                      -o /tmp/entratool
-                    chmod +x /tmp/entratool
-                    sudo mv /tmp/entratool /usr/local/bin/
+                    curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+                      -o /tmp/entra-auth-cli
+                    chmod +x /tmp/entra-auth-cli
+                    sudo mv /tmp/entra-auth-cli /usr/local/bin/
                 '''
             }
         }
@@ -536,7 +536,7 @@ pipeline {
         stage('Authenticate') {
             steps {
                 sh '''
-                    entratool create-profile \
+                    entra-auth-cli create-profile \
                       --name jenkins \
                       --tenant-id "$TENANT_ID" \
                       --client-id "$CLIENT_ID" \
@@ -548,7 +548,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    TOKEN=$(entratool get-token --profile jenkins --output json | jq -r .access_token)
+                    TOKEN=$(entra-auth-cli get-token --profile jenkins --output json | jq -r .access_token)
                     curl -H "Authorization: Bearer $TOKEN" https://api.example.com/deploy
                 '''
             }
@@ -562,13 +562,13 @@ pipeline {
 ```bash {linenos=inline}
 # Execute on remote server with token
 ssh user@server "$(cat <<'EOF'
-TOKEN=$(entratool get-token --profile production --output json | jq -r .access_token)
+TOKEN=$(entra-auth-cli get-token --profile production --output json | jq -r .access_token)
 curl -H "Authorization: Bearer $TOKEN" https://graph.microsoft.com/v1.0/me
 EOF
 )"
 
 # Deploy profile to remote server
-scp ~/.entratool/profiles/production.* user@server:~/.entratool/profiles/
+scp ~/.entra-auth-cli/profiles/production.* user@server:~/.entra-auth-cli/profiles/
 
 # Execute script remotely
 ssh user@server 'bash -s' < local-script.sh
@@ -582,16 +582,16 @@ ssh user@server 'bash -s' < local-script.sh
 - name: Deploy application with Entra Token
   hosts: webservers
   tasks:
-    - name: Install Entra Token CLI
+    - name: Install Entra Auth Cli
       get_url:
-        url: https://github.com/garrardkitchen/entratool-cli/releases/latest/download/entratool-linux-amd64
-        dest: /usr/local/bin/entratool
+        url: https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64
+        dest: /usr/local/bin/entra-auth-cli
         mode: '0755'
       become: yes
 
     - name: Create profile
       shell: |
-        entratool create-profile \
+        entra-auth-cli create-profile \
           --name ansible \
           --tenant-id "{{ azure_tenant_id }}" \
           --client-id "{{ azure_client_id }}" \
@@ -599,7 +599,7 @@ ssh user@server 'bash -s' < local-script.sh
       no_log: true
 
     - name: Get token
-      shell: entratool get-token --profile ansible --output json
+      shell: entra-auth-cli get-token --profile ansible --output json
       register: token_output
 
     - name: Deploy application
@@ -619,30 +619,30 @@ ssh user@server 'bash -s' < local-script.sh
 # Secure home directory
 chmod 700 ~
 
-# Secure entratool directory
-chmod 700 ~/.entratool
-chmod 700 ~/.entratool/profiles
-chmod 600 ~/.entratool/profiles/*
+# Secure entra-auth-cli directory
+chmod 700 ~/.entra-auth-cli
+chmod 700 ~/.entra-auth-cli/profiles
+chmod 600 ~/.entra-auth-cli/profiles/*
 
 # Verify
-ls -la ~/.entratool/profiles/
+ls -la ~/.entra-auth-cli/profiles/
 ```
 
 ### AppArmor Profile
 
 ```bash {linenos=inline}
-# /etc/apparmor.d/usr.local.bin.entratool
+# /etc/apparmor.d/usr.local.bin.entra-auth-cli
 #include <tunables/global>
 
-/usr/local/bin/entratool {
+/usr/local/bin/entra-auth-cli {
   #include <abstractions/base>
   #include <abstractions/nameservice>
   #include <abstractions/ssl_certs>
 
-  /usr/local/bin/entratool mr,
+  /usr/local/bin/entra-auth-cli mr,
   
-  owner @{HOME}/.entratool/ rw,
-  owner @{HOME}/.entratool/** rw,
+  owner @{HOME}/.entra-auth-cli/ rw,
+  owner @{HOME}/.entra-auth-cli/** rw,
   
   /etc/machine-id r,
   /proc/sys/kernel/random/uuid r,
@@ -652,7 +652,7 @@ ls -la ~/.entratool/profiles/
 }
 
 # Load profile
-sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.entratool
+sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.entra-auth-cli
 ```
 
 ### Firewall Rules
@@ -676,14 +676,14 @@ sudo iptables -A OUTPUT -p tcp --dport 443 -j DROP
 
 ```bash {linenos=inline}
 # Check ownership
-ls -la ~/.entratool/profiles/
+ls -la ~/.entra-auth-cli/profiles/
 
 # Fix ownership
-chown -R $USER:$USER ~/.entratool/
+chown -R $USER:$USER ~/.entra-auth-cli/
 
 # Fix permissions
-chmod 700 ~/.entratool/profiles/
-chmod 600 ~/.entratool/profiles/*
+chmod 700 ~/.entra-auth-cli/profiles/
+chmod 600 ~/.entra-auth-cli/profiles/*
 ```
 
 ### Machine ID Changed
@@ -695,10 +695,10 @@ chmod 600 ~/.entratool/profiles/*
 ```bash {linenos=inline}
 # Machine ID changed, tokens are invalid
 # Delete old tokens and re-authenticate
-rm ~/.entratool/profiles/*.token
+rm ~/.entra-auth-cli/profiles/*.token
 
 # Get new token
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 ```
 
 ### SELinux Denial
@@ -709,14 +709,14 @@ entratool get-token --flow interactive
 
 ```bash {linenos=inline}
 # Check denials
-sudo ausearch -m avc -ts recent | grep entratool
+sudo ausearch -m avc -ts recent | grep entra-auth-cli
 
 # Allow access
-sudo audit2allow -a -M entratool
-sudo semodule -i entratool.pp
+sudo audit2allow -a -M entra-auth-cli
+sudo semodule -i entra-auth-cli.pp
 
 # Or set correct context
-sudo chcon -R -t user_home_t ~/.entratool/
+sudo chcon -R -t user_home_t ~/.entra-auth-cli/
 ```
 
 ### Missing Dependencies
@@ -742,12 +742,12 @@ sudo pacman -S jq
 
 ```bash {linenos=inline}
 # Cache token in tmpfs (RAM disk)
-CACHE_DIR="/dev/shm/entratool-$$"
+CACHE_DIR="/dev/shm/entra-auth-cli-$$"
 mkdir -p "$CACHE_DIR"
 chmod 700 "$CACHE_DIR"
 
 # Get and cache token
-entratool get-token --output json > "$CACHE_DIR/token.json"
+entra-auth-cli get-token --output json > "$CACHE_DIR/token.json"
 
 # Use cached token
 TOKEN=$(jq -r .access_token "$CACHE_DIR/token.json")
@@ -760,7 +760,7 @@ trap "rm -rf $CACHE_DIR" EXIT
 
 ```bash {linenos=inline}
 # Parallel API calls with GNU parallel
-TOKEN=$(entratool get-token --output json | jq -r .access_token)
+TOKEN=$(entra-auth-cli get-token --output json | jq -r .access_token)
 
 parallel -j 10 "curl -s -H 'Authorization: Bearer $TOKEN' {}" ::: \
   https://graph.microsoft.com/v1.0/users \

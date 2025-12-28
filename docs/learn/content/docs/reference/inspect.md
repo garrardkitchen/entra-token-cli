@@ -11,7 +11,7 @@ Decode and inspect JWT (JSON Web Token) access tokens to view claims, expiration
 ## Synopsis
 
 ```bash {linenos=inline}
-entratool inspect [flags]
+entra-auth-cli inspect [flags]
 ```
 
 ## Description
@@ -33,8 +33,8 @@ The command can inspect:
 Inspect token from a profile.
 
 ```bash {linenos=inline}
-entratool inspect --profile production
-entratool inspect -p dev
+entra-auth-cli inspect --profile production
+entra-auth-cli inspect -p dev
 ```
 
 #### `--token`, `-t`
@@ -42,7 +42,7 @@ entratool inspect -p dev
 Inspect a specific token string.
 
 ```bash {linenos=inline}
-entratool inspect --token "eyJ0eXAiOiJKV1QiLCJh..."
+entra-auth-cli inspect --token "eyJ0eXAiOiJKV1QiLCJh..."
 ```
 
 #### `--file`, `-f`
@@ -50,7 +50,7 @@ entratool inspect --token "eyJ0eXAiOiJKV1QiLCJh..."
 Read token from a file.
 
 ```bash {linenos=inline}
-entratool inspect --file token.txt
+entra-auth-cli inspect --file token.txt
 ```
 
 ### Output Options
@@ -60,8 +60,8 @@ entratool inspect --file token.txt
 Output format.
 
 ```bash {linenos=inline}
-entratool inspect --output json
-entratool inspect -o yaml
+entra-auth-cli inspect --output json
+entra-auth-cli inspect -o yaml
 ```
 
 **Options:**
@@ -74,7 +74,7 @@ entratool inspect -o yaml
 Show only the claims (payload).
 
 ```bash {linenos=inline}
-entratool inspect --claims
+entra-auth-cli inspect --claims
 ```
 
 #### `--header`
@@ -82,7 +82,7 @@ entratool inspect --claims
 Show only the token header.
 
 ```bash {linenos=inline}
-entratool inspect --header
+entra-auth-cli inspect --header
 ```
 
 ## Examples
@@ -91,42 +91,42 @@ entratool inspect --header
 
 ```bash {linenos=inline}
 # Inspect token from profile
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 
 # Inspect specific token
-entratool inspect --token "eyJ0eXAiOiJKV1Qi..."
+entra-auth-cli inspect --token "eyJ0eXAiOiJKV1Qi..."
 
 # Inspect token from file
-entratool inspect --file access_token.txt
+entra-auth-cli inspect --file access_token.txt
 
 # Inspect token from stdin
-entratool get-token | entratool inspect
+entra-auth-cli get-token | entra-auth-cli inspect
 ```
 
 ### Output Formats
 
 ```bash {linenos=inline}
 # Human-readable (default)
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 
 # JSON format
-entratool inspect --profile myapp --output json
+entra-auth-cli inspect --profile myapp --output json
 
 # YAML format
-entratool inspect --profile myapp --output yaml
+entra-auth-cli inspect --profile myapp --output yaml
 
 # Only claims
-entratool inspect --profile myapp --claims
+entra-auth-cli inspect --profile myapp --claims
 
 # Only header
-entratool inspect --profile myapp --header
+entra-auth-cli inspect --profile myapp --header
 ```
 
 ### Script Usage
 
 ```bash {linenos=inline}
 # Check token expiration
-EXPIRY=$(entratool inspect --profile myapp --output json | jq -r .exp)
+EXPIRY=$(entra-auth-cli inspect --profile myapp --output json | jq -r .exp)
 NOW=$(date +%s)
 
 if [ $EXPIRY -lt $NOW ]; then
@@ -135,11 +135,11 @@ if [ $EXPIRY -lt $NOW ]; then
 fi
 
 # Get specific claim
-TENANT=$(entratool inspect --profile myapp --output json | jq -r .tid)
+TENANT=$(entra-auth-cli inspect --profile myapp --output json | jq -r .tid)
 echo "Tenant ID: $TENANT"
 
 # Check if token has required scope
-SCOPES=$(entratool inspect --profile myapp --output json | jq -r '.scp // .roles | join(" ")')
+SCOPES=$(entra-auth-cli inspect --profile myapp --output json | jq -r '.scp // .roles | join(" ")')
 if [[ "$SCOPES" =~ "User.Read" ]]; then
     echo "Token has User.Read permission"
 fi
@@ -241,7 +241,7 @@ Expiration:
 check_token_valid() {
     local profile="$1"
     
-    if ! output=$(entratool inspect --profile "$profile" --output json 2>&1); then
+    if ! output=$(entra-auth-cli inspect --profile "$profile" --output json 2>&1); then
         echo "No valid token for $profile"
         return 1
     fi
@@ -264,7 +264,7 @@ if check_token_valid production; then
     echo "Proceeding with API call"
 else
     echo "Need to refresh token"
-    entratool refresh --profile production
+    entra-auth-cli refresh --profile production
 fi
 ```
 
@@ -272,16 +272,16 @@ fi
 
 ```bash {linenos=inline}
 # Get tenant ID
-TENANT_ID=$(entratool inspect --profile myapp --output json | jq -r .tid)
+TENANT_ID=$(entra-auth-cli inspect --profile myapp --output json | jq -r .tid)
 
 # Get user email
-USER_EMAIL=$(entratool inspect --profile myapp --output json | jq -r .upn)
+USER_EMAIL=$(entra-auth-cli inspect --profile myapp --output json | jq -r .upn)
 
 # Get scopes
-SCOPES=$(entratool inspect --profile myapp --output json | jq -r .scp)
+SCOPES=$(entra-auth-cli inspect --profile myapp --output json | jq -r .scp)
 
 # Get expiration
-EXPIRES=$(entratool inspect --profile myapp --output json | jq -r .exp)
+EXPIRES=$(entra-auth-cli inspect --profile myapp --output json | jq -r .exp)
 EXPIRES_HR=$(date -r $EXPIRES)
 echo "Token expires: $EXPIRES_HR"
 ```
@@ -295,7 +295,7 @@ has_permission() {
     local profile="$1"
     local required="$2"
     
-    local perms=$(entratool inspect --profile "$profile" --output json | \
+    local perms=$(entra-auth-cli inspect --profile "$profile" --output json | \
         jq -r '.scp // .roles // empty')
     
     if [[ "$perms" =~ $required ]]; then
@@ -318,16 +318,16 @@ fi
 
 ```bash {linenos=inline}
 # Full token inspection for debugging
-entratool inspect --profile problematic-app
+entra-auth-cli inspect --profile problematic-app
 
 # Check what API the token is for
-entratool inspect --profile myapp --output json | jq -r .aud
+entra-auth-cli inspect --profile myapp --output json | jq -r .aud
 
 # Verify tenant
-entratool inspect --profile myapp --output json | jq -r .tid
+entra-auth-cli inspect --profile myapp --output json | jq -r .tid
 
 # Check token age
-entratool inspect --profile myapp --output json | \
+entra-auth-cli inspect --profile myapp --output json | \
     jq -r '"\(.iat) issued, \(.exp) expires"'
 ```
 
@@ -336,15 +336,15 @@ entratool inspect --profile myapp --output json | \
 ```bash {linenos=inline}
 # Compare tokens from different profiles
 echo "Production token:"
-entratool inspect --profile production --claims
+entra-auth-cli inspect --profile production --claims
 
 echo -e "\nDevelopment token:"
-entratool inspect --profile dev --claims
+entra-auth-cli inspect --profile dev --claims
 
 # Compare scopes
 diff \
-    <(entratool inspect --profile production --output json | jq -r .scp) \
-    <(entratool inspect --profile dev --output json | jq -r .scp)
+    <(entra-auth-cli inspect --profile production --output json | jq -r .scp) \
+    <(entra-auth-cli inspect --profile dev --output json | jq -r .scp)
 ```
 
 ## Troubleshooting
@@ -353,7 +353,7 @@ diff \
 
 **Problem:**
 ```bash {linenos=inline}
-$ entratool inspect --token "invalid-token"
+$ entra-auth-cli inspect --token "invalid-token"
 Error: invalid token format
 ```
 
@@ -364,24 +364,24 @@ echo "$TOKEN" | grep -E '^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$'
 
 # Check for extra whitespace
 TOKEN=$(echo "$TOKEN" | tr -d '[:space:]')
-entratool inspect --token "$TOKEN"
+entra-auth-cli inspect --token "$TOKEN"
 ```
 
 ### Token Not Found
 
 **Problem:**
 ```bash {linenos=inline}
-$ entratool inspect --profile myapp
+$ entra-auth-cli inspect --profile myapp
 Error: no token found for profile 'myapp'
 ```
 
 **Solution:**
 ```bash {linenos=inline}
 # Generate token first
-entratool get-token --profile myapp
+entra-auth-cli get-token --profile myapp
 
 # Then inspect
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 ```
 
 ### Expired Token
@@ -391,10 +391,10 @@ entratool inspect --profile myapp
 **Solution:**
 ```bash {linenos=inline}
 # Get fresh token
-entratool get-token --profile myapp --force
+entra-auth-cli get-token --profile myapp --force
 
 # Verify new token
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 ```
 
 ## Exit Codes
@@ -453,13 +453,13 @@ Cryptographic signature to verify token integrity (not decoded).
 **Token Security:**
 ```bash {linenos=inline}
 # ✅ Good - inspect cached token
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 
 # ⚠️ Caution - token visible in command history
-entratool inspect --token "eyJ0..."
+entra-auth-cli inspect --token "eyJ0..."
 
 # ✅ Better - use file or stdin
-cat token.txt | entratool inspect
+cat token.txt | entra-auth-cli inspect
 ```
 
 ## See Also

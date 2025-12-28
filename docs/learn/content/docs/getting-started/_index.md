@@ -1,12 +1,12 @@
 ---
 title: "Getting Started"
-description: "Get up and running with Entra Token CLI"
+description: "Get up and running with Entra Auth Cli"
 weight: 1
 ---
 
 # Getting Started
 
-Welcome! This section will help you install Entra Token CLI and generate your first token.
+Welcome! This section will help you install Entra Auth Cli and generate your first token.
 
 ## What You'll Learn
 

@@ -6,7 +6,7 @@ weight: 3
 
 # CI/CD Integration
 
-Learn how to integrate Entra Token CLI into your CI/CD pipelines for automated authentication.
+Learn how to integrate Entra Auth Cli into your CI/CD pipelines for automated authentication.
 
 ---
 
@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Install Entra Token CLI
+      - name: Install Entra Auth Cli
         run: |
           dotnet tool install --global EntraTokenCli
       
@@ -45,13 +45,13 @@ jobs:
             "useClientSecret": true
           }
           EOF
-          entratool config import -f profile.json
+          entra-auth-cli config import -f profile.json
           
           # Store secret (implementation depends on tool capabilities)
       
       - name: Deploy to Azure
         run: |
-          TOKEN=$(entratool get-token -p cicd --silent)
+          TOKEN=$(entra-auth-cli get-token -p cicd --silent)
           
           # Use token for deployment
           curl -X POST \
@@ -77,7 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Entra Token CLI
+      - name: Setup Entra Auth Cli
         run: dotnet tool install --global EntraTokenCli
       
       - name: Deploy to ${{ matrix.environment }}
@@ -87,11 +87,11 @@ jobs:
           CLIENT_SECRET: ${{ secrets[format('{0}_CLIENT_SECRET', matrix.environment)] }}
         run: |
           # Create environment-specific profile
-          entratool config create --name ${{ matrix.environment }} \
+          entra-auth-cli config create --name ${{ matrix.environment }} \
             --client-id "$CLIENT_ID" \
             --tenant-id "$TENANT_ID"
           
-          TOKEN=$(entratool get-token -p ${{ matrix.environment }} --silent)
+          TOKEN=$(entra-auth-cli get-token -p ${{ matrix.environment }} --silent)
           ./deploy.sh "$TOKEN" "${{ matrix.environment }}"
 ```
 
@@ -111,7 +111,7 @@ pool:
 steps:
 - script: |
     dotnet tool install --global EntraTokenCli
-  displayName: 'Install Entra Token CLI'
+  displayName: 'Install Entra Auth Cli'
 
 - task: AzureCLI@2
   inputs:
@@ -120,7 +120,7 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Create profile
-      entratool config create --non-interactive \
+      entra-auth-cli config create --non-interactive \
         --name cicd \
         --client-id $(ClientId) \
         --tenant-id $(TenantId) \
@@ -128,7 +128,7 @@ steps:
         --scope "https://management.azure.com/.default"
       
       # Get token
-      TOKEN=$(entratool get-token -p cicd --silent)
+      TOKEN=$(entra-auth-cli get-token -p cicd --silent)
       
       # Deploy
       ./deploy.sh "$TOKEN"
@@ -164,11 +164,11 @@ stages:
             displayName: 'Install CLI'
           
           - script: |
-              entratool config create --name prod \
+              entra-auth-cli config create --name prod \
                 --client-id $(ClientId) \
                 --tenant-id $(TenantId)
               
-              TOKEN=$(entratool get-token -p prod --silent)
+              TOKEN=$(entra-auth-cli get-token -p prod --silent)
               ./deploy-to-production.sh "$TOKEN"
             displayName: 'Deploy'
 ```
@@ -198,10 +198,10 @@ deploy:
         "scope": "https://management.azure.com/.default"
       }
       EOF
-    - entratool config import -f profile.json
+    - entra-auth-cli config import -f profile.json
     
     # Deploy
-    - TOKEN=$(entratool get-token -p gitlab-ci --silent)
+    - TOKEN=$(entra-auth-cli get-token -p gitlab-ci --silent)
     - ./deploy.sh "$TOKEN"
   only:
     - main
@@ -232,12 +232,12 @@ pipeline {
             steps {
                 sh '''
                     # Create profile
-                    entratool config create --name jenkins \
+                    entra-auth-cli config create --name jenkins \
                       --client-id "$CLIENT_ID" \
                       --tenant-id "$TENANT_ID"
                     
                     # Get token
-                    TOKEN=$(entratool get-token -p jenkins --silent)
+                    TOKEN=$(entra-auth-cli get-token -p jenkins --silent)
                     
                     # Deploy
                     ./deploy.sh "$TOKEN"
@@ -274,10 +274,10 @@ az ad sp create-for-rbac --name "cicd-deployment" \
 ```yaml
 # Create environment-specific profiles
 - name: Configure Dev Profile
-  run: entratool config create --name dev ...
+  run: entra-auth-cli config create --name dev ...
 
 - name: Configure Prod Profile
-  run: entratool config create --name prod ...
+  run: entra-auth-cli config create --name prod ...
 ```
 
 ### Use Silent Mode
@@ -285,7 +285,7 @@ az ad sp create-for-rbac --name "cicd-deployment" \
 Always use `--silent` flag in CI/CD to get clean token output:
 
 ```bash {linenos=inline}
-TOKEN=$(entratool get-token -p cicd --silent)
+TOKEN=$(entra-auth-cli get-token -p cicd --silent)
 ```
 
 ### Validate Tokens
@@ -293,8 +293,8 @@ TOKEN=$(entratool get-token -p cicd --silent)
 Test token validity before use:
 
 ```bash {linenos=inline}
-TOKEN=$(entratool get-token -p cicd --silent)
-if entratool inspect <<< "$TOKEN" &>/dev/null; then
+TOKEN=$(entra-auth-cli get-token -p cicd --silent)
+if entra-auth-cli inspect <<< "$TOKEN" &>/dev/null; then
   echo "Token valid"
   # Proceed with deployment
 else
@@ -320,8 +320,8 @@ export PATH="$PATH:$HOME/.dotnet/tools"
 Profile creation may have failed. Check logs and recreate:
 
 ```bash {linenos=inline}
-entratool config list
-entratool config create ...
+entra-auth-cli config list
+entra-auth-cli config create ...
 ```
 
 ### "Authentication failed"

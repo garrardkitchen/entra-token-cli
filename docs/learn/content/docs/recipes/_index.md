@@ -6,7 +6,7 @@ weight: 40
 
 # Recipes & Examples
 
-Real-world examples and patterns for integrating Entra Token CLI into your workflows.
+Real-world examples and patterns for integrating Entra Auth Cli into your workflows.
 
 ---
 
@@ -97,7 +97,7 @@ Advanced techniques for complex scenarios.
 
 ```bash {linenos=inline}
 # Read user profile
-TOKEN=$(entratool get-token -p graph-readonly --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-readonly --silent)
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me | jq
 ```
@@ -106,7 +106,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ```bash {linenos=inline}
 # List subscriptions
-TOKEN=$(entratool get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
 curl -H "Authorization: Bearer $TOKEN" \
      'https://management.azure.com/subscriptions?api-version=2020-01-01' | jq
 ```
@@ -117,10 +117,10 @@ curl -H "Authorization: Bearer $TOKEN" \
 # Token caching
 get_token() {
   local cache="/tmp/token-cache.txt"
-  if [ -f "$cache" ] && entratool discover -f "$cache" &>/dev/null; then
+  if [ -f "$cache" ] && entra-auth-cli discover -f "$cache" &>/dev/null; then
     cat "$cache"
   else
-    entratool get-token -p my-profile --silent | tee "$cache"
+    entra-auth-cli get-token -p my-profile --silent | tee "$cache"
   fi
 }
 ```

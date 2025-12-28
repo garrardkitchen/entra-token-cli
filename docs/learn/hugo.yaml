@@ -1,5 +1,5 @@
-baseURL: "https://entratool-docs.garrardkitchen.com/"
-title: "Entra Token CLI Documentation"
+baseURL: "https://entra-auth-cli-docs.garrardkitchen.com/"
+title: "Entra Auth Cli Documentation"
 languageCode: "en-us"
 enableEmoji: true
 enableGitInfo: false

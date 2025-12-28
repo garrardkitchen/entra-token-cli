@@ -72,8 +72,8 @@ cacheCertificatePassword: true     # Cache cert password
 
 Profiles are stored in platform-specific locations:
 
-- **Windows**: `%APPDATA%\entratool\profiles.json`
-- **macOS/Linux**: `~/.config/entratool/profiles.json`
+- **Windows**: `%APPDATA%\entra-auth-cli\profiles.json`
+- **macOS/Linux**: `~/.config/entra-auth-cli/profiles.json`
 
 The `profiles.json` file contains metadata **only** - no secrets!
 
@@ -101,9 +101,9 @@ The `profiles.json` file contains metadata **only** - no secrets!
 
 Secrets (client secrets and certificate passwords) are stored separately using **secure storage**:
 
-- **Windows**: Encrypted with DPAPI in `%APPDATA%\entratool\secure\`
-- **macOS**: Stored in Keychain (service: `entratool`, account: `entratool:{profileName}:{secretType}`)
-- **Linux**: XOR-obfuscated in `~/.config/entratool/secure/` ⚠️
+- **Windows**: Encrypted with DPAPI in `%APPDATA%\entra-auth-cli\secure\`
+- **macOS**: Stored in Keychain (service: `entra-auth-cli`, account: `entra-auth-cli:{profileName}:{secretType}`)
+- **Linux**: XOR-obfuscated in `~/.config/entra-auth-cli/secure/` ⚠️
 
 > **Security Note**: See [Secure Storage](/docs/core-concepts/secure-storage/) for details about platform security.
 
@@ -113,35 +113,35 @@ Secrets (client secrets and certificate passwords) are stored separately using *
 
 ### 1. Create
 ```bash {linenos=inline}
-entratool config create
+entra-auth-cli config create
 ```
 
 Interactive prompts guide you through setup.
 
 ### 2. Use
 ```bash {linenos=inline}
-entratool get-token -p myprofile
+entra-auth-cli get-token -p myprofile
 ```
 
 Reference the profile by name when generating tokens.
 
 ### 3. Update
 ```bash {linenos=inline}
-entratool config edit -p myprofile
+entra-auth-cli config edit -p myprofile
 ```
 
 Modify settings or rotate credentials.
 
 ### 4. Share
 ```bash {linenos=inline}
-entratool config export -p myprofile --include-secrets -o myprofile.enc
+entra-auth-cli config export -p myprofile --include-secrets -o myprofile.enc
 ```
 
 Export with AES-256 encryption for team sharing.
 
 ### 5. Delete
 ```bash {linenos=inline}
-entratool config delete -p myprofile
+entra-auth-cli config delete -p myprofile
 ```
 
 Remove profile and associated secrets.

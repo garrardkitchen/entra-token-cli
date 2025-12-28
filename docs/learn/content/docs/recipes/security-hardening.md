@@ -6,7 +6,7 @@ weight: 6
 
 # Security Hardening
 
-Learn how to secure your Entra Token CLI deployments for production environments.
+Learn how to secure your Entra Auth Cli deployments for production environments.
 
 ---
 
@@ -23,7 +23,7 @@ TOKEN_FILE=$(mktemp)
 trap "rm -f $TOKEN_FILE" EXIT
 
 # Get token with restricted permissions
-entratool get-token -p my-profile --silent > "$TOKEN_FILE"
+entra-auth-cli get-token -p my-profile --silent > "$TOKEN_FILE"
 chmod 600 "$TOKEN_FILE"
 
 # Use token
@@ -55,21 +55,21 @@ Create separate profiles for each environment:
 
 ```bash {linenos=inline}
 # Development
-entratool config create
+entra-auth-cli config create
 # Name: dev-graph
 # Client ID: <dev-app-id>
 # Tenant ID: <dev-tenant-id>
 # Scope: https://graph.microsoft.com/User.Read
 
 # Staging
-entratool config create
+entra-auth-cli config create
 # Name: staging-graph
 # Client ID: <staging-app-id>
 # Tenant ID: <staging-tenant-id>
 # Scope: https://graph.microsoft.com/User.Read
 
 # Production
-entratool config create
+entra-auth-cli config create
 # Name: prod-graph
 # Client ID: <prod-app-id>
 # Tenant ID: <prod-tenant-id>
@@ -80,11 +80,11 @@ entratool config create
 
 ```bash {linenos=inline}
 # Good: Clear environment separation
-entratool get-token -p dev-graph      # Development
-entratool get-token -p prod-graph     # Production
+entra-auth-cli get-token -p dev-graph      # Development
+entra-auth-cli get-token -p prod-graph     # Production
 
 # Bad: Shared profiles across environments
-entratool get-token -p shared-graph   # Risk of production data exposure
+entra-auth-cli get-token -p shared-graph   # Risk of production data exposure
 ```
 
 ---
@@ -103,14 +103,14 @@ rotate_secret() {
   echo "Rotating secret for profile: $profile"
   
   # Update profile with new secret
-  entratool config edit -p "$profile" <<EOF
+  entra-auth-cli config edit -p "$profile" <<EOF
 3
 $new_secret
 q
 EOF
   
   # Test new secret
-  if entratool get-token -p "$profile" --silent > /dev/null; then
+  if entra-auth-cli get-token -p "$profile" --silent > /dev/null; then
     echo "✓ Secret rotation successful"
     
     # Optionally revoke old secret in Azure Portal
@@ -136,7 +136,7 @@ set -euo pipefail
 
 # Rotation interval: 90 days
 ROTATION_INTERVAL_DAYS=90
-SECRET_NAME="entratool-prod-secret"
+SECRET_NAME="entra-auth-cli-prod-secret"
 KEY_VAULT="my-prod-vault"
 
 # Check last rotation date
@@ -180,11 +180,11 @@ Always use the minimum required scopes:
 
 ```bash {linenos=inline}
 # Good: Specific scope
-entratool get-token -p my-profile \
+entra-auth-cli get-token -p my-profile \
   --scope "https://graph.microsoft.com/User.Read"
 
 # Bad: Over-permissive
-entratool get-token -p my-profile \
+entra-auth-cli get-token -p my-profile \
   --scope "https://graph.microsoft.com/.default"  # Grants all consented permissions
 ```
 
@@ -194,12 +194,12 @@ Assign minimum required Azure RBAC roles:
 
 ```bash {linenos=inline}
 # Good: Specific role
-az ad sp create-for-rbac --name "entratool-deployment" \
+az ad sp create-for-rbac --name "entra-auth-cli-deployment" \
   --role "Contributor" \
   --scopes "/subscriptions/xxx/resourceGroups/my-rg"
 
 # Bad: Over-permissive
-az ad sp create-for-rbac --name "entratool-deployment" \
+az ad sp create-for-rbac --name "entra-auth-cli-deployment" \
   --role "Owner" \
   --scopes "/subscriptions/xxx"  # Full subscription access
 ```
@@ -230,12 +230,12 @@ openssl pkcs12 -export \
 
 ```bash {linenos=inline}
 # Create secure directory
-mkdir -p ~/.entratool/certs
-chmod 700 ~/.entratool/certs
+mkdir -p ~/.entra-auth-cli/certs
+chmod 700 ~/.entra-auth-cli/certs
 
 # Store certificate with restricted permissions
-cp certificate.pfx ~/.entratool/certs/
-chmod 600 ~/.entratool/certs/certificate.pfx
+cp certificate.pfx ~/.entra-auth-cli/certs/
+chmod 600 ~/.entra-auth-cli/certs/certificate.pfx
 
 # Never store in git
 echo "*.pfx" >> .gitignore
@@ -265,7 +265,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 export HTTPS_PROXY="https://proxy.corp.com:8080"
 export HTTP_PROXY="http://proxy.corp.com:8080"
 
-entratool get-token -p my-profile
+entra-auth-cli get-token -p my-profile
 ```
 
 ---
@@ -281,12 +281,12 @@ log_auth() {
   local profile=$1
   local status=$2
   
-  logger -t entratool \
+  logger -t entra-auth-cli \
     "Authentication attempt: profile=$profile status=$status user=$(whoami) host=$(hostname)"
 }
 
 # Get token with logging
-if TOKEN=$(entratool get-token -p prod-profile --silent); then
+if TOKEN=$(entra-auth-cli get-token -p prod-profile --silent); then
   log_auth "prod-profile" "success"
 else
   log_auth "prod-profile" "failure"
@@ -318,7 +318,7 @@ fi
 ### Directory Structure
 
 ```
-~/.entratool/
+~/.entra-auth-cli/
 ├── dev/
 │   ├── profiles.json
 │   └── certs/
@@ -337,13 +337,13 @@ fi
 
 # Set environment
 ENVIRONMENT=${1:-dev}
-export ENTRATOOL_CONFIG_PATH="$HOME/.entratool/$ENVIRONMENT"
+export entra-auth-cli_CONFIG_PATH="$HOME/.entra-auth-cli/$ENVIRONMENT"
 
 # Ensure directory exists
-mkdir -p "$ENTRATOOL_CONFIG_PATH"
+mkdir -p "$entra-auth-cli_CONFIG_PATH"
 
 # Get token
-entratool get-token -p "$ENVIRONMENT-profile"
+entra-auth-cli get-token -p "$ENVIRONMENT-profile"
 ```
 
 ---
@@ -363,7 +363,7 @@ CLIENT_SECRET=$(az keyvault secret show \
   --query value -o tsv)
 
 # Use secret (avoid storing in profile)
-entratool get-token -p prod-profile --client-secret "$CLIENT_SECRET"
+entra-auth-cli get-token -p prod-profile --client-secret "$CLIENT_SECRET"
 ```
 
 **HashiCorp Vault:**
@@ -371,10 +371,10 @@ entratool get-token -p prod-profile --client-secret "$CLIENT_SECRET"
 #!/bin/bash
 
 # Retrieve secret from Vault
-CLIENT_SECRET=$(vault kv get -field=client_secret secret/entratool/prod)
+CLIENT_SECRET=$(vault kv get -field=client_secret secret/entra-auth-cli/prod)
 
 # Use secret
-entratool get-token -p prod-profile --client-secret "$CLIENT_SECRET"
+entra-auth-cli get-token -p prod-profile --client-secret "$CLIENT_SECRET"
 ```
 
 ---

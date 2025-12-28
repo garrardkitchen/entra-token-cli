@@ -26,13 +26,13 @@ The Interactive Browser flow provides seamless user authentication by opening yo
 
 ```bash {linenos=inline}
 # Authenticate with interactive browser
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # With specific profile
-entratool get-token --flow interactive --profile myapp
+entra-auth-cli get-token --flow interactive --profile myapp
 
 # With custom scopes
-entratool get-token --flow interactive \
+entra-auth-cli get-token --flow interactive \
   --scope https://graph.microsoft.com/User.Read
 ```
 
@@ -40,7 +40,7 @@ entratool get-token --flow interactive \
 
 ```mermaid
 sequenceDiagram
-    participant CLI as Entra Token CLI
+    participant CLI as Entra Auth Cli
     participant Browser
     participant EntraID as Microsoft Entra ID
     participant User
@@ -73,7 +73,7 @@ sequenceDiagram
 Create a profile for interactive browser flow:
 
 ```bash {linenos=inline}
-entratool create-profile --name interactive-app
+entra-auth-cli create-profile --name interactive-app
 ```
 
 When prompted:
@@ -120,13 +120,13 @@ az ad app update \
 
 ```bash {linenos=inline}
 # Default profile, default scopes
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # Specific profile
-entratool get-token --flow interactive --profile production
+entra-auth-cli get-token --flow interactive --profile production
 
 # Override scopes
-entratool get-token --flow interactive \
+entra-auth-cli get-token --flow interactive \
   --scope "https://graph.microsoft.com/User.Read https://graph.microsoft.com/Mail.Read"
 ```
 
@@ -134,7 +134,7 @@ entratool get-token --flow interactive \
 
 ```bash {linenos=inline}
 # Get token for Graph API
-TOKEN=$(entratool get-token --flow interactive \
+TOKEN=$(entra-auth-cli get-token --flow interactive \
   --scope https://graph.microsoft.com/User.Read \
   --output json | jq -r .access_token)
 
@@ -155,7 +155,7 @@ get_user_token() {
     
     echo "Authenticating... Browser will open shortly." >&2
     
-    if ! token_json=$(entratool get-token \
+    if ! token_json=$(entra-auth-cli get-token \
         --flow interactive \
         --scope "$scopes" \
         --output json 2>/dev/null); then
@@ -181,10 +181,10 @@ After initial sign-in, tokens are cached:
 
 ```bash {linenos=inline}
 # First run - browser opens
-entratool get-token --flow interactive --profile myapp
+entra-auth-cli get-token --flow interactive --profile myapp
 
 # Subsequent runs - uses cached token (no browser)
-entratool get-token --profile myapp
+entra-auth-cli get-token --profile myapp
 
 # Token automatically refreshed when expired
 ```
@@ -194,7 +194,7 @@ entratool get-token --profile myapp
 ### First-Time Authentication
 
 ```
-$ entratool get-token --flow interactive
+$ entra-auth-cli get-token --flow interactive
 
 Opening browser for authentication...
 ✓ Browser opened
@@ -210,7 +210,7 @@ Token saved to profile 'default'
 ### Cached Token (Subsequent Runs)
 
 ```
-$ entratool get-token
+$ entra-auth-cli get-token
 
 ✓ Using cached token
 Token expires: 2025-12-28 15:30:00
@@ -219,7 +219,7 @@ Token expires: 2025-12-28 15:30:00
 ### Token Refresh (Auto)
 
 ```
-$ entratool get-token
+$ entra-auth-cli get-token
 
 ⟳ Refreshing expired token...
 ✓ Token refreshed
@@ -249,14 +249,14 @@ Set environment variable to use specific browser:
 
 ```bash {linenos=inline}
 # Use Chrome
-BROWSER=google-chrome entratool get-token --flow interactive
+BROWSER=google-chrome entra-auth-cli get-token --flow interactive
 
 # Use Firefox
-BROWSER=firefox entratool get-token --flow interactive
+BROWSER=firefox entra-auth-cli get-token --flow interactive
 
 # Use specific browser path
 BROWSER="/Applications/Firefox.app/Contents/MacOS/firefox" \
-  entratool get-token --flow interactive
+  entra-auth-cli get-token --flow interactive
 ```
 
 ### Headless Environments
@@ -265,7 +265,7 @@ If browser cannot open (e.g., SSH session without X11):
 
 ```bash {linenos=inline}
 # CLI detects no display and falls back to device code
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 Output:
 No display detected. Falling back to device code flow.
@@ -280,13 +280,13 @@ The CLI starts a temporary HTTP server for the OAuth callback:
 
 ```bash {linenos=inline}
 # Random available port (default)
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # Specific port
-entratool get-token --flow interactive --port 8080
+entra-auth-cli get-token --flow interactive --port 8080
 
 # Port range
-entratool get-token --flow interactive --port-range 8000-8100
+entra-auth-cli get-token --flow interactive --port-range 8000-8100
 ```
 
 **Port selection:**
@@ -342,18 +342,18 @@ Switch between user accounts:
 
 ```bash {linenos=inline}
 # Create profiles for different users
-entratool create-profile --name work
-entratool create-profile --name personal
+entra-auth-cli create-profile --name work
+entra-auth-cli create-profile --name personal
 
 # Authenticate with work account
-entratool get-token --flow interactive --profile work
+entra-auth-cli get-token --flow interactive --profile work
 
 # Authenticate with personal account
-entratool get-token --flow interactive --profile personal
+entra-auth-cli get-token --flow interactive --profile personal
 
 # Switch accounts
-entratool get-token --profile work
-entratool get-token --profile personal
+entra-auth-cli get-token --profile work
+entra-auth-cli get-token --profile personal
 ```
 
 ### Conditional Access
@@ -369,16 +369,16 @@ Supports all Conditional Access policies:
 
 ```bash {linenos=inline}
 # Check token expiry
-entratool inspect --profile myapp
+entra-auth-cli inspect --profile myapp
 
 # Force refresh
-entratool refresh --profile myapp
+entra-auth-cli refresh --profile myapp
 
 # Clear cached token
-entratool clear-cache --profile myapp
+entra-auth-cli clear-cache --profile myapp
 
 # Re-authenticate
-entratool get-token --flow interactive --profile myapp
+entra-auth-cli get-token --flow interactive --profile myapp
 ```
 
 ## Troubleshooting
@@ -395,13 +395,13 @@ entratool get-token --flow interactive --profile myapp
 defaults read com.apple.LaunchServices/com.apple.launchservices.secure | grep -A 2 browser
 
 # 2. Manually copy URL
-entratool get-token --flow interactive --show-url
+entra-auth-cli get-token --flow interactive --show-url
 
 # 3. Use specific browser
-BROWSER=firefox entratool get-token --flow interactive
+BROWSER=firefox entra-auth-cli get-token --flow interactive
 
 # 4. Fall back to device code
-entratool get-token --flow device-code
+entra-auth-cli get-token --flow device-code
 ```
 
 ### Port Already in Use
@@ -412,10 +412,10 @@ entratool get-token --flow device-code
 
 ```bash {linenos=inline}
 # Use different port
-entratool get-token --flow interactive --port 8081
+entra-auth-cli get-token --flow interactive --port 8081
 
 # Use random available port (default)
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # Check what's using the port
 lsof -i :8080
@@ -435,7 +435,7 @@ lsof -i :8080
 # Temporarily disable firewall for testing
 
 # 3. Try specific port
-entratool get-token --flow interactive --port 8080
+entra-auth-cli get-token --flow interactive --port 8080
 
 # 4. Check browser console for errors
 # Look for CORS or redirect issues
@@ -449,14 +449,14 @@ entratool get-token --flow interactive --port 8080
 
 ```bash {linenos=inline}
 # Clear token cache
-entratool clear-cache --profile myapp
+entra-auth-cli clear-cache --profile myapp
 
 # Force re-authentication
-entratool get-token --flow interactive --profile myapp --force
+entra-auth-cli get-token --flow interactive --profile myapp --force
 
 # Delete and recreate profile
-entratool delete-profile --name myapp
-entratool create-profile --name myapp
+entra-auth-cli delete-profile --name myapp
+entra-auth-cli create-profile --name myapp
 ```
 
 ## Platform-Specific Notes
@@ -465,18 +465,18 @@ entratool create-profile --name myapp
 
 ```bash {linenos=inline}
 # Default browser (Safari/Chrome/Firefox)
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # Token storage: macOS Keychain
 # View tokens:
-security find-generic-password -s "entratool-cli"
+security find-generic-password -s "entra-auth-cli-cli"
 ```
 
 ### Windows
 
 ```bash {linenos=inline}
 # Default browser (Edge/Chrome/Firefox)
-entratool.exe get-token --flow interactive
+entra-auth-cli.exe get-token --flow interactive
 
 # Token storage: DPAPI
 # Encrypted per-user, per-machine
@@ -486,15 +486,15 @@ entratool.exe get-token --flow interactive
 
 ```bash {linenos=inline}
 # Default browser (Firefox/Chrome/Chromium)
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 
 # Token storage: Encrypted file
-# Location: ~/.entratool/tokens.enc
+# Location: ~/.entra-auth-cli/tokens.enc
 # Permissions: 600 (user-only)
 
 # Headless systems
 export DISPLAY=:0  # If X11 available
-entratool get-token --flow interactive
+entra-auth-cli get-token --flow interactive
 ```
 
 ## Best Practices
@@ -503,24 +503,24 @@ entratool get-token --flow interactive
 
 ```bash {linenos=inline}
 # Separate profiles by purpose
-entratool create-profile --name graph-reader
-entratool create-profile --name azure-admin
-entratool create-profile --name mail-sender
+entra-auth-cli create-profile --name graph-reader
+entra-auth-cli create-profile --name azure-admin
+entra-auth-cli create-profile --name mail-sender
 
 # Use descriptive names
-entratool create-profile --name "production-api"
-entratool create-profile --name "dev-testing"
+entra-auth-cli create-profile --name "production-api"
+entra-auth-cli create-profile --name "dev-testing"
 ```
 
 ### Scope Management
 
 ```bash {linenos=inline}
 # Minimum required scopes
-entratool get-token --flow interactive \
+entra-auth-cli get-token --flow interactive \
   --scope "https://graph.microsoft.com/User.Read"
 
 # Multiple scopes
-entratool get-token --flow interactive \
+entra-auth-cli get-token --flow interactive \
   --scope "User.Read Mail.Read Calendars.Read"
 
 # Avoid .default with interactive flow
@@ -536,7 +536,7 @@ get_token_safe() {
     local attempt=0
     
     while [ $attempt -lt $max_retries ]; do
-        if token=$(entratool get-token \
+        if token=$(entra-auth-cli get-token \
             --flow interactive \
             --profile "$profile" \
             --output json 2>/dev/null); then

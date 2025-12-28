@@ -2,7 +2,7 @@
 
 ## Summary of Changes
 
-I've completed the requested updates for the Entra Token CLI documentation site:
+I've completed the requested updates for the Entra Auth Cli documentation site:
 
 ### 1. ✅ Custom Home Page Created
 
@@ -18,7 +18,7 @@ Replaced the basic markdown home page with a rich, Lotus Docs-optimized layout f
   - Flexible Scopes
   - Token Management
 - **Quick Start section** with code example
-- **Why Entra Token CLI** benefits list
+- **Why Entra Auth Cli** benefits list
 - **Platform Support** cards showing Windows/macOS/Linux with production readiness badges
 - **Call-to-action** section with links to installation and first token tutorial
 
@@ -74,7 +74,7 @@ Created comprehensive overview pages for referenced sections:
 
 ### 4. ✅ Deployment Documentation
 
-Created deployment guides for the separate `entratool-docs` repository:
+Created deployment guides for the separate `entra-auth-cli-docs` repository:
 
 **File**: `README.md` - Comprehensive maintenance guide
 **File**: `DEPLOYMENT.md` - Step-by-step deployment instructions
@@ -114,14 +114,14 @@ Created deployment guides for the separate `entratool-docs` repository:
 
 The documentation site is now **100% ready** for deployment to:
 
-**Repository**: https://github.com/garrardkitchen/entratool-docs  
-**Custom Domain**: https://entratool-docs.garrardkitchen.com
+**Repository**: https://github.com/garrardkitchen/entra-auth-cli-docs  
+**Custom Domain**: https://entra-auth-cli-docs.garrardkitchen.com
 
 ## 📝 Next Steps
 
 Follow `DEPLOYMENT.md` for step-by-step instructions:
 
-1. Create `entratool-docs` repository on GitHub
+1. Create `entra-auth-cli-docs` repository on GitHub
 2. Enable GitHub Pages (Source: GitHub Actions)
 3. Push documentation files to new repository
 4. Configure custom domain DNS (CNAME record)
@@ -179,4 +179,4 @@ hugo server -D
 **Blockers**: None  
 **Action Required**: Follow DEPLOYMENT.md instructions
 
-All files are in place, configuration is correct, and content is complete. The site will deploy successfully once pushed to the `entratool-docs` repository.
+All files are in place, configuration is correct, and content is complete. The site will deploy successfully once pushed to the `entra-auth-cli-docs` repository.
