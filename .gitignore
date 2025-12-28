@@ -148,4 +148,5 @@ profiles.json
 *.cer
 *.pfx
 
-/docs/learn/public/
+docs/learn/public/
+docs/learn/.hugo_build.lock
