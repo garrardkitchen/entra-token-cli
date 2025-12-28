@@ -82,7 +82,7 @@ Full support for Windows (10+) and macOS (10.15+) with production-ready security
 Download and install the [.NET Runtime 10.0](https://dotnet.microsoft.com/download/dotnet/10.0) or later, then install the tool globally.
 
 ```bash
-dotnet tool install -g EntraTokenCli
+dotnet tool install -g EntraAuthCli
 ```
 
 2

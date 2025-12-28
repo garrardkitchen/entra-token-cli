@@ -1,8 +1,8 @@
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Spectre.Console;
 
-namespace EntraTokenCli.Authentication;
+namespace EntraAuthCli.Authentication;
 
 /// <summary>
 /// Service for loading X.509 certificates with flexible password handling.

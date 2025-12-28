@@ -17,19 +17,19 @@ Entra Auth Cli can be installed as a .NET global tool or downloaded as a self-co
 ### Install
 
 ```bash {linenos=inline}
-dotnet tool install -g EntraTokenCli
+dotnet tool install -g EntraAuthCli
 ```
 
 ### Update
 
 ```bash {linenos=inline}
-dotnet tool update -g EntraTokenCli
+dotnet tool update -g EntraAuthCli
 ```
 
 ### Uninstall
 
 ```bash {linenos=inline}
-dotnet tool uninstall -g EntraTokenCli
+dotnet tool uninstall -g EntraAuthCli
 ```
 
 ### Verify Installation

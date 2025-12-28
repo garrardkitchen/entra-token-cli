@@ -436,7 +436,7 @@ Profiles are stored in platform-specific locations:
 
 ### Windows
 ```
-%LOCALAPPDATA%\EntraTokenCLI\profiles\
+%LOCALAPPDATA%\EntraAuthCli\profiles\
 ```
 
 ### macOS
@@ -530,7 +530,7 @@ ls -la ~/.entra-auth-cli/profiles/
 chmod 700 ~/.entra-auth-cli/profiles/
 
 # Windows (PowerShell)
-Test-Path "$env:LOCALAPPDATA\EntraTokenCLI\profiles"
+Test-Path "$env:LOCALAPPDATA\EntraAuthCli\profiles"
 ```
 
 ### Profile Corruption

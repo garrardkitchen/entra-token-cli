@@ -62,7 +62,7 @@ Entra Auth Cli works across all major platforms, but each has unique characteris
 
 ```powershell
 # Install
-dotnet tool install --global EntraTokenCli
+dotnet tool install --global EntraAuthCli
 
 # Create profile (uses DPAPI for secrets)
 entra-auth-cli config create
@@ -75,7 +75,7 @@ entra-auth-cli get-token -p my-profile
 
 ```bash {linenos=inline}
 # Install
-dotnet tool install --global EntraTokenCli
+dotnet tool install --global EntraAuthCli
 
 # Create profile (uses Keychain for secrets)
 entra-auth-cli config create
@@ -88,7 +88,7 @@ entra-auth-cli get-token -p my-profile
 
 ```bash {linenos=inline}
 # Install
-dotnet tool install --global EntraTokenCli
+dotnet tool install --global EntraAuthCli
 
 # Create profile (uses XOR obfuscation - consider alternatives)
 entra-auth-cli config create

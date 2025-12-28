@@ -51,4 +51,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatic fallback to file output when clipboard unavailable
 - Token expiration warnings with configurable thresholds
 
-[1.0.0]: https://github.com/yourusername/entratokencli/releases/tag/v1.0.0
+[1.0.0]: https://github.com/garrardkitchen/entratokencli/releases/tag/v1.0.0

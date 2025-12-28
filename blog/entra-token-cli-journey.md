@@ -307,7 +307,7 @@ Every I/O operation is async, keeping the CLI responsive even during network cal
 
 ```bash
 # Install globally
-dotnet tool install -g EntraTokenCli
+dotnet tool install -g EntraAuthCli
 
 # Or download executables from releases
 # https://github.com/garrardkitchen/entra-token-cli/releases

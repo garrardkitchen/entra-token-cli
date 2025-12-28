@@ -13,7 +13,7 @@ Generate your first Entra ID access token in just a few minutes!
 ## Step 1: Install the Tool
 
 ```bash {linenos=inline}
-dotnet tool install -g EntraTokenCli
+dotnet tool install -g EntraAuthCli
 ```
 
 [See all installation options →](/docs/getting-started/installation/)

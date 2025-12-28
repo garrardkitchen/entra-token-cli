@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using EntraAuthCli.Authentication;
+using EntraAuthCli.Commands;
+using EntraAuthCli.Configuration;
+using EntraAuthCli.Discovery;
+using EntraAuthCli.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using EntraTokenCli.Storage;
-using EntraTokenCli.Configuration;
-using EntraTokenCli.Authentication;
-using EntraTokenCli.Commands;
-using EntraTokenCli.Discovery;
-using System.Reflection;
 
-namespace EntraTokenCli;
+namespace EntraAuthCli;
 
 class Program
 {

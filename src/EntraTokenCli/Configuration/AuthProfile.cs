@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace EntraTokenCli.Configuration;
+namespace EntraAuthCli.Configuration;
 
 /// <summary>
 /// Represents a saved authentication profile.

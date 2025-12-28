@@ -1,11 +1,11 @@
-using Spectre.Console.Cli;
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
-using EntraTokenCli.Configuration;
-using EntraTokenCli.Authentication;
-using EntraTokenCli.UI;
+using EntraAuthCli.Authentication;
+using EntraAuthCli.Configuration;
+using EntraAuthCli.UI;
+using Spectre.Console.Cli;
 
-namespace EntraTokenCli.Commands;
+namespace EntraAuthCli.Commands;
 
 public class GetTokenSettings : CommandSettings
 {

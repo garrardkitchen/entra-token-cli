@@ -1,8 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace EntraTokenCli.Storage;
+namespace EntraAuthCli.Storage;
 
 /// <summary>
 /// macOS-specific secure storage implementation using Keychain.

@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EntraTokenCli.Storage;
+using EntraAuthCli.Storage;
 
-namespace EntraTokenCli.Configuration;
+namespace EntraAuthCli.Configuration;
 
 /// <summary>
 /// Service for managing authentication profiles.

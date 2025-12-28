@@ -169,10 +169,10 @@ Error: permission denied accessing /home/user/.entra-auth-cli/profiles/
 whoami
 
 # 2. Verify storage location
-$env:LOCALAPPDATA\EntraTokenCLI\profiles
+$env:LOCALAPPDATA\EntraAuthCli\profiles
 
 # 3. Check permissions
-Get-Acl "$env:LOCALAPPDATA\EntraTokenCLI\profiles" | Format-List
+Get-Acl "$env:LOCALAPPDATA\EntraAuthCli\profiles" | Format-List
 
 # 4. Recreate profile if user changed
 entra-auth-cli delete-profile --name myapp
@@ -231,7 +231,7 @@ Error: failed to parse profile: invalid JSON
 
 ```bash {linenos=inline}
 # Windows
-type %LOCALAPPDATA%\EntraTokenCLI\profiles\prod.json
+type %LOCALAPPDATA%\EntraAuthCli\profiles\prod.json
 
 # macOS/Linux
 cat ~/.entra-auth-cli/profiles/prod.json
@@ -245,7 +245,7 @@ entra-auth-cli delete-profile --name prod
 
 # Or manually
 # Windows
-del %LOCALAPPDATA%\EntraTokenCLI\profiles\prod.*
+del %LOCALAPPDATA%\EntraAuthCli\profiles\prod.*
 
 # macOS/Linux
 rm ~/.entra-auth-cli/profiles/prod.*
@@ -317,8 +317,8 @@ mkdir -p ~/.entra-auth-cli/profiles
 chmod 700 ~/.entra-auth-cli/profiles
 
 # Windows (PowerShell)
-Test-Path "$env:LOCALAPPDATA\EntraTokenCLI"
-New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\EntraTokenCLI\profiles"
+Test-Path "$env:LOCALAPPDATA\EntraAuthCli"
+New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\EntraAuthCli\profiles"
 ```
 
 #### 2. Check Disk Space
@@ -431,7 +431,7 @@ entra-auth-cli get-token --profile myapp --output json
 
 # 4. Check profile file exists
 # Windows
-dir %LOCALAPPDATA%\EntraTokenCLI\profiles\
+dir %LOCALAPPDATA%\EntraAuthCli\profiles\
 
 # macOS/Linux
 ls -la ~/.entra-auth-cli/profiles/

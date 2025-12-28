@@ -27,7 +27,7 @@ jobs:
       
       - name: Install Entra Auth Cli
         run: |
-          dotnet tool install --global EntraTokenCli
+          dotnet tool install --global EntraAuthCli
       
       - name: Create Profile
         env:
@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Setup Entra Auth Cli
-        run: dotnet tool install --global EntraTokenCli
+        run: dotnet tool install --global EntraAuthCli
       
       - name: Deploy to ${{ matrix.environment }}
         env:
@@ -110,7 +110,7 @@ pool:
 
 steps:
 - script: |
-    dotnet tool install --global EntraTokenCli
+    dotnet tool install --global EntraAuthCli
   displayName: 'Install Entra Auth Cli'
 
 - task: AzureCLI@2
@@ -160,7 +160,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: dotnet tool install --global EntraTokenCli
+          - script: dotnet tool install --global EntraAuthCli
             displayName: 'Install CLI'
           
           - script: |
@@ -185,7 +185,7 @@ deploy:
   stage: deploy
   image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
-    - dotnet tool install --global EntraTokenCli
+    - dotnet tool install --global EntraAuthCli
     - export PATH="$PATH:/root/.dotnet/tools"
     
     # Create profile
@@ -224,7 +224,7 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                sh 'dotnet tool install --global EntraTokenCli'
+                sh 'dotnet tool install --global EntraAuthCli'
             }
         }
         

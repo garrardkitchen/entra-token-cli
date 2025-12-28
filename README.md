@@ -19,12 +19,12 @@ A cross-platform .NET CLI tool for generating Azure AD access tokens via multipl
 ### Option 1: .NET Global Tool (Recommended)
 
 ```bash
-dotnet tool install -g EntraTokenCli
+dotnet tool install -g EntraAuthCli
 ```
 
 ### Option 2: Self-Contained Executables
 
-Download the latest release for your platform from the [Releases](https://github.com/yourusername/entratokencli/releases) page:
+Download the latest release for your platform from the [Releases](https://github.com/garrardkitchen/entratokencli/releases) page:
 
 - **Windows**: `entra-auth-cli-win-x64.exe`
 - **macOS (Apple Silicon)**: `entra-auth-cli-osx-arm64`

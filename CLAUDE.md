@@ -114,8 +114,8 @@ Location: `GetTokenCommand.cs` lines ~80-110
 ## Naming Conventions
 
 - **CLI command**: `entra-auth-cli` (user invokes this)
-- **Package ID**: `EntraTokenCli` (NuGet package name)
-- **Namespace**: `EntraTokenCli.*` (all C# code)
+- **Package ID**: `EntraAuthCli` (NuGet package name)
+- **Namespace**: `EntraAuthCli.*` (all C# code)
 - **Config directory**: `entra-auth-cli` (filesystem storage)
 - **Keychain service**: `entra-auth-cli` (macOS Keychain service name)
 

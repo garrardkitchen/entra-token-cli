@@ -23,7 +23,7 @@ Entra Auth Cli leverages Windows security features for optimal token protection:
 
 ```powershell {linenos=inline}
 # Install using Windows Package Manager
-winget install GarrardKitchen.EntraTokenCLI
+winget install GarrardKitchen.EntraAuthCli
 ```
 
 ### Manual Installation
@@ -62,7 +62,7 @@ Tokens are encrypted using Windows DPAPI:
 
 ```powershell {linenos=inline}
 # Tokens stored at:
-$env:LOCALAPPDATA\EntraTokenCLI\profiles\
+$env:LOCALAPPDATA\EntraAuthCli\profiles\
 
 # Each profile has encrypted token file:
 # - profile-name.json (configuration)
@@ -79,11 +79,11 @@ $env:LOCALAPPDATA\EntraTokenCLI\profiles\
 
 ```powershell {linenos=inline}
 # Check storage path
-$storagePath = "$env:LOCALAPPDATA\EntraTokenCLI\profiles"
+$storagePath = "$env:LOCALAPPDATA\EntraAuthCli\profiles"
 Get-ChildItem $storagePath
 
 # Example output:
-# Directory: C:\Users\jsmith\AppData\Local\EntraTokenCLI\profiles
+# Directory: C:\Users\jsmith\AppData\Local\EntraAuthCli\profiles
 #
 # Mode                 LastWriteTime         Length Name
 # ----                 -------------         ------ ----
@@ -97,10 +97,10 @@ Get-ChildItem $storagePath
 
 ```powershell {linenos=inline}
 # Check file permissions
-Get-Acl "$env:LOCALAPPDATA\EntraTokenCLI\profiles\default.token" | Format-List
+Get-Acl "$env:LOCALAPPDATA\EntraAuthCli\profiles\default.token" | Format-List
 
 # Verify only current user has access
-$acl = Get-Acl "$env:LOCALAPPDATA\EntraTokenCLI\profiles\default.token"
+$acl = Get-Acl "$env:LOCALAPPDATA\EntraAuthCli\profiles\default.token"
 $acl.Access | Where-Object { $_.IdentityReference -eq "$env:USERDOMAIN\$env:USERNAME" }
 ```
 
@@ -309,7 +309,7 @@ function Write-EntraTokenLog {
         [string]$EntryType = 'Information'
     )
     
-    $source = "EntraTokenCLI"
+    $source = "EntraAuthCli"
     $logName = "Application"
     
     # Create source if it doesn't exist
@@ -473,10 +473,10 @@ finally {
 
 ```powershell {linenos=inline}
 # Store credentials in Windows Credential Manager
-cmdkey /generic:EntraTokenCLI /user:$clientId /pass:$clientSecret
+cmdkey /generic:EntraAuthCli /user:$clientId /pass:$clientSecret
 
 # Retrieve from Credential Manager
-$credential = Get-StoredCredential -Target "EntraTokenCLI"
+$credential = Get-StoredCredential -Target "EntraAuthCli"
 $clientSecret = $credential.GetNetworkCredential().Password
 
 # Use in profile creation
@@ -499,7 +499,7 @@ whoami
 echo $env:USERNAME
 
 # Verify profile ownership
-Get-Acl "$env:LOCALAPPDATA\EntraTokenCLI\profiles\default.token" | Select-Object Owner
+Get-Acl "$env:LOCALAPPDATA\EntraAuthCli\profiles\default.token" | Select-Object Owner
 
 # Recreate profile if ownership changed
 entra-auth-cli delete-profile --name default

@@ -1,10 +1,10 @@
+using System.ComponentModel;
+using EntraAuthCli.Configuration;
+using EntraAuthCli.UI;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using System.ComponentModel;
-using EntraTokenCli.Configuration;
-using EntraTokenCli.UI;
 
-namespace EntraTokenCli.Commands;
+namespace EntraAuthCli.Commands;
 
 public class ConfigSettings : CommandSettings
 {

@@ -1,11 +1,10 @@
-using Spectre.Console;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using EntraAuthCli.Authentication;
+using EntraAuthCli.Configuration;
+using Spectre.Console;
 using TextCopy;
-using EntraTokenCli.Authentication;
-using EntraTokenCli.Configuration;
 
-namespace EntraTokenCli.UI;
+namespace EntraAuthCli.UI;
 
 /// <summary>
 /// Console UI utilities using Spectre.Console.
