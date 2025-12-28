@@ -71,13 +71,13 @@ Tokens are securely stored in macOS Keychain:
 
 ```bash {linenos=inline}
 # Tokens stored in Keychain with:
-# - Service: com.garrardkitchen.entra-auth-cli-cli
+# - Service: entra-auth-cli
 # - Account: profile-name
 # - Kind: Application password
 
 # View in Keychain Access app
 open -a "Keychain Access"
-# Search for: entra-auth-cli-cli
+# Search for: entra-auth-cli
 ```
 
 **Security characteristics:**
@@ -90,13 +90,13 @@ open -a "Keychain Access"
 
 ```bash {linenos=inline}
 # List Entra Auth Cli keychains
-security find-generic-password -s "com.garrardkitchen.entra-auth-cli-cli"
+security find-generic-password -s "entra-auth-cli"
 
 # View specific profile
-security find-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "default"
+security find-generic-password -s "entra-auth-cli" -a "default"
 
 # Delete keychain entry
-security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "default"
+security delete-generic-password -s "entra-auth-cli" -a "default"
 
 # Export keychain item (requires authorization)
 security export -k ~/Library/Keychains/login.keychain-db \
@@ -117,7 +117,7 @@ security show-keychain-info ~/Library/Keychains/login.keychain-db
 # 3. Two-factor authentication enabled
 
 # View synced items
-# System Settings > Passwords > entra-auth-cli-cli
+# System Settings > Passwords > entra-auth-cli
 ```
 
 ## Shell Integration
@@ -437,11 +437,11 @@ services:
 
 # Or programmatically:
 security set-generic-password-partition-list \
-  -s com.garrardkitchen.entra-auth-cli-cli \
+  -s entra-auth-cli \
   -k ~/Library/Keychains/login.keychain-db
 
 # Reset Keychain permissions
-security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli"
+security delete-generic-password -s "entra-auth-cli"
 entra-auth-cli get-token  # Creates new entry
 ```
 
