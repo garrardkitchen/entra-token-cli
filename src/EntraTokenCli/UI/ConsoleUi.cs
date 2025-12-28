@@ -1,11 +1,10 @@
-using Spectre.Console;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using EntraAuthCli.Authentication;
+using EntraAuthCli.Configuration;
+using Spectre.Console;
 using TextCopy;
-using EntraTokenCli.Authentication;
-using EntraTokenCli.Configuration;
 
-namespace EntraTokenCli.UI;
+namespace EntraAuthCli.UI;
 
 /// <summary>
 /// Console UI utilities using Spectre.Console.
@@ -168,7 +167,7 @@ public static class ConsoleUi
         if (profiles.Count == 0)
         {
             throw new InvalidOperationException(
-                "No profiles found. Create a profile first using 'entratool config create'.");
+                "No profiles found. Create a profile first using 'entra-auth-cli config create'.");
         }
 
         if (profiles.Count == 1)

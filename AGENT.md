@@ -1,6 +1,6 @@
-# Agent Instructions - Entra Token CLI
+# Agent Instructions - Entra Auth Cli
 
-This document provides guidance for AI coding agents working on the Entra Token CLI (entratool) project.
+This document provides guidance for AI coding agents working on the Entra Auth Cli (entra-auth-cli) project.
 
 ## Project Overview
 
@@ -91,7 +91,7 @@ When no explicit flow is specified, the tool infers the appropriate OAuth2 flow 
 Profiles are validated on-demand rather than at load time, allowing invalid profiles to exist temporarily without blocking the tool.
 
 ### Certificate Password Caching
-Controlled by `--cache-cert-password` flag. When enabled, passwords stored in platform-native secure storage under key format: `entratool:{profileName}:cert-password`.
+Controlled by `--cache-cert-password` flag. When enabled, passwords stored in platform-native secure storage under key format: `entra-auth-cli:{profileName}:cert-password`.
 
 ### Token Expiration Warnings
 Default threshold: 5 minutes. Configurable via `--warn-expiry` option. Only applies to cached tokens, not fresh authentications.
@@ -99,11 +99,11 @@ Default threshold: 5 minutes. Configurable via `--warn-expiry` option. Only appl
 ## Important Conventions
 
 ### Naming
-- **Tool name**: `entratool` (command-line invocation)
+- **Tool name**: `entra-auth-cli` (command-line invocation)
 - **Package ID**: `EntraTokenCli` (NuGet package)
 - **Namespace**: `EntraTokenCli.*` (all C# code)
-- **Config directory**: `entratool` (filesystem paths)
-- **Keychain service**: `entratool` (macOS Keychain)
+- **Config directory**: `entra-auth-cli` (filesystem paths)
+- **Keychain service**: `entra-auth-cli` (macOS Keychain)
 
 ### Error Handling
 - Commands return `int` exit codes (0 = success, 1 = error)
@@ -119,8 +119,8 @@ Default threshold: 5 minutes. Configurable via `--warn-expiry` option. Only appl
 
 ### Secure Storage Keys
 Format: `{serviceName}:{profileName}:{secretType}`
-- Client secret: `entratool:myprofile:client-secret`
-- Cert password: `entratool:myprofile:cert-password`
+- Client secret: `entra-auth-cli:myprofile:client-secret`
+- Cert password: `entra-auth-cli:myprofile:cert-password`
 
 ## Common Development Tasks
 
@@ -269,16 +269,16 @@ dotnet publish -c Release -r linux-x64 --self-contained -o ./publish/linux-x64
 
 ### Windows
 - DPAPI encryption scoped to current user
-- Requires write access to `%APPDATA%\entratool\`
+- Requires write access to `%APPDATA%\entra-auth-cli\`
 
 ### macOS
 - Keychain prompts may appear for first-time access
 - Uses `security` command-line tool for Keychain operations
-- Keychain items prefixed with `entratool:` for easy identification
+- Keychain items prefixed with `entra-auth-cli:` for easy identification
 
 ### Linux
 - No native secure storage, uses XOR obfuscation (weak security)
-- Requires write access to `~/.config/entratool/secure/`
+- Requires write access to `~/.config/entra-auth-cli/secure/`
 - libsecret integration is mentioned but not implemented (fallback only)
 
 ## Troubleshooting Common Issues

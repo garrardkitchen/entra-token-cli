@@ -1,14 +1,14 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace EntraTokenCli.Storage;
+namespace EntraAuthCli.Storage;
 
 /// <summary>
 /// Linux-specific secure storage implementation using libsecret via D-Bus.
 /// </summary>
 public class LinuxSecureStorage : ISecureStorage
 {
-    private const string ServiceName = "entratool";
+    private const string ServiceName = "entra-auth-cli";
     private readonly Dictionary<string, string> _cache = new();
     private readonly string _fallbackDirectory;
     private bool _usesFallback = false;

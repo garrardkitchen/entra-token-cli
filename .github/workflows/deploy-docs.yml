@@ -1,0 +1,71 @@
+name: Deploy Documentation entra-auth-cli-docs
+
+on:
+  push:
+    branches:
+      - main
+      - feat/**
+    paths:
+      - 'docs/learn/**'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.153.2
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true
+
+      - name: Download Hugo modules
+        working-directory: docs/learn
+        run: hugo mod get
+
+      - name: Build with Hugo
+        working-directory: docs/learn
+        env:
+          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
+          HUGO_ENVIRONMENT: production
+        run: |
+          hugo \
+            --gc \
+            --minify \
+            --baseURL "https://entra-auth-cli-docs.garrardkitchen.com/"
+
+      - name: Deploy to entra-auth-cli-docs repository
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
+          external_repository: garrardkitchen/entra-auth-cli-docs
+          publish_branch: main
+          publish_dir: ./docs/learn/public
+          cname: entra-auth-cli-docs.garrardkitchen.com
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy documentation from ${{ github.sha }}'

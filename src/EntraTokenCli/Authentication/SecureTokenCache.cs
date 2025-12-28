@@ -1,10 +1,7 @@
-using System.Security.Cryptography.X509Certificates;
-
-namespace EntraTokenCli.Authentication;
-
+using EntraAuthCli.Storage;
 using Microsoft.Identity.Client;
-using EntraTokenCli.Storage;
-using System.Text;
+
+namespace EntraAuthCli.Authentication;
 
 /// <summary>
 /// Secure token cache implementation with encryption.

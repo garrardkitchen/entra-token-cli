@@ -1,10 +1,10 @@
-using Microsoft.Identity.Client;
-using EntraTokenCli.Configuration;
-using EntraTokenCli.Storage;
-using Spectre.Console;
 using System.Security.Cryptography.X509Certificates;
+using EntraAuthCli.Configuration;
+using EntraAuthCli.Storage;
+using Microsoft.Identity.Client;
+using Spectre.Console;
 
-namespace EntraTokenCli.Authentication;
+namespace EntraAuthCli.Authentication;
 
 /// <summary>
 /// Result of an authentication operation.

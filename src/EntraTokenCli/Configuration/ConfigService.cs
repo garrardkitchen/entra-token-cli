@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EntraTokenCli.Storage;
+using EntraAuthCli.Storage;
 
-namespace EntraTokenCli.Configuration;
+namespace EntraAuthCli.Configuration;
 
 /// <summary>
 /// Service for managing authentication profiles.
@@ -41,7 +41,7 @@ public class ConfigService
         {
             return Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "entratool"
+                "entra-auth-cli"
             );
         }
         
@@ -49,7 +49,7 @@ public class ConfigService
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
             ".config",
-            "entratool"
+            "entra-auth-cli"
         );
     }
 

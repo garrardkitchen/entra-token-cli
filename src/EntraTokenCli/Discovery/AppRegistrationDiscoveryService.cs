@@ -1,12 +1,12 @@
+using EntraAuthCli.Storage;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Identity.Client;
-using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Abstractions;
-using EntraTokenCli.Storage;
+using Microsoft.Kiota.Abstractions.Authentication;
 using Spectre.Console;
 
-namespace EntraTokenCli.Discovery;
+namespace EntraAuthCli.Discovery;
 
 /// <summary>
 /// Service for discovering Azure AD app registrations with auto-consent.

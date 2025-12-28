@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EntraTokenCli.Storage;
+namespace EntraAuthCli.Storage;
 
 /// <summary>
 /// Windows-specific secure storage implementation using DPAPI.
@@ -21,7 +21,7 @@ public class WindowsSecureStorage : ISecureStorage
 
         _storageDirectory = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "entratool",
+            "entra-auth-cli",
             "secure"
         );
 

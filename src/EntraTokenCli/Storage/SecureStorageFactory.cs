@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace EntraTokenCli.Storage;
+namespace EntraAuthCli.Storage;
 
 /// <summary>
 /// Factory for creating platform-specific secure storage implementations.

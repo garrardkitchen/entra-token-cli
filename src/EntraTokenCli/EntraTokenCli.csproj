@@ -7,14 +7,16 @@
     <Nullable>enable</Nullable>
     <RuntimeIdentifiers>win-x64;osx-arm64;osx-x64;linux-x64</RuntimeIdentifiers>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>entratool</ToolCommandName>
-    <PackageId>EntraTokenCli</PackageId>
+    <ToolCommandName>entra-auth-cli</ToolCommandName>
+    <PackageId>EntraAuthCli</PackageId>
     <Version>0.0.0</Version>
-    <Authors>EntraTokenCli Contributors</Authors>
-    <Description>Cross-platform CLI tool for generating Microsoft Entra ID access tokens via multiple OAuth2 flows</Description>
+    <Authors>EntraAuthCli Contributors</Authors>
+    <Description>Cross-platform CLI tool for Microsoft Entra ID authentication and access token management via multiple OAuth2 flows</Description>
     <PackageTags>entra;entraid;azure;azuread;oauth2;cli;token;authentication</PackageTags>
-    <RepositoryUrl>https://github.com/yourusername/entratokencli</RepositoryUrl>
+    <RepositoryUrl>https://github.com/garrardkitchen/EntraAuthCli</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyName>EntraAuthCli</AssemblyName>
+    <RootNamespace>EntraAuthCli</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

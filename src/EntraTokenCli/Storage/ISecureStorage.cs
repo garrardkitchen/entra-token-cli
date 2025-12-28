@@ -1,4 +1,4 @@
-namespace EntraTokenCli.Storage;
+namespace EntraAuthCli.Storage;
 
 /// <summary>
 /// Interface for platform-specific secure storage implementations.

@@ -1,9 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using EntraTokenCli.Storage;
+using EntraAuthCli.Storage;
 
-namespace EntraTokenCli.Configuration;
+namespace EntraAuthCli.Configuration;
 
 /// <summary>
 /// Service for exporting and importing profiles with optional encryption.

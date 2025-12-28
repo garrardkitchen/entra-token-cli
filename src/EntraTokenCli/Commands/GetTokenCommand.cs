@@ -1,11 +1,11 @@
-using Spectre.Console.Cli;
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
-using EntraTokenCli.Configuration;
-using EntraTokenCli.Authentication;
-using EntraTokenCli.UI;
+using EntraAuthCli.Authentication;
+using EntraAuthCli.Configuration;
+using EntraAuthCli.UI;
+using Spectre.Console.Cli;
 
-namespace EntraTokenCli.Commands;
+namespace EntraAuthCli.Commands;
 
 public class GetTokenSettings : CommandSettings
 {
@@ -145,7 +145,7 @@ public class GetTokenCommand : AsyncCommand<GetTokenSettings>
                 {
                     ConsoleUi.DisplayWarning(
                         $"Token expires in {timeUntilExpiry.TotalMinutes:F1} minutes. " +
-                        $"Consider refreshing using 'entratool refresh -p {profile.Name}'");
+                        $"Consider refreshing using 'entra-auth-cli refresh -p {profile.Name}'");
                 }
             }
 

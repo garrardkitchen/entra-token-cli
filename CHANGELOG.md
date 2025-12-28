@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-12-17
 
 ### Added
-- Initial release of Entra Token CLI
+- Initial release of Entra Auth Cli
 - Multiple OAuth2 flow support (Authorization Code, Client Credentials, Device Code, Interactive Browser)
 - Platform-specific secure storage (DPAPI on Windows, Keychain on macOS, libsecret on Linux)
 - Certificate-based authentication with flexible password handling
@@ -51,4 +51,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatic fallback to file output when clipboard unavailable
 - Token expiration warnings with configurable thresholds
 
-[1.0.0]: https://github.com/yourusername/entratokencli/releases/tag/v1.0.0
+[1.0.0]: https://github.com/garrardkitchen/entratokencli/releases/tag/v1.0.0
