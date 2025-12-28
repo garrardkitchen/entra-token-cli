@@ -469,7 +469,7 @@ entra-auth-cli get-token --flow interactive
 
 # Token storage: macOS Keychain
 # View tokens:
-security find-generic-password -s "entra-auth-cli-cli"
+security find-generic-password -s "entra-auth-cli"
 ```
 
 ### Windows

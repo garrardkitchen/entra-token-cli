@@ -174,7 +174,7 @@ jobs:
       
       - name: Install Entra Auth Cli
         run: |
-          wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64
+          wget https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64
           chmod +x entra-auth-cli-linux-amd64
           sudo mv entra-auth-cli-linux-amd64 /usr/local/bin/entra-auth-cli
       
@@ -212,7 +212,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64
+      wget https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64
       chmod +x entra-auth-cli-linux-amd64
       sudo mv entra-auth-cli-linux-amd64 /usr/local/bin/entra-auth-cli
 

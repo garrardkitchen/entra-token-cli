@@ -26,10 +26,10 @@ Entra Auth Cli integrates seamlessly with macOS security features:
 brew tap garrardkitchen/entra-auth-cli
 
 # Install
-brew install entra-auth-cli-cli
+brew install entra-auth-cli
 
 # Update
-brew upgrade entra-auth-cli-cli
+brew upgrade entra-auth-cli
 ```
 
 ### Manual Installation
@@ -37,7 +37,7 @@ brew upgrade entra-auth-cli-cli
 ```bash {linenos=inline}
 # Download latest release
 VERSION="1.0.0"
-curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/download/v${VERSION}/entra-auth-cli-darwin-amd64" \
+curl -L "https://github.com/garrardkitchen/entra-auth-cli/releases/download/v${VERSION}/entra-auth-cli-darwin-amd64" \
   -o /usr/local/bin/entra-auth-cli
 
 # Make executable
@@ -51,15 +51,15 @@ entra-auth-cli --version
 
 ```bash {linenos=inline}
 # Apple Silicon (M1/M2/M3)
-curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-darwin-arm64" \
+curl -L "https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-darwin-arm64" \
   -o /usr/local/bin/entra-auth-cli
 
 # Intel (x86_64)
-curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-darwin-amd64" \
+curl -L "https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-darwin-amd64" \
   -o /usr/local/bin/entra-auth-cli
 
 # Universal Binary (works on both)
-curl -L "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-darwin-universal" \
+curl -L "https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-darwin-universal" \
   -o /usr/local/bin/entra-auth-cli
 ```
 
@@ -71,13 +71,13 @@ Tokens are securely stored in macOS Keychain:
 
 ```bash {linenos=inline}
 # Tokens stored in Keychain with:
-# - Service: com.garrardkitchen.entra-auth-cli-cli
+# - Service: com.garrardkitchen.entra-auth-cli
 # - Account: profile-name
 # - Kind: Application password
 
 # View in Keychain Access app
 open -a "Keychain Access"
-# Search for: entra-auth-cli-cli
+# Search for: entra-auth-cli
 ```
 
 **Security characteristics:**
@@ -90,13 +90,13 @@ open -a "Keychain Access"
 
 ```bash {linenos=inline}
 # List Entra Auth Cli keychains
-security find-generic-password -s "com.garrardkitchen.entra-auth-cli-cli"
+security find-generic-password -s "com.garrardkitchen.entra-auth-cli"
 
 # View specific profile
-security find-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "default"
+security find-generic-password -s "com.garrardkitchen.entra-auth-cli" -a "default"
 
 # Delete keychain entry
-security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "default"
+security delete-generic-password -s "com.garrardkitchen.entra-auth-cli" -a "default"
 
 # Export keychain item (requires authorization)
 security export -k ~/Library/Keychains/login.keychain-db \
@@ -117,7 +117,7 @@ security show-keychain-info ~/Library/Keychains/login.keychain-db
 # 3. Two-factor authentication enabled
 
 # View synced items
-# System Settings > Passwords > entra-auth-cli-cli
+# System Settings > Passwords > entra-auth-cli
 ```
 
 ## Shell Integration
@@ -437,11 +437,11 @@ services:
 
 # Or programmatically:
 security set-generic-password-partition-list \
-  -s com.garrardkitchen.entra-auth-cli-cli \
+  -s com.garrardkitchen.entra-auth-cli \
   -k ~/Library/Keychains/login.keychain-db
 
 # Reset Keychain permissions
-security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli"
+security delete-generic-password -s "com.garrardkitchen.entra-auth-cli"
 entra-auth-cli get-token  # Creates new entry
 ```
 

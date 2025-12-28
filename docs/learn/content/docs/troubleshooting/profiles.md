@@ -186,12 +186,12 @@ entra-auth-cli create-profile --name myapp
 # Click "Always Allow" when prompted
 
 # 2. Reset Keychain permissions
-security delete-generic-password -s "com.garrardkitchen.entra-auth-cli-cli" -a "myapp"
+security delete-generic-password -s "com.garrardkitchen.entra-auth-cli" -a "myapp"
 entra-auth-cli create-profile --name myapp
 
 # 3. Check Keychain Access app
 open -a "Keychain Access"
-# Search for: entra-auth-cli-cli
+# Search for: entra-auth-cli
 
 # 4. Unlock Keychain if locked
 security unlock-keychain ~/Library/Keychains/login.keychain-db

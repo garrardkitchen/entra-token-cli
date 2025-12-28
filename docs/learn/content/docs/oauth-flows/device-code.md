@@ -218,7 +218,7 @@ FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y curl jq
 
 # Install Entra Auth Cli
-RUN curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+RUN curl -L https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
     -o /usr/local/bin/entra-auth-cli && \
     chmod +x /usr/local/bin/entra-auth-cli
 

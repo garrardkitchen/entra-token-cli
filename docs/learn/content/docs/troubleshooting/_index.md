@@ -177,7 +177,7 @@ entra-auth-cli get-token -p my-profile --verbose
 
 ### Community Support
 
-- [GitHub Issues](https://github.com/garrardkitchen/entra-auth-cli-cli/issues)
+- [GitHub Issues](https://github.com/garrardkitchen/entra-auth-cli/issues)
 - [Documentation](/docs/)
 - [Recipes](/docs/recipes/)
 

@@ -31,7 +31,7 @@ winget install GarrardKitchen.EntraAuthCli
 ```powershell {linenos=inline}
 # Download latest release
 $version = "1.0.0"
-$url = "https://github.com/garrardkitchen/entra-auth-cli-cli/releases/download/v$version/entra-auth-cli-windows-amd64.exe"
+$url = "https://github.com/garrardkitchen/entra-auth-cli/releases/download/v$version/entra-auth-cli-windows-amd64.exe"
 
 # Download
 Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\entra-auth-cli.exe"

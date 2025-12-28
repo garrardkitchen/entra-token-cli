@@ -23,13 +23,13 @@ Entra Auth Cli provides secure token storage and management on Linux:
 
 ```bash {linenos=inline}
 # Download .deb package
-wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli_amd64.deb
+wget https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli_amd64.deb
 
 # Install
 sudo dpkg -i entra-auth-cli_amd64.deb
 
 # Or install directly
-curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli_amd64.deb \
+curl -L https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli_amd64.deb \
   -o /tmp/entra-auth-cli.deb && \
   sudo dpkg -i /tmp/entra-auth-cli.deb
 
@@ -41,13 +41,13 @@ entra-auth-cli --version
 
 ```bash {linenos=inline}
 # Download .rpm package
-wget https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-1.0.0-1.x86_64.rpm
+wget https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-1.0.0-1.x86_64.rpm
 
 # Install
 sudo rpm -ivh entra-auth-cli-1.0.0-1.x86_64.rpm
 
 # Or use dnf
-sudo dnf install https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-1.0.0-1.x86_64.rpm
+sudo dnf install https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-1.0.0-1.x86_64.rpm
 
 # Verify
 entra-auth-cli --version
@@ -57,14 +57,14 @@ entra-auth-cli --version
 
 ```bash {linenos=inline}
 # Using yay
-yay -S entra-auth-cli-cli
+yay -S entra-auth-cli
 
 # Using paru
-paru -S entra-auth-cli-cli
+paru -S entra-auth-cli
 
 # Manual from AUR
-git clone https://aur.archlinux.org/entra-auth-cli-cli.git
-cd entra-auth-cli-cli
+git clone https://aur.archlinux.org/entra-auth-cli.git
+cd entra-auth-cli
 makepkg -si
 ```
 
@@ -72,7 +72,7 @@ makepkg -si
 
 ```bash {linenos=inline}
 # Download binary
-curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+curl -L https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
   -o /usr/local/bin/entra-auth-cli
 
 # Make executable
@@ -91,8 +91,8 @@ sudo dnf install golang          # Fedora/RHEL
 sudo pacman -S go                # Arch
 
 # Clone and build
-git clone https://github.com/garrardkitchen/entra-auth-cli-cli.git
-cd entra-auth-cli-cli
+git clone https://github.com/garrardkitchen/entra-auth-cli.git
+cd entra-auth-cli
 go build -o entra-auth-cli ./cmd/entra-auth-cli
 
 # Install
@@ -360,7 +360,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Entra Auth Cli
-RUN curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+RUN curl -L https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
     -o /usr/local/bin/entra-auth-cli && \
     chmod +x /usr/local/bin/entra-auth-cli
 
@@ -491,7 +491,7 @@ deploy:
   image: ubuntu:22.04
   before_script:
     - apt-get update && apt-get install -y curl jq
-    - curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 
+    - curl -L https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64 
         -o /usr/local/bin/entra-auth-cli
     - chmod +x /usr/local/bin/entra-auth-cli
     - |
@@ -525,7 +525,7 @@ pipeline {
         stage('Setup') {
             steps {
                 sh '''
-                    curl -L https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
+                    curl -L https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64 \
                       -o /tmp/entra-auth-cli
                     chmod +x /tmp/entra-auth-cli
                     sudo mv /tmp/entra-auth-cli /usr/local/bin/
@@ -584,7 +584,7 @@ ssh user@server 'bash -s' < local-script.sh
   tasks:
     - name: Install Entra Auth Cli
       get_url:
-        url: https://github.com/garrardkitchen/entra-auth-cli-cli/releases/latest/download/entra-auth-cli-linux-amd64
+        url: https://github.com/garrardkitchen/entra-auth-cli/releases/latest/download/entra-auth-cli-linux-amd64
         dest: /usr/local/bin/entra-auth-cli
         mode: '0755'
       become: yes
