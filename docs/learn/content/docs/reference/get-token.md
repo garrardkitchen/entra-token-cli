@@ -1,0 +1,400 @@
+---
+title: "get-token"
+description: "Generate access tokens using configured profiles"
+weight: 10
+---
+
+# get-token
+
+Generate Microsoft Entra ID access tokens using configured authentication profiles.
+
+## Synopsis
+
+```bash
+entratool get-token [flags]
+```
+
+## Description
+
+The `get-token` command generates access tokens for authenticating with Microsoft APIs. It supports multiple OAuth2 flows and can use profiles configured with different authentication methods.
+
+Tokens are cached and automatically refreshed when needed, making subsequent calls fast and efficient.
+
+## Flags
+
+### Core Options
+
+#### `--profile`, `-p`
+
+Profile name to use for authentication.
+
+```bash
+entratool get-token --profile production
+entratool get-token -p dev
+```
+
+**Default:** `default`
+
+#### `--scope`, `-s`
+
+Override default scopes for this request.
+
+```bash
+entratool get-token --scope "https://graph.microsoft.com/User.Read"
+entratool get-token -s "User.Read Mail.Read"
+```
+
+**Format:** Space-separated list of scopes
+
+#### `--flow`, `-f`
+
+OAuth2 flow to use for authentication.
+
+```bash
+entratool get-token --flow interactive
+entratool get-token -f device-code
+```
+
+**Options:**
+- `client-credentials` - Service-to-service (default for app profiles)
+- `interactive` - Browser-based user auth
+- `device-code` - Device code for limited input
+- `authorization-code` - Web app flow (rarely used in CLI)
+
+### Output Options
+
+#### `--output`, `-o`
+
+Output format for the token.
+
+```bash
+entratool get-token --output json
+entratool get-token -o yaml
+```
+
+**Options:**
+- `token` - Just the access token (default)
+- `json` - Full token response as JSON
+- `yaml` - Full token response as YAML
+
+#### `--file`
+
+Save token to file instead of stdout.
+
+```bash
+entratool get-token --file token.txt
+entratool get-token --output json --file token.json
+```
+
+#### `--silent`, `-q`
+
+Suppress all output except the token.
+
+```bash
+TOKEN=$(entratool get-token --silent)
+```
+
+### Behavior Options
+
+#### `--force`
+
+Force new token generation (skip cache).
+
+```bash
+entratool get-token --force
+```
+
+#### `--no-cache`
+
+Don't cache the generated token.
+
+```bash
+entratool get-token --no-cache
+```
+
+#### `--timeout`
+
+Maximum time to wait for token generation.
+
+```bash
+entratool get-token --timeout 30s
+entratool get-token --timeout 2m
+```
+
+**Default:** `60s`
+
+## Examples
+
+### Basic Usage
+
+```bash
+# Default profile and scopes
+entratool get-token
+
+# Specific profile
+entratool get-token --profile production
+
+# With custom scope
+entratool get-token --scope "https://management.azure.com/.default"
+```
+
+### Output Formats
+
+```bash
+# Token only (default)
+entratool get-token
+
+# Full JSON response
+entratool get-token --output json
+
+# Save to file
+entratool get-token --file access_token.txt
+```
+
+### Different Flows
+
+```bash
+# Client credentials (service account)
+entratool get-token --profile service-app
+
+# Interactive browser (user auth)
+entratool get-token --flow interactive
+
+# Device code (headless/SSH)
+entratool get-token --flow device-code
+```
+
+### Script Usage
+
+```bash
+# Get token in variable
+TOKEN=$(entratool get-token --silent)
+
+# Use in API call
+curl -H "Authorization: Bearer $TOKEN" \
+  https://graph.microsoft.com/v1.0/me
+
+# JSON parsing
+ACCESS_TOKEN=$(entratool get-token --output json | jq -r .access_token)
+EXPIRES_AT=$(entratool get-token --output json | jq -r .expires_at)
+```
+
+### Force Refresh
+
+```bash
+# Skip cache and get fresh token
+entratool get-token --force
+
+# Useful when token has wrong permissions
+entratool get-token --force --scope "Mail.Read Mail.Send"
+```
+
+## Output
+
+### Default (Token Only)
+
+```
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1yNS1BVW...
+```
+
+### JSON Format
+
+```json
+{
+  "token_type": "Bearer",
+  "scope": "User.Read Mail.Read",
+  "expires_in": 3599,
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "refresh_token": "0.ARoAv4j5cvGGr...",
+  "expires_at": "2025-12-28T15:30:00Z"
+}
+```
+
+### YAML Format
+
+```yaml
+token_type: Bearer
+scope: User.Read Mail.Read
+expires_in: 3599
+access_token: eyJ0eXAiOiJKV1QiLCJhbGc...
+refresh_token: 0.ARoAv4j5cvGGr...
+expires_at: 2025-12-28T15:30:00Z
+```
+
+## Exit Codes
+
+| Code | Description |
+|------|-------------|
+| 0 | Success |
+| 1 | General error |
+| 2 | Profile not found |
+| 3 | Authentication failed |
+| 4 | Network error |
+| 5 | Timeout |
+
+## Token Caching
+
+Tokens are automatically cached for reuse:
+
+- **Location**: Platform-specific secure storage
+  - Windows: DPAPI encrypted
+  - macOS: Keychain
+  - Linux: Encrypted file
+- **Duration**: Until expiration (typically 1 hour)
+- **Refresh**: Automatic when expired (if refresh token available)
+
+### Cache Behavior
+
+```bash
+# First call - generates new token (~500ms)
+entratool get-token --profile prod
+
+# Subsequent calls - uses cached token (~50ms)
+entratool get-token --profile prod
+
+# After expiration - automatically refreshes
+entratool get-token --profile prod
+```
+
+## Common Use Cases
+
+### Microsoft Graph API
+
+```bash
+# Get token for Graph
+TOKEN=$(entratool get-token \
+  --scope "https://graph.microsoft.com/.default" \
+  --output json | jq -r .access_token)
+
+# Call Graph API
+curl -H "Authorization: Bearer $TOKEN" \
+  https://graph.microsoft.com/v1.0/users
+```
+
+### Azure Management API
+
+```bash
+# Get token for Azure
+TOKEN=$(entratool get-token \
+  --scope "https://management.azure.com/.default" \
+  --output json | jq -r .access_token)
+
+# List subscriptions
+curl -H "Authorization: Bearer $TOKEN" \
+  https://management.azure.com/subscriptions?api-version=2020-01-01
+```
+
+### CI/CD Pipeline
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+# Get token (exits on failure)
+TOKEN=$(entratool get-token \
+  --profile cicd \
+  --silent \
+  --timeout 30s)
+
+# Deploy application
+./deploy.sh --token "$TOKEN"
+```
+
+### Multiple Scopes
+
+```bash
+# Request multiple scopes
+entratool get-token \
+  --scope "User.Read Mail.Read Calendars.Read" \
+  --output json
+
+# Verify scopes in token
+entratool get-token --output json | \
+  jq -r .scope
+```
+
+## Error Handling
+
+### Script Example
+
+```bash
+#!/bin/bash
+
+get_token_safe() {
+    local profile="${1:-default}"
+    local max_retries=3
+    local attempt=0
+    
+    while [ $attempt -lt $max_retries ]; do
+        if token=$(entratool get-token \
+            --profile "$profile" \
+            --silent 2>/dev/null); then
+            echo "$token"
+            return 0
+        fi
+        
+        attempt=$((attempt + 1))
+        if [ $attempt -lt $max_retries ]; then
+            echo "Attempt $attempt failed, retrying..." >&2
+            sleep $((attempt * 2))
+        fi
+    done
+    
+    echo "Failed to get token after $max_retries attempts" >&2
+    return 1
+}
+
+# Usage
+if TOKEN=$(get_token_safe production); then
+    echo "Success: ${TOKEN:0:20}..."
+else
+    echo "Failed to authenticate"
+    exit 1
+fi
+```
+
+## Tips
+
+### Performance
+
+```bash
+# Cache tokens in memory for multiple uses
+TOKEN=$(entratool get-token --silent)
+for api in users groups applications; do
+    curl -s -H "Authorization: Bearer $TOKEN" \
+      "https://graph.microsoft.com/v1.0/$api"
+done
+```
+
+### Debugging
+
+```bash
+# Verbose output
+entratool get-token --output json | jq .
+
+# Force fresh token
+entratool get-token --force --output json
+
+# Check what's cached
+entratool inspect --profile myapp
+```
+
+### Security
+
+```bash
+# Don't expose token in command history
+TOKEN=$(entratool get-token --silent)
+
+# Use token from variable, not command substitution
+curl -H "Authorization: Bearer $TOKEN" ...
+
+# Not recommended (token visible in ps output)
+curl -H "Authorization: Bearer $(entratool get-token)" ...
+```
+
+## See Also
+
+- [refresh](/docs/reference/refresh/) - Refresh expired tokens
+- [inspect](/docs/reference/inspect/) - Decode and inspect tokens
+- [Managing Profiles](/docs/user-guide/managing-profiles/) - Profile management
+- [Generating Tokens](/docs/user-guide/generating-tokens/) - Token generation guide

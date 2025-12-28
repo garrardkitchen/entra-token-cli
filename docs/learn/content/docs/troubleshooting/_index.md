@@ -1,0 +1,191 @@
+---
+title: "Troubleshooting"
+description: "Common issues and solutions"
+weight: 80
+---
+
+# Troubleshooting
+
+Solutions to common problems and error messages.
+
+---
+
+## Common Issues
+
+### Profile Problems
+
+[**Profile Issues →**](/docs/troubleshooting/profiles/)
+
+**Common errors:**
+- "Profile not found"
+- "Profile already exists"
+- "Invalid profile configuration"
+- "Cannot access secure storage"
+
+### Authentication Failures
+
+[**Authentication Issues →**](/docs/troubleshooting/authentication/)
+
+**Common errors:**
+- "Authentication failed"
+- "Invalid client secret"
+- "AADSTS errors"
+- "Token generation failed"
+
+### Certificate Problems
+
+[**Certificate Issues →**](/docs/troubleshooting/certificates/)
+
+**Common errors:**
+- "Certificate not found"
+- "Invalid certificate password"
+- "Client assertion contains an invalid signature"
+- "Certificate has expired"
+
+### Token Issues
+
+[**Token Issues →**](/docs/troubleshooting/tokens/)
+
+**Common errors:**
+- "Token expired"
+- "Invalid token format"
+- "Insufficient permissions"
+- "Token validation failed"
+
+---
+
+## Quick Fixes
+
+### Profile Not Found
+
+```bash
+# List available profiles
+entratool config list
+
+# Use correct profile name
+entratool get-token -p correct-profile-name
+```
+
+### Authentication Failed
+
+```bash
+# Verify credentials are correct
+entratool config show -p my-profile
+
+# Recreate profile if needed
+entratool config delete -p my-profile
+entratool config create
+```
+
+### Certificate Issues
+
+```bash
+# Verify certificate file exists
+ls -l /path/to/certificate.pfx
+
+# Check certificate is uploaded to Azure
+# Azure Portal → App registrations → Your app → Certificates & secrets
+```
+
+### Token Expired
+
+```bash
+# Simply request a new token
+entratool get-token -p my-profile
+
+# Or use refresh if available
+entratool refresh -p my-profile
+```
+
+---
+
+## Diagnostic Commands
+
+### Check Configuration
+
+```bash
+# List profiles
+entratool config list
+
+# Show profile details
+entratool config show -p my-profile
+
+# Verify token generation
+entratool get-token -p my-profile
+```
+
+### Inspect Tokens
+
+```bash
+# Get token and inspect
+TOKEN=$(entratool get-token -p my-profile --silent)
+entratool inspect -t "$TOKEN"
+
+# Check expiration
+entratool discover -t "$TOKEN"
+```
+
+### Validate Certificate
+
+```bash
+# Check certificate file
+openssl pkcs12 -info -in certificate.pfx -noout
+
+# Verify thumbprint matches Azure
+openssl pkcs12 -in certificate.pfx -nokeys | \
+  openssl x509 -noout -fingerprint -sha1
+```
+
+---
+
+## Error Code Reference
+
+### AADSTS Error Codes
+
+| Code | Meaning | Solution |
+|------|---------|----------|
+| AADSTS50011 | Redirect URI mismatch | Add redirect URI in Azure Portal |
+| AADSTS700016 | Application not found | Verify Client ID |
+| AADSTS700027 | Invalid certificate signature | Check certificate registration |
+| AADSTS70002 | Invalid client secret | Update client secret |
+| AADSTS50076 | MFA required | Use interactive flow |
+
+### Common Exit Codes
+
+| Code | Meaning | Action |
+|------|---------|--------|
+| 1 | General error | Check error message |
+| 2 | Authentication failed | Verify credentials |
+| 3 | Profile not found | Check profile name |
+| 4 | Invalid arguments | Check command syntax |
+
+---
+
+## Getting Help
+
+### Check Logs
+
+```bash
+# Enable verbose logging (if supported)
+entratool get-token -p my-profile --verbose
+
+# Check system logs
+# Windows: Event Viewer
+# macOS: Console.app
+# Linux: journalctl
+```
+
+### Community Support
+
+- [GitHub Issues](https://github.com/garrardkitchen/entratool-cli/issues)
+- [Documentation](/docs/)
+- [Recipes](/docs/recipes/)
+
+---
+
+## Next Steps
+
+- [Profile Issues](/docs/troubleshooting/profiles/)
+- [Authentication Issues](/docs/troubleshooting/authentication/)
+- [Certificate Issues](/docs/troubleshooting/certificates/)
+- [User Guide](/docs/user-guide/)
