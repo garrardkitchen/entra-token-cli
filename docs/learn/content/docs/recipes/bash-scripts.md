@@ -26,14 +26,14 @@ get_token() {
   
   # Check if cached token exists and is valid
   if [ -f "$TOKEN_CACHE" ]; then
-    if entra-auth-cli discover -f "$TOKEN_CACHE" &>/dev/null; then
+    if entra-auth-cli inspect - < "$TOKEN_CACHE" &>/dev/null; then
       cat "$TOKEN_CACHE"
       return 0
     fi
   fi
   
   # Get fresh token
-  entra-auth-cli get-token -p "$profile" --silent | tee "$TOKEN_CACHE"
+  entra-auth-cli get-token -p "$profile" | tee "$TOKEN_CACHE"
   chmod 600 "$TOKEN_CACHE"
 }
 
@@ -58,7 +58,7 @@ get_token_with_retry() {
   local retry=0
   
   while [ $retry -lt $max_retries ]; do
-    if TOKEN=$(entra-auth-cli get-token -p "$profile" --silent 2>&1); then
+    if TOKEN=$(entra-auth-cli get-token -p "$profile" 2>&1); then
       echo "$TOKEN"
       return 0
     fi
@@ -92,8 +92,8 @@ Work with multiple APIs using different tokens.
 set -euo pipefail
 
 # Get tokens for different APIs
-GRAPH_TOKEN=$(entra-auth-cli get-token -p graph-profile --silent)
-AZURE_TOKEN=$(entra-auth-cli get-token -p azure-profile --silent)
+GRAPH_TOKEN=$(entra-auth-cli get-token -p graph-profile)
+AZURE_TOKEN=$(entra-auth-cli get-token -p azure-profile)
 
 # Use Graph API
 echo "Fetching user profile..."
@@ -128,7 +128,7 @@ get_valid_token() {
   # Check if token exists
   if [ -f "$token_file" ]; then
     # Check expiration
-    exp=$(entra-auth-cli inspect -f "$token_file" 2>/dev/null | jq -r .payload.exp)
+    exp=$(entra-auth-cli inspect - < "$token_file" 2>/dev/null | jq -r .exp)
     now=$(date +%s)
     remaining=$(( exp - now ))
     
@@ -140,7 +140,7 @@ get_valid_token() {
   fi
   
   # Get fresh token
-  entra-auth-cli get-token -p "$profile" --silent | tee "$token_file"
+  entra-auth-cli get-token -p "$profile" | tee "$token_file"
   chmod 600 "$token_file"
 }
 
@@ -157,7 +157,7 @@ Make multiple API calls concurrently.
 #!/bin/bash
 
 # Get token once
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile)
 
 # Parallel API calls
 {
@@ -192,7 +192,7 @@ TOKEN_FILE=$(mktemp)
 trap "rm -f $TOKEN_FILE" EXIT
 
 # Get token with restricted permissions
-entra-auth-cli get-token -p my-profile --silent > "$TOKEN_FILE"
+entra-auth-cli get-token -p my-profile > "$TOKEN_FILE"
 chmod 600 "$TOKEN_FILE"
 
 # Use token
@@ -244,7 +244,7 @@ call_api_with_rate_limit() {
   return 1
 }
 
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile)
 call_api_with_rate_limit "https://graph.microsoft.com/v1.0/users" "$TOKEN"
 ```
 
@@ -256,7 +256,7 @@ Handle paginated API responses.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p graph-admin --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-admin)
 URL="https://graph.microsoft.com/v1.0/users"
 
 while [ -n "$URL" ]; do
@@ -293,13 +293,13 @@ log() {
 # Get cached or fresh token
 get_token() {
   if [ -f "$TOKEN_CACHE" ]; then
-    if entra-auth-cli discover -f "$TOKEN_CACHE" &>/dev/null; then
+    if entra-auth-cli inspect - < "$TOKEN_CACHE" &>/dev/null; then
       cat "$TOKEN_CACHE"
       return 0
     fi
   fi
   
-  entra-auth-cli get-token -p "$PROFILE" --silent | tee "$TOKEN_CACHE"
+  entra-auth-cli get-token -p "$PROFILE" | tee "$TOKEN_CACHE"
   chmod 600 "$TOKEN_CACHE"
 }
 
@@ -360,12 +360,13 @@ main "$@"
 set -euo pipefail  # Exit on error, undefined var, pipe failure
 ```
 
-### Use Silent Mode for Scripts
+### Capture Token Output
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
-# vs
-TOKEN=$(entra-auth-cli get-token -p my-profile)  # May include extra output
+# Capture just the token (last line of output)
+TOKEN=$(entra-auth-cli get-token -p my-profile | tail -n1)
+# or capture all output
+TOKEN=$(entra-auth-cli get-token -p my-profile)
 ```
 
 ### Secure Token Storage

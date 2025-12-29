@@ -46,14 +46,15 @@ Waiting for authentication...
 Create a profile for device code flow:
 
 ```bash {linenos=inline}
-entra-auth-cli create-profile --name device-app
+entra-auth-cli config create
+# Interactively configure:
+# - Tenant ID: Your Microsoft Entra tenant
+# - Client ID: Public client application  
+# - Auth Method: Choose appropriate method
+# - Scopes: Include delegated permissions
 ```
 
-Profile configuration:
-- **Tenant ID**: Your Microsoft Entra tenant
-- **Client ID**: Public client application
-- **Default Flow**: device-code (optional)
-- **Scopes**: Delegated permissions
+**Note:** You can set the default OAuth2 flow to DeviceCode during profile creation to avoid specifying `-f DeviceCode` each time.
 
 ### Azure App Registration
 
@@ -294,19 +295,17 @@ if __name__ == "__main__":
 PROFILE="raspberry-pi"
 TOKEN_FILE="/home/pi/.entra-auth-cli-cache"
 
-# Create profile if it doesn't exist
-if ! entra-auth-cli list-profiles | grep -q "$PROFILE"; then
-    echo "Creating profile for Raspberry Pi..."
-    entra-auth-cli create-profile \
-        --name "$PROFILE" \
-        --tenant-id "$TENANT_ID" \
-        --client-id "$CLIENT_ID" \
-        --scope "https://graph.microsoft.com/User.Read"
+# Note: Profile must be pre-created interactively
+# Check if profile exists
+if ! entra-auth-cli config list | grep -q "$PROFILE"; then
+    echo "Error: Profile '$PROFILE' not found. Please create it first with:"
+    echo "  entra-auth-cli config create"
+    exit 1
 fi
 
 # Authenticate using device code
 echo "Please sign in using another device..."
-entra-auth-cli get-token --flow device-code --profile "$PROFILE"
+entra-auth-cli get-token -f DeviceCode -p "$PROFILE"
 
 # Cache token for application
 entra-auth-cli get-token --profile "$PROFILE" --output json > "$TOKEN_FILE"

@@ -17,7 +17,7 @@ Learn how to generate access tokens using different OAuth2 flows and configurati
 | Get token with profile | `entra-auth-cli get-token -p PROFILE` |
 | Override scope | `entra-auth-cli get-token -p PROFILE --scope "SCOPE"` |
 | Specify flow | `entra-auth-cli get-token -p PROFILE -f FLOW` |
-| Silent mode | `entra-auth-cli get-token -p PROFILE --silent` |
+| Silent mode | `entra-auth-cli get-token -p PROFILE` |
 | Save to file | `entra-auth-cli get-token -p PROFILE -o token.txt` |
 | Refresh token | `entra-auth-cli refresh -p PROFILE` |
 
@@ -277,7 +277,7 @@ entra-auth-cli get-token -p cert-profile -f ClientCredentials
 Suppress all output except the token:
 
 ```bash {linenos=inline}
-entra-auth-cli get-token -p myprofile --silent
+entra-auth-cli get-token -p myprofile
 ```
 
 **Output:**
@@ -287,7 +287,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 
 **Use in scripts:**
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+TOKEN=$(entra-auth-cli get-token -p myprofile)
 curl -H "Authorization: Bearer $TOKEN" https://graph.microsoft.com/v1.0/me
 ```
 
@@ -332,12 +332,12 @@ entra-auth-cli get-token -p myprofile --json
 
 ```bash {linenos=inline}
 # Generate and inspect in one command
-entra-auth-cli get-token -p myprofile --silent | entra-auth-cli inspect
+entra-auth-cli get-token -p myprofile | entra-auth-cli inspect
 ```
 
 **Or separately:**
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+TOKEN=$(entra-auth-cli get-token -p myprofile)
 entra-auth-cli inspect -t "$TOKEN"
 ```
 
@@ -395,7 +395,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 set -e
 
 # Get token
-TOKEN=$(entra-auth-cli get-token -p automation --silent)
+TOKEN=$(entra-auth-cli get-token -p automation)
 
 # Use token
 curl -H "Authorization: Bearer $TOKEN" \
@@ -406,7 +406,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 ### Pattern 2: Environment Variable
 
 ```bash {linenos=inline}
-export ACCESS_TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+export ACCESS_TOKEN=$(entra-auth-cli get-token -p myprofile)
 
 # Use in multiple commands
 curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api1.example.com
@@ -420,7 +420,7 @@ TOKEN_FILE=~/.cache/entra-auth-cli-token.txt
 
 # Check if token exists and is valid
 if [ ! -f "$TOKEN_FILE" ] || ! entra-auth-cli discover -f "$TOKEN_FILE" &>/dev/null; then
-  entra-auth-cli get-token -p myprofile --silent > "$TOKEN_FILE"
+  entra-auth-cli get-token -p myprofile > "$TOKEN_FILE"
 fi
 
 TOKEN=$(cat "$TOKEN_FILE")
@@ -430,8 +430,8 @@ TOKEN=$(cat "$TOKEN_FILE")
 
 ```bash {linenos=inline}
 # Get tokens for different APIs
-TOKEN_GRAPH=$(entra-auth-cli get-token -p graph-profile --silent)
-TOKEN_AZURE=$(entra-auth-cli get-token -p azure-profile --silent)
+TOKEN_GRAPH=$(entra-auth-cli get-token -p graph-profile)
+TOKEN_AZURE=$(entra-auth-cli get-token -p azure-profile)
 
 # Use with different APIs
 curl -H "Authorization: Bearer $TOKEN_GRAPH" https://graph.microsoft.com/v1.0/me
@@ -528,7 +528,7 @@ entra-auth-cli discover -f token.txt
 
 # Refresh if needed
 if [ $? -ne 0 ]; then
-  entra-auth-cli get-token -p myprofile --silent > token.txt
+  entra-auth-cli get-token -p myprofile > token.txt
 fi
 ```
 
@@ -537,7 +537,7 @@ fi
 ```bash {linenos=inline}
 # Set restrictive permissions
 TOKEN_FILE=~/.cache/my-token.txt
-entra-auth-cli get-token -p myprofile --silent > "$TOKEN_FILE"
+entra-auth-cli get-token -p myprofile > "$TOKEN_FILE"
 chmod 600 "$TOKEN_FILE"
 ```
 

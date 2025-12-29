@@ -1,83 +1,63 @@
 ---
 title: "discover"
-description: "Quick token validation and information"
+description: "Discover Azure AD app registrations"
 weight: 40
 ---
 
 # discover
 
-Quickly validate tokens and display essential information without full decoding.
+Discover and search for Azure AD app registrations in your tenant.
 
 ## Synopsis
 
 ```bash {linenos=inline}
-entra-auth-cli discover [flags]
+entra-auth-cli discover [options]
 ```
 
 ## Description
 
-The `discover` command provides a fast way to validate token format and get basic information about tokens without performing full JWT decoding. It's useful for quick checks and validation in scripts.
-
-This command is lighter than `inspect` and focuses on:
-- Token format validation
-- Basic validity checks
-- Quick metadata extraction
-- Fast status reporting
+The `discover` command helps you find Azure AD app registrations in a tenant. You can search by wildcard patterns to locate specific applications.
 
 ## Flags
 
-### Input Options
+#### `-t`, `--tenant`
 
-#### `--profile`, `-p`
-
-Check token from a profile.
+Tenant ID to search in (required for tenant-specific searches).
 
 ```bash {linenos=inline}
-entra-auth-cli discover --profile production
-entra-auth-cli discover -p dev
+entra-auth-cli discover -t contoso.onmicrosoft.com
+entra-auth-cli discover --tenant "12345678-1234-1234-1234-123456789012"
 ```
 
-#### `--token`, `-t`
+#### `-s`, `--search`
 
-Check a specific token string.
+Search pattern with wildcard support.
 
 ```bash {linenos=inline}
-entra-auth-cli discover --token "eyJ0eXAiOiJKV1QiLCJh..."
+entra-auth-cli discover -s "MyApp*"
+entra-auth-cli discover -s "*Test*"
+entra-auth-cli discover -t contoso.onmicrosoft.com -s "Prod*"
 ```
 
-#### `--file`, `-f`
+## Examples
 
-Read token from a file.
+### Search for Apps
 
 ```bash {linenos=inline}
-entra-auth-cli discover --file token.txt
+# Search all apps matching pattern
+entra-auth-cli discover -s "MyApp*"
+
+# Search in specific tenant
+entra-auth-cli discover -t contoso.onmicrosoft.com -s "*API*"
+
+# Find test apps
+entra-auth-cli discover -s "*Test*"
 ```
 
-### Output Options
+## See Also
 
-#### `--output`, `-o`
-
-Output format.
-
-```bash {linenos=inline}
-entra-auth-cli discover --output json
-entra-auth-cli discover -o yaml
-```
-
-**Options:**
-- `text` - Human-readable text (default)
-- `json` - JSON format
-- `yaml` - YAML format
-
-#### `--quiet`, `-q`
-
-Only output validation result (exit code only).
-
-```bash {linenos=inline}
-if entra-auth-cli discover --profile myapp --quiet; then
-    echo "Token is valid"
-fi
-```
+- [get-token](/docs/reference/get-token/) - Generate access tokens
+- [inspect](/docs/reference/inspect/) - Inspect and decode JWT tokens
 
 ## Examples
 
@@ -85,7 +65,7 @@ fi
 
 ```bash {linenos=inline}
 # Check token from profile
-entra-auth-cli discover --profile myapp
+entra-auth-cli discover
 
 # Check specific token
 entra-auth-cli discover --token "eyJ0eXAiOiJKV1Qi..."
@@ -101,13 +81,12 @@ entra-auth-cli get-token | entra-auth-cli discover
 
 ```bash {linenos=inline}
 # Text output (default)
-entra-auth-cli discover --profile myapp
+entra-auth-cli discover
 
 # JSON output
-entra-auth-cli discover --profile myapp --output json
+entra-auth-cli discover --output json
 
 # Quiet mode (exit code only)
-entra-auth-cli discover --profile myapp --quiet
 echo $?  # 0 = valid, 1 = invalid
 ```
 
@@ -115,7 +94,6 @@ echo $?  # 0 = valid, 1 = invalid
 
 ```bash {linenos=inline}
 # Quick validation check
-if entra-auth-cli discover --profile production --quiet; then
     echo "Token valid, proceeding..."
     ./deploy.sh
 else
@@ -126,7 +104,6 @@ fi
 # Check before API call
 validate_token() {
     local profile="$1"
-    if ! entra-auth-cli discover --profile "$profile" --quiet 2>/dev/null; then
         echo "Invalid token for $profile" >&2
         return 1
     fi
@@ -205,13 +182,12 @@ The discover command validates:
 #!/bin/bash
 
 # Validate before expensive operation
-if ! entra-auth-cli discover --profile prod --quiet; then
     echo "Getting fresh token..."
     entra-auth-cli get-token --profile prod --force
 fi
 
 # Proceed with validated token
-TOKEN=$(entra-auth-cli get-token --profile prod --silent)
+TOKEN=$(entra-auth-cli get-token --profile prod)
 ./expensive-operation.sh "$TOKEN"
 ```
 
@@ -226,9 +202,8 @@ echo "Token Health Check"
 echo "===================="
 
 for profile in "${profiles[@]}"; do
-    if entra-auth-cli discover --profile "$profile" --quiet 2>/dev/null; then
         status="✓ Valid"
-        expiry=$(entra-auth-cli discover --profile "$profile" --output json | jq -r .expires_at)
+        expiry=$(entra-auth-cli discover --output json | jq -r .expires_at)
     else
         status="✗ Invalid"
         expiry="N/A"
@@ -247,7 +222,7 @@ done
 check_token_validity() {
     local profile="$1"
     
-    if output=$(entra-auth-cli discover --profile "$profile" --output json 2>/dev/null); then
+    if output=$(entra-auth-cli discover --output json 2>/dev/null); then
         local expires_in=$(echo "$output" | jq -r .expires_in)
         local expired=$(echo "$output" | jq -r .expired)
         
@@ -277,7 +252,6 @@ profiles=("cicd-deploy" "cicd-test" "cicd-prod")
 failed=0
 
 for profile in "${profiles[@]}"; do
-    if entra-auth-cli discover --profile "$profile" --quiet; then
         echo "✓ $profile: Valid"
     else
         echo "✗ $profile: Invalid or expired"
@@ -299,7 +273,7 @@ echo "All tokens valid. Proceeding with deployment."
 # Get time until expiration
 get_ttl() {
     local profile="$1"
-    local ttl=$(entra-auth-cli discover --profile "$profile" --output json 2>/dev/null | jq -r .expires_in)
+    local ttl=$(entra-auth-cli discover --output json 2>/dev/null | jq -r .expires_in)
     
     if [ "$ttl" != "null" ] && [ -n "$ttl" ]; then
         echo "$ttl"
@@ -357,7 +331,6 @@ Use `inspect` for:
 
 ```bash {linenos=inline}
 # Benchmark comparison
-time entra-auth-cli discover --profile prod --quiet
 # ~10ms
 
 time entra-auth-cli inspect --profile prod > /dev/null
@@ -365,7 +338,6 @@ time entra-auth-cli inspect --profile prod > /dev/null
 
 # In tight loops, discover is significantly faster
 for i in {1..100}; do
-    entra-auth-cli discover --profile prod --quiet
 done
 # ~1 second
 
@@ -386,7 +358,6 @@ discover_token() {
     local attempt=0
     
     while [ $attempt -lt $max_retries ]; do
-        if entra-auth-cli discover --profile "$profile" --quiet 2>/dev/null; then
             return 0
         fi
         
@@ -425,7 +396,6 @@ LOG_FILE="/var/log/token-check.log"
     echo "=== Token Check: $(date) ==="
     
     for profile in "${PROFILES[@]}"; do
-        if entra-auth-cli discover --profile "$profile" --quiet; then
             echo "$profile: OK"
         else
             echo "$profile: INVALID - Attempting refresh"
@@ -452,7 +422,6 @@ RUN curl -L https://github.com/garrardkitchen/entra-token-cli/releases/latest/do
 
 # Healthcheck using discover
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
-    CMD entra-auth-cli discover --profile app --quiet || exit 1
 
 CMD ["/app/start.sh"]
 ```
@@ -488,19 +457,16 @@ spec:
 
 ```bash {linenos=inline}
 # Discover + get-token (with automatic refresh)
-if ! entra-auth-cli discover --profile prod --quiet; then
     entra-auth-cli get-token --profile prod --force
 fi
 
 # Discover + inspect (conditional detailed check)
-if ! entra-auth-cli discover --profile prod --quiet; then
     echo "Token invalid. Details:"
     entra-auth-cli inspect --profile prod
 fi
 
 # Pipeline: discover → refresh → use
-entra-auth-cli discover --profile prod --quiet || entra-auth-cli refresh --profile prod
-TOKEN=$(entra-auth-cli get-token --profile prod --silent)
+TOKEN=$(entra-auth-cli get-token --profile prod)
 ```
 
 ### Batch Checking
@@ -508,7 +474,6 @@ TOKEN=$(entra-auth-cli get-token --profile prod --silent)
 ```bash {linenos=inline}
 # Check all profiles
 for profile in $(entra-auth-cli config list); do
-    if entra-auth-cli discover --profile "$profile" --quiet; then
         echo "✓ $profile"
     else
         echo "✗ $profile"
@@ -520,11 +485,11 @@ done
 
 ```bash {linenos=inline}
 # Extract specific fields
-EXPIRES_IN=$(entra-auth-cli discover --profile prod --output json | jq -r .expires_in)
-EXPIRED=$(entra-auth-cli discover --profile prod --output json | jq -r .expired)
+EXPIRES_IN=$(entra-auth-cli discover --output json | jq -r .expires_in)
+EXPIRED=$(entra-auth-cli discover --output json | jq -r .expired)
 
 # Conditional logic based on fields
-if [ "$(entra-auth-cli discover --profile prod --output json | jq -r .expired)" == "true" ]; then
+if [ "$(entra-auth-cli discover --output json | jq -r .expired)" == "true" ]; then
     entra-auth-cli refresh --profile prod
 fi
 ```

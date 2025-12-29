@@ -23,20 +23,20 @@ Error: profile 'production' not found
 
 ```bash {linenos=inline}
 # See all configured profiles
-entra-auth-cli list-profiles
+entra-auth-cli config list
 
 # Check if profile exists with different name
-entra-auth-cli list-profiles | grep -i prod
+entra-auth-cli config list | grep -i prod
 ```
 
 #### 2. Create Missing Profile
 
 ```bash {linenos=inline}
 # Create the profile
-entra-auth-cli create-profile --name production
+entra-auth-cli config create -p production
 
 # Or use interactive mode
-entra-auth-cli create-profile
+entra-auth-cli config create
 ```
 
 #### 3. Use Default Profile
@@ -46,7 +46,7 @@ entra-auth-cli create-profile
 entra-auth-cli get-token
 
 # Check default profile
-entra-auth-cli list-profiles | grep default
+entra-auth-cli config list | grep default
 ```
 
 ## Profile Already Exists
@@ -54,7 +54,7 @@ entra-auth-cli list-profiles | grep default
 ### Problem
 
 ```bash {linenos=inline}
-$ entra-auth-cli create-profile --name dev
+$ entra-auth-cli config create -p dev
 Error: profile 'dev' already exists
 ```
 
@@ -64,28 +64,28 @@ Error: profile 'dev' already exists
 
 ```bash {linenos=inline}
 # View existing profile
-entra-auth-cli show-profile --name dev
+entra-auth-cli config list # Note: no show command exists, use -p dev
 
 # Edit if needed
-entra-auth-cli edit-profile --name dev
+entra-auth-cli config edit -p dev
 ```
 
 #### 2. Delete and Recreate
 
 ```bash {linenos=inline}
 # Delete existing profile
-entra-auth-cli delete-profile --name dev
+entra-auth-cli config delete -p dev
 
 # Create new one
-entra-auth-cli create-profile --name dev
+entra-auth-cli config create -p dev
 ```
 
 #### 3. Use Different Name
 
 ```bash {linenos=inline}
 # Create with different name
-entra-auth-cli create-profile --name dev-new
-entra-auth-cli create-profile --name dev-v2
+entra-auth-cli config create -p dev-new
+entra-auth-cli config create -p dev-v2
 ```
 
 ## Invalid Profile Configuration
@@ -103,7 +103,7 @@ Error: invalid profile configuration: missing tenant_id
 
 ```bash {linenos=inline}
 # View profile details
-entra-auth-cli show-profile --name myapp
+entra-auth-cli config list # Note: no show command exists, use -p myapp
 
 # Look for missing fields:
 # - tenant_id
@@ -115,11 +115,11 @@ entra-auth-cli show-profile --name myapp
 
 ```bash {linenos=inline}
 # Interactive edit
-entra-auth-cli edit-profile --name myapp
+entra-auth-cli config edit -p myapp
 
 # Or delete and recreate
-entra-auth-cli delete-profile --name myapp
-entra-auth-cli create-profile --name myapp
+entra-auth-cli config delete -p myapp
+entra-auth-cli config create -p myapp
 ```
 
 #### 3. Validate Required Fields
@@ -175,8 +175,8 @@ $env:LOCALAPPDATA\EntraAuthCli\profiles
 Get-Acl "$env:LOCALAPPDATA\EntraAuthCli\profiles" | Format-List
 
 # 4. Recreate profile if user changed
-entra-auth-cli delete-profile --name myapp
-entra-auth-cli create-profile --name myapp
+entra-auth-cli config delete -p myapp
+entra-auth-cli config create -p myapp
 ```
 
 #### macOS (Keychain)
@@ -187,7 +187,7 @@ entra-auth-cli create-profile --name myapp
 
 # 2. Reset Keychain permissions
 security delete-generic-password -s "com.garrardkitchen.entra-auth-cli" -a "myapp"
-entra-auth-cli create-profile --name myapp
+entra-auth-cli config create -p myapp
 
 # 3. Check Keychain Access app
 open -a "Keychain Access"
@@ -213,7 +213,7 @@ chown -R $USER:$USER ~/.entra-auth-cli/
 
 # 4. Recreate if needed
 rm -rf ~/.entra-auth-cli/profiles/
-entra-auth-cli create-profile --name myapp
+entra-auth-cli config create -p myapp
 ```
 
 ## Profile Corruption
@@ -241,7 +241,7 @@ cat ~/.entra-auth-cli/profiles/prod.json
 
 ```bash {linenos=inline}
 # Delete via CLI
-entra-auth-cli delete-profile --name prod
+entra-auth-cli config delete -p prod
 
 # Or manually
 # Windows
@@ -254,7 +254,7 @@ rm ~/.entra-auth-cli/profiles/prod.*
 #### 3. Recreate Profile
 
 ```bash {linenos=inline}
-entra-auth-cli create-profile --name prod
+entra-auth-cli config create -p prod
 ```
 
 ## Migration Issues
@@ -280,7 +280,7 @@ Tokens are encrypted per-machine and per-user:
 
 ```bash {linenos=inline}
 # On old machine - export (configuration only, not tokens)
-entra-auth-cli export-profile --name myapp > myapp-profile.json
+entra-auth-cli config export -p myapp > myapp-profile.json
 
 # On new machine - import
 entra-auth-cli import-profile < myapp-profile.json
@@ -293,7 +293,7 @@ entra-auth-cli get-token --profile myapp --force
 
 ```bash {linenos=inline}
 # Easiest solution: recreate profiles on new machine
-entra-auth-cli create-profile --name myapp
+entra-auth-cli config create -p myapp
 # Enter same tenant ID, client ID, etc.
 ```
 
@@ -302,7 +302,7 @@ entra-auth-cli create-profile --name myapp
 ### Problem
 
 ```bash {linenos=inline}
-$ entra-auth-cli create-profile
+$ entra-auth-cli config create
 Error: permission denied: cannot write to profiles directory
 ```
 
@@ -335,10 +335,10 @@ Get-PSDrive C
 
 ```bash {linenos=inline}
 # Don't use sudo
-sudo entra-auth-cli create-profile  # ❌ Wrong
+sudo entra-auth-cli config create  # ❌ Wrong
 
 # Run as regular user
-entra-auth-cli create-profile       # ✅ Correct
+entra-auth-cli config create       # ✅ Correct
 ```
 
 ## Profile Name Conflicts
@@ -346,7 +346,7 @@ entra-auth-cli create-profile       # ✅ Correct
 ### Problem
 
 ```bash {linenos=inline}
-$ entra-auth-cli create-profile --name "My Profile"
+$ entra-auth-cli config create -p "My Profile"
 Error: invalid profile name: spaces not allowed
 ```
 
@@ -356,32 +356,32 @@ Error: invalid profile name: spaces not allowed
 
 ```bash {linenos=inline}
 # Valid profile names:
-entra-auth-cli create-profile --name my-profile
-entra-auth-cli create-profile --name my_profile
-entra-auth-cli create-profile --name myProfile
-entra-auth-cli create-profile --name myprofile
+entra-auth-cli config create -p my-profile
+entra-auth-cli config create -p my_profile
+entra-auth-cli config create -p myProfile
+entra-auth-cli config create -p myprofile
 
 # Invalid (will fail):
-entra-auth-cli create-profile --name "my profile"  # spaces
-entra-auth-cli create-profile --name "my/profile"  # slashes
-entra-auth-cli create-profile --name "my@profile"  # special chars
+entra-auth-cli config create -p "my profile"  # spaces
+entra-auth-cli config create -p "my/profile"  # slashes
+entra-auth-cli config create -p "my@profile"  # special chars
 ```
 
 #### 2. Naming Conventions
 
 ```bash {linenos=inline}
 # Recommended patterns:
-entra-auth-cli create-profile --name production
-entra-auth-cli create-profile --name dev
-entra-auth-cli create-profile --name staging
+entra-auth-cli config create -p production
+entra-auth-cli config create -p dev
+entra-auth-cli config create -p staging
 
 # By purpose:
-entra-auth-cli create-profile --name graph-reader
-entra-auth-cli create-profile --name azure-deployer
+entra-auth-cli config create -p graph-reader
+entra-auth-cli config create -p azure-deployer
 
 # By environment:
-entra-auth-cli create-profile --name prod-api
-entra-auth-cli create-profile --name dev-testing
+entra-auth-cli config create -p prod-api
+entra-auth-cli config create -p dev-testing
 ```
 
 ## Duplicate Tenant/Client Combinations
@@ -396,23 +396,23 @@ Multiple profiles with same tenant/client but different configurations cause con
 
 ```bash {linenos=inline}
 # Instead of:
-entra-auth-cli create-profile --name app1
-entra-auth-cli create-profile --name app2
+entra-auth-cli config create -p app1
+entra-auth-cli config create -p app2
 
 # Use descriptive names:
-entra-auth-cli create-profile --name graph-readonly
-entra-auth-cli create-profile --name graph-admin
+entra-auth-cli config create -p graph-readonly
+entra-auth-cli config create -p graph-admin
 ```
 
 #### 2. List Profiles with Details
 
 ```bash {linenos=inline}
 # Show all profiles with details
-entra-auth-cli list-profiles --verbose
+entra-auth-cli config list --verbose
 
 # Or manually check
-entra-auth-cli show-profile --name profile1
-entra-auth-cli show-profile --name profile2
+entra-auth-cli config list # Note: no show command exists, use -p profile1
+entra-auth-cli config list # Note: no show command exists, use -p profile2
 ```
 
 ## Diagnostic Steps
@@ -421,10 +421,10 @@ entra-auth-cli show-profile --name profile2
 
 ```bash {linenos=inline}
 # 1. List all profiles
-entra-auth-cli list-profiles
+entra-auth-cli config list
 
 # 2. Check specific profile
-entra-auth-cli show-profile --name myapp
+entra-auth-cli config list # Note: no show command exists, use -p myapp
 
 # 3. Verify token generation works
 entra-auth-cli get-token --profile myapp --output json
@@ -459,7 +459,7 @@ az ad app permission list --id YOUR_CLIENT_ID
 
 ```bash {linenos=inline}
 # 1. Use descriptive profile names
-entra-auth-cli create-profile --name prod-graph-api
+entra-auth-cli config create -p prod-graph-api
 
 # 2. Document your profiles
 cat > profiles.md << 'EOF'
@@ -471,7 +471,7 @@ cat > profiles.md << 'EOF'
 EOF
 
 # 3. Backup profile configurations
-entra-auth-cli export-profile --name production > backup/production.json
+entra-auth-cli config export -p production > backup/production.json
 
 # 4. Regular validation
 entra-auth-cli get-token --profile production --force

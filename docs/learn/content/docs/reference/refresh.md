@@ -29,32 +29,12 @@ Refresh tokens are only available when using delegated permissions (user authent
 Profile name to refresh tokens for.
 
 ```bash {linenos=inline}
-entra-auth-cli refresh --profile production
+entra-auth-cli refresh -p production
 entra-auth-cli refresh -p dev
 ```
 
-**Default:** `default`
+**Note:** The refresh command returns the new token to stdout.
 
-#### `--output`, `-o`
-
-Output format for the new token.
-
-```bash {linenos=inline}
-entra-auth-cli refresh --output json
-entra-auth-cli refresh -o yaml
-```
-
-**Options:**
-- `token` - Just the access token (default)
-- `json` - Full token response as JSON
-- `yaml` - Full token response as YAML
-
-#### `--silent`, `-q`
-
-Suppress all output except the token.
-
-```bash {linenos=inline}
-TOKEN=$(entra-auth-cli refresh --silent)
 ```
 
 ## Examples
@@ -79,7 +59,7 @@ entra-auth-cli refresh
 entra-auth-cli refresh --output json
 
 # Get new access token in variable
-TOKEN=$(entra-auth-cli refresh --silent)
+TOKEN=$(entra-auth-cli refresh)
 ```
 
 ### Script Usage
@@ -94,7 +74,7 @@ if ! entra-auth-cli inspect --profile myapp 2>/dev/null; then
 fi
 
 # Use refreshed token
-TOKEN=$(entra-auth-cli get-token --profile myapp --silent)
+TOKEN=$(entra-auth-cli get-token --profile myapp)
 ```
 
 ## Requirements
@@ -177,7 +157,7 @@ entra-auth-cli get-token --profile daemon --flow interactive
 # Main loop
 while true; do
     # Get token (uses cache if valid)
-    TOKEN=$(entra-auth-cli get-token --profile daemon --silent)
+    TOKEN=$(entra-auth-cli get-token --profile daemon)
     
     # Do work with token
     curl -H "Authorization: Bearer $TOKEN" \
@@ -224,7 +204,7 @@ refresh_if_needed() {
 
 # Usage
 refresh_if_needed production
-TOKEN=$(entra-auth-cli get-token --profile production --silent)
+TOKEN=$(entra-auth-cli get-token --profile production)
 ```
 
 ### Scheduled Refresh
@@ -274,8 +254,8 @@ Error: refresh token expired or invalid
 entra-auth-cli get-token --profile user-app --flow interactive --force
 
 # 2. Or recreate profile
-entra-auth-cli config delete --name user-app
-entra-auth-cli config create --name user-app
+entra-auth-cli config delete -p user-app
+entra-auth-cli config create
 entra-auth-cli get-token --profile user-app --flow interactive
 ```
 
@@ -286,12 +266,12 @@ entra-auth-cli get-token --profile user-app --flow interactive
 **Solution:**
 ```bash {linenos=inline}
 # Include offline_access scope
-entra-auth-cli get-token --profile myapp \
-  --scope "User.Read offline_access" \
-  --flow interactive
+entra-auth-cli get-token -p myapp \
+  -s "User.Read offline_access" \
+  -f interactive
 
 # Or update profile default scopes
-entra-auth-cli config edit --name myapp
+entra-auth-cli config edit -p myapp
 # Add "offline_access" to scopes
 ```
 

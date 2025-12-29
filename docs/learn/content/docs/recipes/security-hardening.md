@@ -23,7 +23,7 @@ TOKEN_FILE=$(mktemp)
 trap "rm -f $TOKEN_FILE" EXIT
 
 # Get token with restricted permissions
-entra-auth-cli get-token -p my-profile --silent > "$TOKEN_FILE"
+entra-auth-cli get-token -p my-profile  > "$TOKEN_FILE"
 chmod 600 "$TOKEN_FILE"
 
 # Use token
@@ -110,7 +110,7 @@ q
 EOF
   
   # Test new secret
-  if entra-auth-cli get-token -p "$profile" --silent > /dev/null; then
+  if entra-auth-cli get-token -p "$profile"  > /dev/null; then
     echo "✓ Secret rotation successful"
     
     # Optionally revoke old secret in Azure Portal
@@ -286,7 +286,7 @@ log_auth() {
 }
 
 # Get token with logging
-if TOKEN=$(entra-auth-cli get-token -p prod-profile --silent); then
+if TOKEN=$(entra-auth-cli get-token -p prod-profile ); then
   log_auth "prod-profile" "success"
 else
   log_auth "prod-profile" "failure"

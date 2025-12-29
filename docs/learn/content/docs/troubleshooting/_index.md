@@ -118,7 +118,7 @@ entra-auth-cli get-token -p my-profile
 
 ```bash {linenos=inline}
 # Get token and inspect
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile )
 entra-auth-cli inspect -t "$TOKEN"
 
 # Check expiration

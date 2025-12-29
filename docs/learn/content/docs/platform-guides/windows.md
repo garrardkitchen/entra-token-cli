@@ -339,15 +339,12 @@ param(
     [string]$ClientSecret = $env:AZURE_CLIENT_SECRET
 )
 
-# Create profile
-entra-auth-cli create-profile `
-    --name azdo `
-    --tenant-id $TenantId `
-    --client-id $ClientId `
-    --client-secret $ClientSecret `
-    --scope "https://management.azure.com/.default"
+# Note: config create is interactive only. 
+# For automation, you must pre-create profiles interactively
+# or use direct authentication with credentials
 
-# Get token
+# Get token using pre-created profile
+
 $token = entra-auth-cli get-token --profile azdo --output json | ConvertFrom-Json
 $accessToken = $token.access_token
 
@@ -456,7 +453,7 @@ $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($clientSecr
 $plainSecret = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
 
 try {
-    entra-auth-cli create-profile `
+    entra-auth-cli config create `
         --name "secure-profile" `
         --tenant-id $tenantId `
         --client-id $clientId `
@@ -480,7 +477,7 @@ $credential = Get-StoredCredential -Target "EntraAuthCli"
 $clientSecret = $credential.GetNetworkCredential().Password
 
 # Use in profile creation
-entra-auth-cli create-profile `
+entra-auth-cli config create `
     --name "from-credman" `
     --client-secret $clientSecret
 ```
@@ -502,8 +499,8 @@ echo $env:USERNAME
 Get-Acl "$env:LOCALAPPDATA\EntraAuthCli\profiles\default.token" | Select-Object Owner
 
 # Recreate profile if ownership changed
-entra-auth-cli delete-profile --name default
-entra-auth-cli create-profile --name default
+entra-auth-cli config delete -p default
+entra-auth-cli config create
 ```
 
 ### Path Issues

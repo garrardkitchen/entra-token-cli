@@ -14,7 +14,7 @@ Learn how to integrate Entra Auth Cli with PowerShell for Windows automation and
 
 ```powershell
 # Get token
-$token = entra-auth-cli get-token -p my-profile --silent
+$token = entra-auth-cli get-token -p my-profile
 
 # Use with Invoke-RestMethod
 $headers = @{
@@ -45,14 +45,14 @@ function Get-CachedToken {
     
     # Check if cached token is valid
     if (Test-Path $tokenCache) {
-        entra-auth-cli discover -f $tokenCache 2>$null
+        $result = entra-auth-cli inspect - < $tokenCache 2>$null
         if ($LASTEXITCODE -eq 0) {
             return Get-Content $tokenCache -Raw
         }
     }
     
     # Get fresh token
-    $token = entra-auth-cli get-token -p $Profile --silent
+    $token = entra-auth-cli get-token -p $Profile
     $token | Out-File -FilePath $tokenCache -NoNewline
     return $token
 }
@@ -76,7 +76,7 @@ function Get-TokenWithRetry {
     
     for ($i = 0; $i -lt $MaxRetries; $i++) {
         try {
-            $token = entra-auth-cli get-token -p $Profile --silent 2>&1
+            $token = entra-auth-cli get-token -p $Profile 2>&1
             if ($LASTEXITCODE -eq 0) {
                 return $token
             }
@@ -107,8 +107,8 @@ Work with multiple APIs using different tokens.
 
 ```powershell
 # Get tokens for different APIs
-$graphToken = entra-auth-cli get-token -p graph-profile --silent
-$azureToken = entra-auth-cli get-token -p azure-profile --silent
+$graphToken = entra-auth-cli get-token -p graph-profile
+$azureToken = entra-auth-cli get-token -p azure-profile
 
 # Use Graph API
 Write-Host "Fetching user profile..."
@@ -145,20 +145,21 @@ function Get-ValidToken {
     # Check if token exists
     if (Test-Path $tokenFile) {
         # Check expiration
-        $tokenJson = entra-auth-cli inspect -f $tokenFile 2>$null | ConvertFrom-Json
+        $token = Get-Content $tokenFile -Raw
+        $tokenJson = entra-auth-cli inspect $token 2>$null | ConvertFrom-Json
         if ($tokenJson) {
-            $exp = $tokenJson.payload.exp
+            $exp = $tokenJson.exp
             $now = [DateTimeOffset]::Now.ToUnixTimeSeconds()
             $remaining = $exp - $now
             
             if ($remaining -gt $minValidity) {
-                return Get-Content $tokenFile -Raw
+                return $token
             }
         }
     }
     
     # Get fresh token
-    $token = entra-auth-cli get-token -p $Profile --silent
+    $token = entra-auth-cli get-token -p $Profile
     $token | Out-File -FilePath $tokenFile -NoNewline
     return $token
 }
@@ -174,7 +175,7 @@ Make multiple API calls concurrently using PowerShell jobs.
 
 ```powershell
 # Get token once
-$token = entra-auth-cli get-token -p my-profile --silent
+$token = entra-auth-cli get-token -p my-profile
 $headers = @{ "Authorization" = "Bearer $token" }
 
 # Start parallel jobs
@@ -209,7 +210,7 @@ $results | ForEach-Object { $_ | ConvertTo-Json }
 Handle paginated API responses.
 
 ```powershell
-$token = entra-auth-cli get-token -p graph-admin --silent
+$token = entra-auth-cli get-token -p graph-admin
 $headers = @{ "Authorization" = "Bearer $token" }
 $url = "https://graph.microsoft.com/v1.0/users"
 
@@ -258,7 +259,7 @@ function Invoke-ApiWithRateLimit {
     throw "Max retries exceeded"
 }
 
-$token = entra-auth-cli get-token -p my-profile --silent
+$token = entra-auth-cli get-token -p my-profile
 $headers = @{ "Authorization" = "Bearer $token" }
 $result = Invoke-ApiWithRateLimit -Uri "https://graph.microsoft.com/v1.0/users" -Headers $headers
 ```
@@ -295,13 +296,13 @@ function Get-Token {
     $tokenCache = "$env:TEMP\entra-auth-cli-$Profile.token"
     
     if (Test-Path $tokenCache) {
-        entra-auth-cli discover -f $tokenCache 2>$null
+        $result = entra-auth-cli inspect - < $tokenCache 2>$null
         if ($LASTEXITCODE -eq 0) {
             return Get-Content $tokenCache -Raw
         }
     }
     
-    $token = entra-auth-cli get-token -p $Profile --silent
+    $token = entra-auth-cli get-token -p $Profile
     $token | Out-File -FilePath $tokenCache -NoNewline
     return $token
 }
@@ -358,14 +359,13 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 ```
 
-### Use Silent Mode
+### Capture Token Output
 
 ```powershell
-# Good
-$token = entra-auth-cli get-token -p my-profile --silent
-
-# Bad (may include extra output)
+# Get token (output will include token on last line)
 $token = entra-auth-cli get-token -p my-profile
+# If needed, extract just the token value
+$token = ($token -split "`n")[-1].Trim()
 ```
 
 ### Secure Token Storage
@@ -384,7 +384,7 @@ Set-Acl $tokenFile $acl
 ### Check Exit Codes
 
 ```powershell
-entra-auth-cli get-token -p my-profile --silent
+entra-auth-cli get-token -p my-profile
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Token generation failed"
     exit 1

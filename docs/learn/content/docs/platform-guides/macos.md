@@ -134,7 +134,7 @@ complete -o nospace -C entra-auth-cli entra-auth-cli
 # Aliases
 alias et='entra-auth-cli'
 alias etg='entra-auth-cli get-token'
-alias etp='entra-auth-cli list-profiles'
+alias etp='entra-auth-cli config list'
 
 # Function to get token
 get_token() {
@@ -379,7 +379,7 @@ export TENANT_ID=$(security find-generic-password -s "azure-tenant-id" -w)
 export CLIENT_ID=$(security find-generic-password -s "azure-client-id" -w)
 export CLIENT_SECRET=$(security find-generic-password -s "azure-client-secret" -w)
 
-entra-auth-cli create-profile \
+entra-auth-cli config create \
   --name secure-profile \
   --tenant-id "$TENANT_ID" \
   --client-id "$CLIENT_ID" \

@@ -52,7 +52,7 @@ call_api_with_rate_limit() {
 }
 
 # Usage
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile )
 call_api_with_rate_limit "https://graph.microsoft.com/v1.0/users" "$TOKEN"
 ```
 
@@ -66,7 +66,7 @@ Make multiple API calls concurrently for better performance.
 #!/bin/bash
 
 # Get token once
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile )
 
 # Parallel API calls
 {
@@ -103,7 +103,7 @@ get_valid_token() {
   # Check if token exists
   if [ -f "$token_file" ]; then
     # Check expiration
-    exp=$(entra-auth-cli inspect -f "$token_file" 2>/dev/null | jq -r .payload.exp)
+    exp=$(entra-auth-cli inspect - < "$token_file" 2>/dev/null | jq -r .payload.exp)
     now=$(date +%s)
     remaining=$(( exp - now ))
     
@@ -115,7 +115,7 @@ get_valid_token() {
   fi
   
   # Get fresh token
-  entra-auth-cli get-token -p "$profile" --silent | tee "$token_file"
+  entra-auth-cli get-token -p "$profile"  | tee "$token_file"
   chmod 600 "$token_file"
 }
 
@@ -134,7 +134,7 @@ Process items in batches to avoid rate limits.
 
 process_batch() {
   local items=("$@")
-  local token=$(entra-auth-cli get-token -p my-profile --silent)
+  local token=$(entra-auth-cli get-token -p my-profile )
   local batch_size=20
   
   for ((i=0; i<${#items[@]}; i+=batch_size)); do
@@ -213,7 +213,7 @@ call_api_with_circuit_breaker() {
 }
 
 # Usage
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile )
 call_api_with_circuit_breaker "https://api.example.com/data" "$TOKEN"
 ```
 
@@ -253,7 +253,7 @@ call_api_deduplicated() {
 }
 
 # Usage
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile )
 call_api_deduplicated "https://api.example.com/data" "$TOKEN"
 call_api_deduplicated "https://api.example.com/data" "$TOKEN"  # Uses cache
 ```
@@ -302,7 +302,7 @@ call_api_with_jitter() {
 }
 
 # Usage
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile )
 call_api_with_jitter "https://api.example.com/data" "$TOKEN"
 ```
 
@@ -320,7 +320,7 @@ health_check() {
   local check_url="https://graph.microsoft.com/v1.0/me"
   
   # Try to get token
-  if ! token=$(entra-auth-cli get-token -p "$profile" --silent 2>&1); then
+  if ! token=$(entra-auth-cli get-token -p "$profile"  2>&1); then
     echo "FAIL: Could not acquire token"
     return 1
   fi
@@ -363,7 +363,7 @@ PROFILE="my-profile"
 get_token_lazy() {
   if [ -z "$TOKEN" ]; then
     echo "Acquiring token..." >&2
-    TOKEN=$(entra-auth-cli get-token -p "$PROFILE" --silent)
+    TOKEN=$(entra-auth-cli get-token -p "$PROFILE" )
   fi
   echo "$TOKEN"
 }
@@ -394,7 +394,7 @@ call_multi_tenant_api() {
   local endpoint=$2
   
   # Get token for specific tenant
-  token=$(entra-auth-cli get-token -p "tenant-$tenant" --silent)
+  token=$(entra-auth-cli get-token -p "tenant-$tenant" )
   
   # Call API
   curl -s -H "Authorization: Bearer $token" "$endpoint"
@@ -424,7 +424,7 @@ get_data_with_fallback() {
   local cache_file="/tmp/data-cache.json"
   
   # Try to get fresh data
-  if token=$(entra-auth-cli get-token -p my-profile --silent 2>/dev/null); then
+  if token=$(entra-auth-cli get-token -p my-profile  2>/dev/null); then
     data=$(curl -s -H "Authorization: Bearer $token" \
       "https://api.example.com/data")
     

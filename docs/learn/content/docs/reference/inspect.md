@@ -24,30 +24,23 @@ The command can inspect:
 - Tokens from files
 - Tokens passed as arguments
 
-## Flags
+## Usage
 
-### Input Options
-
-#### `--profile`, `-p`
-
-Inspect token from a profile.
+The `inspect` command accepts a JWT token as an argument or via stdin:
 
 ```bash {linenos=inline}
-entra-auth-cli inspect --profile production
-entra-auth-cli inspect -p dev
+# Inspect token directly
+entra-auth-cli inspect "eyJ0eXAiOiJKV1QiLCJh..."
+
+# From stdin
+echo "eyJ0eXAiOiJKV1QiLCJh..." | entra-auth-cli inspect -
+
+# From file
+entra-auth-cli inspect - < token.txt
+
+# Pipe from get-token
+entra-auth-cli get-token -p myprofile | entra-auth-cli inspect -
 ```
-
-#### `--token`, `-t`
-
-Inspect a specific token string.
-
-```bash {linenos=inline}
-entra-auth-cli inspect --token "eyJ0eXAiOiJKV1QiLCJh..."
-```
-
-#### `--file`, `-f`
-
-Read token from a file.
 
 ```bash {linenos=inline}
 entra-auth-cli inspect --file token.txt

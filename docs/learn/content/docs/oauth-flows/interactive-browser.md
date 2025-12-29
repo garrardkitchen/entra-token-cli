@@ -73,7 +73,7 @@ sequenceDiagram
 Create a profile for interactive browser flow:
 
 ```bash {linenos=inline}
-entra-auth-cli create-profile --name interactive-app
+entra-auth-cli config create
 ```
 
 When prompted:
@@ -342,8 +342,8 @@ Switch between user accounts:
 
 ```bash {linenos=inline}
 # Create profiles for different users
-entra-auth-cli create-profile --name work
-entra-auth-cli create-profile --name personal
+entra-auth-cli config create
+entra-auth-cli config create
 
 # Authenticate with work account
 entra-auth-cli get-token --flow interactive --profile work
@@ -455,8 +455,8 @@ entra-auth-cli clear-cache --profile myapp
 entra-auth-cli get-token --flow interactive --profile myapp --force
 
 # Delete and recreate profile
-entra-auth-cli delete-profile --name myapp
-entra-auth-cli create-profile --name myapp
+entra-auth-cli config delete -p myapp
+entra-auth-cli config create
 ```
 
 ## Platform-Specific Notes
@@ -503,13 +503,13 @@ entra-auth-cli get-token --flow interactive
 
 ```bash {linenos=inline}
 # Separate profiles by purpose
-entra-auth-cli create-profile --name graph-reader
-entra-auth-cli create-profile --name azure-admin
-entra-auth-cli create-profile --name mail-sender
+entra-auth-cli config create
+entra-auth-cli config create
+entra-auth-cli config create
 
 # Use descriptive names
-entra-auth-cli create-profile --name "production-api"
-entra-auth-cli create-profile --name "dev-testing"
+entra-auth-cli config create
+entra-auth-cli config create
 ```
 
 ### Scope Management

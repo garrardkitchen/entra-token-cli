@@ -15,7 +15,7 @@ Once you have an access token, learn how to inspect, validate, refresh, and use 
 | Task | Command |
 |------|---------|
 | Inspect token | `entra-auth-cli inspect -t TOKEN` |
-| Inspect from file | `entra-auth-cli inspect -f token.txt` |
+| Inspect from file | `entra-auth-cli inspect - < token.txt` |
 | Discover token info | `entra-auth-cli discover -t TOKEN` |
 | Refresh token | `entra-auth-cli refresh -p PROFILE` |
 | Check expiration | `entra-auth-cli discover -t TOKEN \| jq .exp` |
@@ -63,14 +63,14 @@ entra-auth-cli inspect -t "eyJ0eXAiOiJKV1QiLCJh..."
 ### Inspect from File
 
 ```bash {linenos=inline}
-entra-auth-cli get-token -p myprofile --silent > token.txt
-entra-auth-cli inspect -f token.txt
+entra-auth-cli get-token -p myprofile > token.txt
+entra-auth-cli inspect - < token.txt
 ```
 
 ### Inspect from Pipeline
 
 ```bash {linenos=inline}
-entra-auth-cli get-token -p myprofile --silent | entra-auth-cli inspect
+entra-auth-cli get-token -p myprofile | entra-auth-cli inspect
 ```
 
 [Detailed inspection guide →](/docs/user-guide/working-with-tokens/inspecting/)
@@ -217,7 +217,7 @@ eyJ0eXAiOiJKV1QiLCJh...
 ### Microsoft Graph API
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p graph-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-profile)
 
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me
@@ -237,7 +237,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 ### Azure Resource Manager
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p azure-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-profile)
 
 curl -H "Authorization: Bearer $TOKEN" \
      "https://management.azure.com/subscriptions?api-version=2020-01-01"
@@ -246,7 +246,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 ### Custom APIs
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p custom-api --silent)
+TOKEN=$(entra-auth-cli get-token -p custom-api)
 
 curl -H "Authorization: Bearer $TOKEN" \
      -H "Content-Type: application/json" \
@@ -317,7 +317,7 @@ APIs validate tokens by:
 if entra-auth-cli discover -f token.txt &>/dev/null; then
   TOKEN=$(cat token.txt)
 else
-  TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+  TOKEN=$(entra-auth-cli get-token -p myprofile)
   echo "$TOKEN" > token.txt
 fi
 ```
@@ -331,7 +331,7 @@ RESPONSE=$(curl -s -w "%{http_code}" \
 
 if [[ "$RESPONSE" == *"401"* ]]; then
   # Token expired, get new one
-  TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+  TOKEN=$(entra-auth-cli get-token -p myprofile)
   echo "$TOKEN" > token.txt
   
   # Retry request
@@ -343,12 +343,12 @@ fi
 **Pattern 3: Preemptive refresh**
 ```bash {linenos=inline}
 # Refresh if less than 5 minutes remaining
-EXP=$(entra-auth-cli inspect -f token.txt | jq -r .payload.exp)
+EXP=$(entra-auth-cli inspect - < token.txt | jq -r .payload.exp)
 NOW=$(date +%s)
 REMAINING=$(( ($EXP - $NOW) / 60 ))
 
 if [ $REMAINING -lt 5 ]; then
-  entra-auth-cli get-token -p myprofile --silent > token.txt
+  entra-auth-cli get-token -p myprofile > token.txt
 fi
 ```
 
@@ -362,10 +362,10 @@ fi
 
 ```bash {linenos=inline}
 # In-memory (session only)
-export TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+export TOKEN=$(entra-auth-cli get-token -p myprofile)
 
 # File (with restricted permissions)
-entra-auth-cli get-token -p myprofile --silent > /tmp/token.txt
+entra-auth-cli get-token -p myprofile > /tmp/token.txt
 chmod 600 /tmp/token.txt
 ```
 
@@ -430,7 +430,7 @@ TOKEN_FILE=$(mktemp)
 trap "rm -f $TOKEN_FILE" EXIT
 
 # Get token
-entra-auth-cli get-token -p myprofile --silent > "$TOKEN_FILE"
+entra-auth-cli get-token -p myprofile > "$TOKEN_FILE"
 chmod 600 "$TOKEN_FILE"
 
 # Use token
@@ -451,7 +451,7 @@ curl -H "Authorization: Bearer $TOKEN" https://api.example.com
 set -euo pipefail
 
 get_token() {
-  entra-auth-cli get-token -p "$1" --silent
+  entra-auth-cli get-token -p "$1"
 }
 
 TOKEN=$(get_token "myprofile")
@@ -470,7 +470,7 @@ TOKEN_CACHE="/tmp/my-token-cache.txt"
 TOKEN_MAX_AGE=3000  # 50 minutes
 
 get_fresh_token() {
-  entra-auth-cli get-token -p myprofile --silent > "$TOKEN_CACHE"
+  entra-auth-cli get-token -p myprofile > "$TOKEN_CACHE"
   chmod 600 "$TOKEN_CACHE"
 }
 
@@ -504,7 +504,7 @@ get_valid_token() {
     cat "$token_file"
   else
     # Get fresh token
-    entra-auth-cli get-token -p "$profile" --silent | tee "$token_file"
+    entra-auth-cli get-token -p "$profile" | tee "$token_file"
     chmod 600 "$token_file"
   fi
 }
@@ -525,7 +525,7 @@ get_token_for_profile() {
   local profile=$1
   
   if [ -z "${TOKENS[$profile]}" ]; then
-    TOKENS[$profile]=$(entra-auth-cli get-token -p "$profile" --silent)
+    TOKENS[$profile]=$(entra-auth-cli get-token -p "$profile")
   fi
   
   echo "${TOKENS[$profile]}"
@@ -553,7 +553,7 @@ curl -H "Authorization: Bearer $AZURE_TOKEN" https://management.azure.com/subscr
 entra-auth-cli inspect -t "$TOKEN"
 
 # If invalid, get fresh token
-TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+TOKEN=$(entra-auth-cli get-token -p myprofile)
 ```
 
 ### "Token expired"
@@ -563,7 +563,7 @@ TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
 **Fix:**
 ```bash {linenos=inline}
 # Get new token
-TOKEN=$(entra-auth-cli get-token -p myprofile --silent)
+TOKEN=$(entra-auth-cli get-token -p myprofile)
 ```
 
 ### "Insufficient privileges"
