@@ -97,7 +97,7 @@ Advanced techniques for complex scenarios.
 
 ```bash {linenos=inline}
 # Read user profile
-TOKEN=$(entra-auth-cli get-token -p graph-readonly --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-readonly )
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me | jq
 ```
@@ -106,7 +106,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ```bash {linenos=inline}
 # List subscriptions
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt )
 curl -H "Authorization: Bearer $TOKEN" \
      'https://management.azure.com/subscriptions?api-version=2020-01-01' | jq
 ```
@@ -120,7 +120,7 @@ get_token() {
   if [ -f "$cache" ] && entra-auth-cli discover -f "$cache" &>/dev/null; then
     cat "$cache"
   else
-    entra-auth-cli get-token -p my-profile --silent | tee "$cache"
+    entra-auth-cli get-token -p my-profile  | tee "$cache"
   fi
 }
 ```

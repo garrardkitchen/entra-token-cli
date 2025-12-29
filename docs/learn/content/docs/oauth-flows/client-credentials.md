@@ -26,7 +26,7 @@ The Client Credentials flow is designed for service-to-service authentication wh
 
 ```bash {linenos=inline}
 # Create profile with client secret
-entra-auth-cli create-profile
+entra-auth-cli config create
 
 # Generate token
 entra-auth-cli get-token --profile myapp
@@ -36,7 +36,7 @@ entra-auth-cli get-token --profile myapp
 
 ```bash {linenos=inline}
 # Create profile with certificate
-entra-auth-cli create-profile --use-certificate
+entra-auth-cli config create --use-certificate
 
 # Generate token
 entra-auth-cli get-token --profile myapp-cert
@@ -49,7 +49,7 @@ entra-auth-cli get-token --profile myapp-cert
 When creating a profile for client credentials flow:
 
 ```bash {linenos=inline}
-entra-auth-cli create-profile
+entra-auth-cli config create
 ```
 
 You'll be prompted for:
@@ -184,7 +184,7 @@ jobs:
           CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         run: |
-          entra-auth-cli create-profile \
+          entra-auth-cli config create \
             --name ci \
             --tenant-id "$TENANT_ID" \
             --client-id "$CLIENT_ID" \
@@ -225,7 +225,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      entra-auth-cli create-profile \
+      entra-auth-cli config create \
         --name pipeline \
         --tenant-id "$TENANT_ID" \
         --client-id "$CLIENT_ID" \
@@ -254,7 +254,7 @@ steps:
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 
 # Create profile with certificate
-entra-auth-cli create-profile \
+entra-auth-cli config create \
   --name secure-app \
   --use-certificate \
   --certificate-path cert.pem \
@@ -267,14 +267,14 @@ entra-auth-cli create-profile \
 
 ```bash {linenos=inline}
 # ❌ Bad - hardcoded
-entra-auth-cli create-profile --client-secret "my-secret-123"
+entra-auth-cli config create --client-secret "my-secret-123"
 
 # ✅ Good - from environment
-entra-auth-cli create-profile --client-secret "${CLIENT_SECRET}"
+entra-auth-cli config create --client-secret "${CLIENT_SECRET}"
 
 # ✅ Better - from secure vault
 CLIENT_SECRET=$(az keyvault secret show --vault-name myvault --name client-secret --query value -o tsv)
-entra-auth-cli create-profile --client-secret "${CLIENT_SECRET}"
+entra-auth-cli config create --client-secret "${CLIENT_SECRET}"
 ```
 
 ### Least Privilege

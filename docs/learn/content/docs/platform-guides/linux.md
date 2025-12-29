@@ -183,7 +183,7 @@ complete -C entra-auth-cli entra-auth-cli
 # Aliases
 alias et='entra-auth-cli'
 alias etg='entra-auth-cli get-token'
-alias etp='entra-auth-cli list-profiles'
+alias etp='entra-auth-cli config list'
 
 # Function to get token
 get_token() {
@@ -383,7 +383,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 # Create profile from environment variables
 if [ -n "$TENANT_ID" ] && [ -n "$CLIENT_ID" ] && [ -n "$CLIENT_SECRET" ]; then
-    entra-auth-cli create-profile \
+    entra-auth-cli config create \
         --name container \
         --tenant-id "$TENANT_ID" \
         --client-id "$CLIENT_ID" \
@@ -406,9 +406,9 @@ kind: ConfigMap
 metadata:
   name: entra-auth-cli-config
 data:
-  create-profile.sh: |
+  config create.sh: |
     #!/bin/bash
-    entra-auth-cli create-profile \
+    entra-auth-cli config create \
       --name k8s \
       --tenant-id "$TENANT_ID" \
       --client-id "$CLIENT_ID" \
@@ -464,7 +464,7 @@ spec:
         - /bin/bash
         - -c
         - |
-          /config/create-profile.sh
+          /config/config create.sh
           TOKEN=$(entra-auth-cli get-token --output json | jq -r .access_token)
           export AUTH_TOKEN=$TOKEN
           exec /app/start.sh
@@ -495,7 +495,7 @@ deploy:
         -o /usr/local/bin/entra-auth-cli
     - chmod +x /usr/local/bin/entra-auth-cli
     - |
-      entra-auth-cli create-profile \
+      entra-auth-cli config create \
         --name ci \
         --tenant-id "$AZURE_TENANT_ID" \
         --client-id "$AZURE_CLIENT_ID" \
@@ -536,7 +536,7 @@ pipeline {
         stage('Authenticate') {
             steps {
                 sh '''
-                    entra-auth-cli create-profile \
+                    entra-auth-cli config create \
                       --name jenkins \
                       --tenant-id "$TENANT_ID" \
                       --client-id "$CLIENT_ID" \
@@ -591,7 +591,7 @@ ssh user@server 'bash -s' < local-script.sh
 
     - name: Create profile
       shell: |
-        entra-auth-cli create-profile \
+        entra-auth-cli config create \
           --name ansible \
           --tenant-id "{{ azure_tenant_id }}" \
           --client-id "{{ azure_client_id }}" \

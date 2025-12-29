@@ -77,22 +77,7 @@ entra-auth-cli get-token -o yaml
 - `json` - Full token response as JSON
 - `yaml` - Full token response as YAML
 
-#### `--file`
-
-Save token to file instead of stdout.
-
-```bash {linenos=inline}
-entra-auth-cli get-token --file token.txt
-entra-auth-cli get-token --output json --file token.json
-```
-
-#### `--silent`, `-q`
-
-Suppress all output except the token.
-
-```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token --silent)
-```
+**Note:** The token is printed to stdout. To capture just the token value, you can extract the last line of output.
 
 ### Behavior Options
 
@@ -168,7 +153,7 @@ entra-auth-cli get-token --flow device-code
 
 ```bash {linenos=inline}
 # Get token in variable
-TOKEN=$(entra-auth-cli get-token --silent)
+TOKEN=$(entra-auth-cli get-token)
 
 # Use in API call
 curl -H "Authorization: Bearer $TOKEN" \
@@ -293,7 +278,7 @@ set -euo pipefail
 # Get token (exits on failure)
 TOKEN=$(entra-auth-cli get-token \
   --profile cicd \
-  --silent \
+  \
   --timeout 30s)
 
 # Deploy application
@@ -328,7 +313,7 @@ get_token_safe() {
     while [ $attempt -lt $max_retries ]; do
         if token=$(entra-auth-cli get-token \
             --profile "$profile" \
-            --silent 2>/dev/null); then
+            2>/dev/null); then
             echo "$token"
             return 0
         fi
@@ -359,7 +344,7 @@ fi
 
 ```bash {linenos=inline}
 # Cache tokens in memory for multiple uses
-TOKEN=$(entra-auth-cli get-token --silent)
+TOKEN=$(entra-auth-cli get-token)
 for api in users groups applications; do
     curl -s -H "Authorization: Bearer $TOKEN" \
       "https://graph.microsoft.com/v1.0/$api"
@@ -383,7 +368,7 @@ entra-auth-cli inspect --profile myapp
 
 ```bash {linenos=inline}
 # Don't expose token in command history
-TOKEN=$(entra-auth-cli get-token --silent)
+TOKEN=$(entra-auth-cli get-token)
 
 # Use token from variable, not command substitution
 curl -H "Authorization: Bearer $TOKEN" ...

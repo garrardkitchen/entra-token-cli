@@ -116,7 +116,7 @@ Inspect, validate, refresh, and use tokens effectively.
 
 ```bash {linenos=inline}
 # Morning: Get fresh token
-entra-auth-cli get-token -p dev-graph --silent > ~/.cache/token.txt
+entra-auth-cli get-token -p dev-graph > ~/.cache/token.txt
 
 # Use throughout the day
 TOKEN=$(cat ~/.cache/token.txt)
@@ -185,7 +185,7 @@ entra-auth-cli config edit -p profile1
 | Get token | `entra-auth-cli get-token -p PROFILE` |
 | Override scope | `entra-auth-cli get-token -p PROFILE --scope "SCOPE"` |
 | Specify flow | `entra-auth-cli get-token -p PROFILE -f FLOW` |
-| Silent output | `entra-auth-cli get-token -p PROFILE --silent` |
+| Silent output | `entra-auth-cli get-token -p PROFILE` |
 | Save to file | `entra-auth-cli get-token -p PROFILE -o token.txt` |
 | Refresh token | `entra-auth-cli refresh -p PROFILE` |
 | **Token Info** | |

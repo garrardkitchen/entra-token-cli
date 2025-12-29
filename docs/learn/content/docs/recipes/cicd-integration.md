@@ -8,6 +8,14 @@ weight: 3
 
 Learn how to integrate Entra Auth Cli into your CI/CD pipelines for automated authentication.
 
+> **⚠️ Important Note on CI/CD Usage:**  
+> The `entra-auth-cli config create` command is **fully interactive** and cannot accept credentials via command-line flags. For CI/CD scenarios, you have two options:
+> 
+> 1. **Export profiles locally** and import them in CI/CD (using encrypted files with passphrases stored as secrets)
+> 2. **Use direct get-token** with profiles created ahead of time and secrets managed via secure storage
+>
+> The examples below show both approaches.
+
 ---
 
 ## GitHub Actions
@@ -29,29 +37,18 @@ jobs:
         run: |
           dotnet tool install --global EntraAuthCli
       
-      - name: Create Profile
+      - name: Setup Profile
         env:
-          CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          PROFILE_DATA: ${{ secrets.ENTRA_PROFILE_ENCRYPTED }}
+          PASSPHRASE: ${{ secrets.PROFILE_PASSPHRASE }}
         run: |
-          # Create profile non-interactively
-          cat > profile.json <<EOF
-          {
-            "name": "cicd",
-            "clientId": "$CLIENT_ID",
-            "tenantId": "$TENANT_ID",
-            "scope": "https://management.azure.com/.default",
-            "useClientSecret": true
-          }
-          EOF
-          entra-auth-cli config import -f profile.json
-          
-          # Store secret (implementation depends on tool capabilities)
+          # Import pre-exported profile (created locally with config export)
+          echo "$PROFILE_DATA" > profile.enc
+          echo "$PASSPHRASE" | entra-auth-cli config import -i profile.enc
       
       - name: Deploy to Azure
         run: |
-          TOKEN=$(entra-auth-cli get-token -p cicd --silent)
+          TOKEN=$(entra-auth-cli get-token -p cicd)
           
           # Use token for deployment
           curl -X POST \
@@ -61,7 +58,7 @@ jobs:
                "https://management.azure.com/..."
 ```
 
-### With Matrix Strategy
+### With Pre-Created Profiles
 
 ```yaml
 name: Multi-Environment Deploy
@@ -80,18 +77,17 @@ jobs:
       - name: Setup Entra Auth Cli
         run: dotnet tool install --global EntraAuthCli
       
-      - name: Deploy to ${{ matrix.environment }}
+      - name: Import ${{ matrix.environment }} Profile
         env:
-          CLIENT_ID: ${{ secrets[format('{0}_CLIENT_ID', matrix.environment)] }}
-          TENANT_ID: ${{ secrets[format('{0}_TENANT_ID', matrix.environment)] }}
-          CLIENT_SECRET: ${{ secrets[format('{0}_CLIENT_SECRET', matrix.environment)] }}
+          PROFILE_DATA: ${{ secrets[format('{0}_PROFILE_ENC', matrix.environment)] }}
+          PASSPHRASE: ${{ secrets[format('{0}_PASSPHRASE', matrix.environment)] }}
         run: |
-          # Create environment-specific profile
-          entra-auth-cli config create --name ${{ matrix.environment }} \
-            --client-id "$CLIENT_ID" \
-            --tenant-id "$TENANT_ID"
+          echo "$PROFILE_DATA" > profile.enc
+          echo "$PASSPHRASE" | entra-auth-cli config import -i profile.enc -n ${{ matrix.environment }}
           
-          TOKEN=$(entra-auth-cli get-token -p ${{ matrix.environment }} --silent)
+      - name: Deploy
+        run: |
+          TOKEN=$(entra-auth-cli get-token -p ${{ matrix.environment }})
           ./deploy.sh "$TOKEN" "${{ matrix.environment }}"
 ```
 
@@ -128,7 +124,7 @@ steps:
         --scope "https://management.azure.com/.default"
       
       # Get token
-      TOKEN=$(entra-auth-cli get-token -p cicd --silent)
+      TOKEN=$(entra-auth-cli get-token -p cicd )
       
       # Deploy
       ./deploy.sh "$TOKEN"
@@ -164,11 +160,11 @@ stages:
             displayName: 'Install CLI'
           
           - script: |
-              entra-auth-cli config create --name prod \
+              entra-auth-cli config create # Note: fully interactive prod \
                 --client-id $(ClientId) \
                 --tenant-id $(TenantId)
               
-              TOKEN=$(entra-auth-cli get-token -p prod --silent)
+              TOKEN=$(entra-auth-cli get-token -p prod )
               ./deploy-to-production.sh "$TOKEN"
             displayName: 'Deploy'
 ```
@@ -198,10 +194,10 @@ deploy:
         "scope": "https://management.azure.com/.default"
       }
       EOF
-    - entra-auth-cli config import -f profile.json
+    - entra-auth-cli config import -i profile.json
     
     # Deploy
-    - TOKEN=$(entra-auth-cli get-token -p gitlab-ci --silent)
+    - TOKEN=$(entra-auth-cli get-token -p gitlab-ci )
     - ./deploy.sh "$TOKEN"
   only:
     - main
@@ -232,12 +228,12 @@ pipeline {
             steps {
                 sh '''
                     # Create profile
-                    entra-auth-cli config create --name jenkins \
+                    entra-auth-cli config create # Note: fully interactive jenkins \
                       --client-id "$CLIENT_ID" \
                       --tenant-id "$TENANT_ID"
                     
                     # Get token
-                    TOKEN=$(entra-auth-cli get-token -p jenkins --silent)
+                    TOKEN=$(entra-auth-cli get-token -p jenkins )
                     
                     # Deploy
                     ./deploy.sh "$TOKEN"
@@ -274,18 +270,18 @@ az ad sp create-for-rbac --name "cicd-deployment" \
 ```yaml
 # Create environment-specific profiles
 - name: Configure Dev Profile
-  run: entra-auth-cli config create --name dev ...
+  run: entra-auth-cli config create # Note: fully interactive dev ...
 
 - name: Configure Prod Profile
-  run: entra-auth-cli config create --name prod ...
+  run: entra-auth-cli config create # Note: fully interactive prod ...
 ```
 
 ### Use Silent Mode
 
-Always use `--silent` flag in CI/CD to get clean token output:
+Always use `` flag in CI/CD to get clean token output:
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p cicd --silent)
+TOKEN=$(entra-auth-cli get-token -p cicd )
 ```
 
 ### Validate Tokens
@@ -293,7 +289,7 @@ TOKEN=$(entra-auth-cli get-token -p cicd --silent)
 Test token validity before use:
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p cicd --silent)
+TOKEN=$(entra-auth-cli get-token -p cicd )
 if entra-auth-cli inspect <<< "$TOKEN" &>/dev/null; then
   echo "Token valid"
   # Proceed with deployment

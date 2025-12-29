@@ -38,7 +38,7 @@ entra-auth-cli config create
 ### Get Token and Call API
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p graph-readonly --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-readonly )
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me | jq
 ```
@@ -51,7 +51,7 @@ Retrieve information about the authenticated user.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p graph-readonly --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-readonly )
 
 curl -H "Authorization: Bearer $TOKEN" \
      https://graph.microsoft.com/v1.0/me | jq
@@ -67,7 +67,7 @@ Retrieve a list of users in your organization.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p graph-admin --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-admin  \
   --scope "https://graph.microsoft.com/User.Read.All")
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -84,7 +84,7 @@ Send an email via Microsoft Graph.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p graph-mail --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-mail  \
   --scope "https://graph.microsoft.com/Mail.Send")
 
 curl -X POST \
@@ -120,7 +120,7 @@ Retrieve calendar events for the authenticated user.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p graph-calendar --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-calendar  \
   --scope "https://graph.microsoft.com/Calendars.Read")
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -137,7 +137,7 @@ Create a new calendar event.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p graph-calendar --silent \
+TOKEN=$(entra-auth-cli get-token -p graph-calendar  \
   --scope "https://graph.microsoft.com/Calendars.ReadWrite")
 
 curl -X POST \
@@ -202,7 +202,7 @@ get_graph_token() {
   if [ -f "$TOKEN_CACHE" ] && entra-auth-cli discover -f "$TOKEN_CACHE" &>/dev/null; then
     cat "$TOKEN_CACHE"
   else
-    entra-auth-cli get-token -p graph --silent | tee "$TOKEN_CACHE"
+    entra-auth-cli get-token -p graph  | tee "$TOKEN_CACHE"
     chmod 600 "$TOKEN_CACHE"
   fi
 }
@@ -214,7 +214,7 @@ TOKEN=$(get_graph_token)
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p graph-admin --silent)
+TOKEN=$(entra-auth-cli get-token -p graph-admin )
 URL="https://graph.microsoft.com/v1.0/users"
 
 while [ -n "$URL" ]; do

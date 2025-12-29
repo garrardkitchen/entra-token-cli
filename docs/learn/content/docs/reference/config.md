@@ -31,72 +31,48 @@ Each profile contains:
 Create a new authentication profile.
 
 ```bash {linenos=inline}
-entra-auth-cli config create [flags]
+entra-auth-cli config create
 ```
 
 **Flags:**
-- `--name`, `-n` - Profile name
-- `--tenant-id` - Azure tenant ID
-- `--client-id` - Application client ID
-- `--client-secret` - Client secret (interactive prompt if not provided)
-- `--certificate` - Path to certificate file (PFX/PEM)
-- `--certificate-password` - Certificate password
-- `--scope` - Default scopes (space-separated)
-- `--interactive` - Use interactive prompts for all fields
+- None - This command is fully interactive
 
 **Examples:**
 
 ```bash {linenos=inline}
-# Interactive creation (recommended)
+# Create a profile (fully interactive)
 entra-auth-cli config create
 
-# With flags
-entra-auth-cli config create \
-  --name production \
-  --tenant-id "12345678-1234-1234-1234-123456789012" \
-  --client-id "87654321-4321-4321-4321-210987654321" \
-  --client-secret "your-secret"
-
-# With certificate
-entra-auth-cli config create \
-  --name secure-app \
-  --tenant-id "$TENANT_ID" \
-  --client-id "$CLIENT_ID" \
-  --certificate "./cert.pfx" \
-  --certificate-password "password"
-
-# With custom scopes
-entra-auth-cli config create \
-  --name graph-api \
-  --scope "User.Read Mail.Read Calendars.Read"
+# You will be prompted for:
+# - Profile name
+# - Tenant ID
+# - Client ID
+# - Authentication method (ClientSecret, Certificate, or PasswordlessCertificate)
+# - Credentials (client secret or certificate path)
+# - Default OAuth2 flow (optional)
+# - Redirect URI (optional)
+# - Default scopes (optional)
 ```
 
 ### list
 List all configured profiles.
 
 ```bash {linenos=inline}
-entra-auth-cli config list [flags]
+entra-auth-cli config list
 ```
 
 **Flags:**
-- `--output`, `-o` - Output format (text, json, yaml)
-- `--verbose`, `-v` - Show additional details
+- None
 
 **Examples:**
 
 ```bash {linenos=inline}
-# Simple list
+# List all profiles
 entra-auth-cli config list
-
-# With details
-entra-auth-cli config list --verbose
-
-# JSON output
-entra-auth-cli config list --output json
 ```
 
-### show
-Display detailed information about a profile.
+### edit
+Edit an existing profile.
 
 ```bash {linenos=inline}
 entra-auth-cli config show [flags]
@@ -111,72 +87,56 @@ entra-auth-cli config show [flags]
 
 ```bash {linenos=inline}
 # Show profile details
-entra-auth-cli config show --name production
+entra-auth-cli config list | grep production
 
 # JSON format
-entra-auth-cli config show --name production --output json
-
-# Show with secrets (sensitive)
-entra-auth-cli config show --name production --show-secrets
-```
+entra-auth-cli config list | grep production --output json
 
 ### edit
 Edit an existing profile.
 
 ```bash {linenos=inline}
-entra-auth-cli config edit [flags]
+entra-auth-cli config edit -p <profile>
 ```
 
 **Flags:**
-- `--name`, `-n` - Profile name
-- `--tenant-id` - Update tenant ID
-- `--client-id` - Update client ID
-- `--client-secret` - Update client secret
-- `--certificate` - Update certificate
-- `--scope` - Update default scopes
-- `--interactive` - Use interactive editor
+- `-p`, `--profile` - Profile name to edit (required)
 
 **Examples:**
 
 ```bash {linenos=inline}
-# Interactive edit
-entra-auth-cli config edit --name production
+# Interactive edit (will prompt for all fields)
+entra-auth-cli config edit -p production
 
-# Update specific fields
-entra-auth-cli config edit --name production --scope "User.Read Mail.Send"
-
-# Update credentials
-entra-auth-cli config edit --name production --client-secret "new-secret"
-
-# Switch to certificate auth
-entra-auth-cli config edit --name production \
-  --certificate "./new-cert.pfx" \
-  --certificate-password "password"
+# The command will interactively ask which fields to update:
+# - Tenant ID
+# - Client ID
+# - Authentication method
+# - Credentials
+# - Default OAuth2 flow
+# - Redirect URI
+# - Default scopes
 ```
 
 ### delete
 Delete a profile.
 
 ```bash {linenos=inline}
-entra-auth-cli config delete [flags]
+entra-auth-cli config delete -p <profile>
 ```
 
 **Flags:**
-- `--name`, `-n` - Profile name
-- `--force`, `-f` - Skip confirmation prompt
+- `-p`, `--profile` - Profile name to delete (required)
 
 **Examples:**
 
 ```bash {linenos=inline}
-# Delete with confirmation
-entra-auth-cli config delete --name old-profile
-
-# Force delete (no confirmation)
-entra-auth-cli config delete --name old-profile --force
+# Delete with confirmation prompt
+entra-auth-cli config delete -p old-profile
 
 # Delete multiple profiles
 for profile in old-dev old-test old-staging; do
-    entra-auth-cli config delete --name "$profile" --force
+    entra-auth-cli config delete -p "$profile"
 done
 ```
 
@@ -184,107 +144,66 @@ done
 Export profile configuration to a file.
 
 ```bash {linenos=inline}
-entra-auth-cli config export [flags]
+entra-auth-cli config export -p <profile> -o <file> [--include-secrets]
 ```
 
 **Flags:**
-- `--name`, `-n` - Profile name (or all profiles if omitted)
-- `--output`, `-o` - Output file path
-- `--include-secrets` - Include sensitive data (use with caution)
+- `-p`, `--profile` - Profile name to export (required)
+- `-o`, `--output` - Output file path (required)
+- `--include-secrets` - Include secrets in export (optional)
+
+**Important:** Export requires entering a passphrase to encrypt the exported data.
 
 **Examples:**
 
 ```bash {linenos=inline}
-# Export single profile
-entra-auth-cli config export --name production > production-profile.json
+# Export a profile (will prompt for encryption passphrase)
+entra-auth-cli config export -p production -o production-profile.enc
 
-# Export all profiles
-entra-auth-cli config export > all-profiles.json
-
-# Export with secrets (for backup/migration)
-entra-auth-cli config export --name production --include-secrets > backup.json
+# Export with secrets (will prompt for encryption passphrase)
+entra-auth-cli config export -p production --include-secrets -o backup.enc
 ```
 
 ### import
 Import profile configuration from a file.
 
 ```bash {linenos=inline}
-entra-auth-cli config import [flags]
+entra-auth-cli config import -i <file> [-n <new-name>]
 ```
 
 **Flags:**
-- `--file`, `-f` - Input file path
-- `--overwrite` - Overwrite existing profiles
-- `--dry-run` - Show what would be imported without making changes
+- `-i`, `--input` - Input file path (required)
+- `-n`, `--name` - New profile name (optional, renames the profile)
+
+**Important:** Import requires entering the passphrase used during export.
 
 **Examples:**
 
 ```bash {linenos=inline}
-# Import from file
-entra-auth-cli config import --file production-profile.json
+# Import from file (will prompt for decryption passphrase)
+entra-auth-cli config import -i production-profile.enc
 
-# Import from stdin
-cat production-profile.json | entra-auth-cli config import
-
-# Import with overwrite
-entra-auth-cli config import --file all-profiles.json --overwrite
-
-# Dry run to preview
-entra-auth-cli config import --file backup.json --dry-run
+# Import with a new name
+entra-auth-cli config import -i production-profile.enc -n production-v2
 ```
 
 ## Complete Examples
 
 ### Creating Profiles
 
-#### Client Secret Authentication
-
 ```bash {linenos=inline}
-# Interactive (recommended for first-time users)
+# Create a profile (fully interactive)
 entra-auth-cli config create
 
-# You'll be prompted for:
+# You'll be prompted for all required fields:
 # - Profile name: production
 # - Tenant ID: 12345678-1234-1234-1234-123456789012
 # - Client ID: 87654321-4321-4321-4321-210987654321
-# - Auth method: client-secret
+# - Auth method: ClientSecret (or Certificate/PasswordlessCertificate)
 # - Client secret: (hidden input)
-# - Scopes: https://graph.microsoft.com/.default
-```
-
-#### Certificate Authentication
-
-```bash {linenos=inline}
-# Create with certificate
-entra-auth-cli config create \
-  --name secure-prod \
-  --tenant-id "$TENANT_ID" \
-  --client-id "$CLIENT_ID" \
-  --certificate "./certs/production.pfx" \
-  --certificate-password "$CERT_PASSWORD" \
-  --scope "https://graph.microsoft.com/.default"
-```
-
-#### Multiple Environments
-
-```bash {linenos=inline}
-# Development environment
-entra-auth-cli config create --name dev \
-  --tenant-id "$DEV_TENANT_ID" \
-  --client-id "$DEV_CLIENT_ID" \
-  --client-secret "$DEV_SECRET"
-
-# Staging environment
-entra-auth-cli config create --name staging \
-  --tenant-id "$STAGING_TENANT_ID" \
-  --client-id "$STAGING_CLIENT_ID" \
-  --client-secret "$STAGING_SECRET"
-
-# Production environment
-entra-auth-cli config create --name production \
-  --tenant-id "$PROD_TENANT_ID" \
-  --client-id "$PROD_CLIENT_ID" \
-  --certificate "./certs/prod.pfx"
+# - Default OAuth2 flow: (optional)
+# - Redirect URI: (optional)
+# - Default scopes: https://graph.microsoft.com/.default
 ```
 
 ### Managing Profiles
@@ -296,39 +215,21 @@ entra-auth-cli config create --name production \
 entra-auth-cli config list
 
 # Output:
-# default
 # production
 # staging
 # dev
 # graph-api
-
-# Show details of specific profile
-entra-auth-cli config show --name production
-
-# Output:
-# Profile: production
-# Tenant ID: 12345678-1234-1234-1234-123456789012
-# Client ID: 87654321-4321-4321-4321-210987654321
-# Auth Method: certificate
-# Certificate: /path/to/cert.pfx
-# Default Scopes: https://graph.microsoft.com/.default
 ```
 
 #### Update Configuration
 
 ```bash {linenos=inline}
-# Change default scopes
-entra-auth-cli config edit --name production \
-  --scope "User.Read Mail.Read Calendars.Read"
+# Edit profile interactively
+entra-auth-cli config edit -p production
 
-# Rotate client secret
-entra-auth-cli config edit --name production \
-  --client-secret "$NEW_SECRET"
-
-# Switch from secret to certificate
-entra-auth-cli config edit --name production \
-  --certificate "./new-cert.pfx" \
-  --certificate-password "$CERT_PASS"
+# Will prompt for:
+# - What to update (tenant, client ID, auth method, credentials, etc.)
+# - New values for selected fields
 ```
 
 ### Backup and Migration
@@ -345,10 +246,11 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 mkdir -p "$BACKUP_DIR"
 
 # Export each profile
-for profile in $(entra-auth-cli config list); do
+for profile in $(entra-auth-cli config list | grep -v "^$"); do
     echo "Backing up profile: $profile"
-    entra-auth-cli config export --name "$profile" --include-secrets \
-      > "$BACKUP_DIR/${profile}_${TIMESTAMP}.json"
+    # Will prompt for encryption passphrase for each profile
+    entra-auth-cli config export -p "$profile" --include-secrets \
+      -o "$BACKUP_DIR/${profile}_${TIMESTAMP}.enc"
 done
 
 echo "Backup complete: $BACKUP_DIR"
@@ -357,47 +259,16 @@ echo "Backup complete: $BACKUP_DIR"
 #### Migrate to New Machine
 
 ```bash {linenos=inline}
-# On old machine
-entra-auth-cli config export --include-secrets > profiles-backup.json
+# On old machine (will prompt for encryption passphrase)
+entra-auth-cli config export -p production --include-secrets -o profiles-backup.enc
 
 # Transfer file to new machine
-scp profiles-backup.json user@newmachine:/tmp/
+scp profiles-backup.enc user@newmachine:/tmp/
 
-# On new machine
-entra-auth-cli config import --file /tmp/profiles-backup.json
+# On new machine (will prompt for decryption passphrase)
+entra-auth-cli config import -i /tmp/profiles-backup.enc
 
 # Verify
-entra-auth-cli config list
-```
-
-### Environment-Based Configuration
-
-```bash {linenos=inline}
-#!/bin/bash
-
-# Script to create profiles based on environment
-create_env_profile() {
-    local env="$1"
-    local tenant_var="${env}_TENANT_ID"
-    local client_var="${env}_CLIENT_ID"
-    local secret_var="${env}_CLIENT_SECRET"
-    
-    echo "Creating profile for $env environment..."
-    
-    entra-auth-cli config create \
-        --name "$env" \
-        --tenant-id "${!tenant_var}" \
-        --client-id "${!client_var}" \
-        --client-secret "${!secret_var}" \
-        --scope "https://graph.microsoft.com/.default"
-}
-
-# Create profiles for each environment
-for env in DEV STAGING PRODUCTION; do
-    create_env_profile "$env"
-done
-
-echo "All profiles created:"
 entra-auth-cli config list
 ```
 
@@ -410,10 +281,10 @@ entra-auth-cli config list
 echo "Validating profiles..."
 
 failed=0
-for profile in $(entra-auth-cli config list); do
+for profile in $(entra-auth-cli config list | grep -v "^$"); do
     echo -n "Testing $profile... "
     
-    if entra-auth-cli get-token --profile "$profile" --output json > /dev/null 2>&1; then
+    if entra-auth-cli get-token -p "$profile" > /dev/null 2>&1; then
         echo "✓ OK"
     else
         echo "✗ FAILED"
@@ -458,31 +329,24 @@ Each profile consists of:
 ### Secrets Management
 
 ```bash {linenos=inline}
-# ✅ Good - use environment variables
-export CLIENT_SECRET=$(vault read -field=secret secret/azure/client)
-entra-auth-cli config create --client-secret "$CLIENT_SECRET"
+# ✅ Good - use interactive prompt (hides input)
+entra-auth-cli config create  # Will prompt for secret securely
 
-# ✅ Good - interactive prompt (hides input)
-entra-auth-cli config create  # Will prompt for secret
-
-# ❌ Bad - hardcoded in script
-entra-auth-cli config create --client-secret "my-secret-123"
-
-# ❌ Bad - visible in command history
-entra-auth-cli config create --client-secret "$SECRET"  # If $SECRET expands
+# ❌ Bad - don't expose secrets in command history or scripts
+CLIENT_SECRET="my-secret-123"
+entra-auth-cli config create  # Even in scripts, use interactive mode
 ```
 
 ### Profile Naming
 
 ```bash {linenos=inline}
 # ✅ Good - descriptive names
-entra-auth-cli config create --name prod-graph-api
-entra-auth-cli config create --name staging-azure-mgmt
-entra-auth-cli config create --name dev-user-app
+# Create profiles with clear names (done interactively)
+entra-auth-cli config create
+# Then name them: prod-graph-api, staging-azure-mgmt, dev-user-app
 
 # ❌ Avoid - generic names
-entra-auth-cli config create --name app1
-entra-auth-cli config create --name test
+# app1, test, etc.
 ```
 
 ### Regular Rotation
@@ -491,17 +355,17 @@ entra-auth-cli config create --name test
 #!/bin/bash
 # Rotate secrets for all profiles
 
-for profile in $(entra-auth-cli config list); do
+for profile in $(entra-auth-cli config list | grep -v "^$"); do
     echo "Rotating secret for $profile"
     
     # Get new secret from vault
     NEW_SECRET=$(vault read -field=secret "secret/azure/$profile")
     
-    # Update profile
-    entra-auth-cli config edit --name "$profile" --client-secret "$NEW_SECRET"
+    # Update profile (will prompt interactively)
+    entra-auth-cli config edit -p "$profile"
     
     # Verify
-    if entra-auth-cli get-token --profile "$profile" > /dev/null; then
+    if entra-auth-cli get-token -p "$profile" > /dev/null; then
         echo "✓ $profile updated successfully"
     else
         echo "✗ $profile update failed"
@@ -517,8 +381,8 @@ done
 # List available profiles
 entra-auth-cli config list
 
-# Check exact name (case-sensitive)
-entra-auth-cli config show --name Production  # Won't match "production"
+# Profile names are case-sensitive
+# "Production" won't match "production"
 ```
 
 ### Cannot Create Profile
@@ -541,8 +405,8 @@ Test-Path "$env:LOCALAPPDATA\EntraAuthCli\profiles"
 cat ~/.entra-auth-cli/profiles/production.json
 
 # If corrupted, delete and recreate
-entra-auth-cli config delete --name production --force
-entra-auth-cli config create --name production
+entra-auth-cli config delete -p production
+entra-auth-cli config create
 ```
 
 ## See Also

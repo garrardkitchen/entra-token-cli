@@ -38,7 +38,7 @@ entra-auth-cli config create
 ### Get Token and Call API
 
 ```bash {linenos=inline}
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt )
 curl -H "Authorization: Bearer $TOKEN" \
      'https://management.azure.com/subscriptions?api-version=2020-01-01' | jq
 ```
@@ -51,7 +51,7 @@ Retrieve all Azure subscriptions.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent \
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt  \
   --scope "https://management.azure.com/.default")
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -66,7 +66,7 @@ List resource groups in a subscription.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt )
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -81,7 +81,7 @@ Create a new resource group.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt )
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 RESOURCE_GROUP="my-resource-group"
 LOCATION="eastus"
@@ -103,7 +103,7 @@ List all VMs in a resource group.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt )
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 RESOURCE_GROUP="my-rg"
 
@@ -119,7 +119,7 @@ Create a new virtual machine.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p azure-admin --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-admin )
 SUBSCRIPTION_ID="..."
 RESOURCE_GROUP="my-rg"
 VM_NAME="my-vm"
@@ -171,7 +171,7 @@ List storage accounts in a subscription.
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt )
 SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789abc"
 
 curl -H "Authorization: Bearer $TOKEN" \
@@ -211,7 +211,7 @@ Assign minimum required roles:
 
 ```bash {linenos=inline}
 #!/bin/bash
-TOKEN=$(entra-auth-cli get-token -p azure-mgmt --silent)
+TOKEN=$(entra-auth-cli get-token -p azure-mgmt )
 
 # Start operation
 response=$(curl -X PUT \

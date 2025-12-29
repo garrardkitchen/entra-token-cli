@@ -99,7 +99,7 @@ entra-auth-cli --version
 entra-auth-cli get-token -p my-profile
 
 # Generate token (silent mode for scripts)
-TOKEN=$(entra-auth-cli get-token -p my-profile --silent)
+TOKEN=$(entra-auth-cli get-token -p my-profile)
 
 # Override scope
 entra-auth-cli get-token -p my-profile --scope "https://graph.microsoft.com/User.Read"
