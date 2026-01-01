@@ -35,8 +35,12 @@ dotnet tool uninstall -g EntraAuthCli
 ### Verify Installation
 
 ```bash {linenos=inline}
+entra-auth-cli
+# or
 entra-auth-cli --version
 ```
+
+![sensitive-data-debug-mode](/images/cli-no-cmd.png)
 
 ---
 

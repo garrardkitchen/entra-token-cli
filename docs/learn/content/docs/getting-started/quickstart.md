@@ -124,7 +124,7 @@ This decodes the JWT and displays claims like:
 **Explore features:**
 - [Managing Profiles](/docs/user-guide/managing-profiles/) - Create, edit, export profiles
 - [Certificate Authentication](/docs/certificates/) - Use certificates instead of secrets
-- [Scope Overrides](/docs/user-guide/generating-tokens/scope-overrides/) - Get tokens for different APIs
+- [Scope Overrides](/docs/user-guide/generating-tokens/#scope-override) - Get tokens for different APIs
 
 **Try recipes:**
 - [Service Principal Authentication](/docs/recipes/service-principals/)
