@@ -71,8 +71,24 @@ public class MsalAuthService
     /// </summary>
     public async Task<AuthenticationResult> RefreshTokenAsync(
         AuthProfile profile,
+        X509Certificate2? preLoadedCertificate = null,
         CancellationToken cancellationToken = default)
     {
+        // For ClientCredentials flow (ClientSecret/Certificate), we need to get a new token
+        // These don't use cached accounts, they use app-only authentication
+        if (profile.AuthMethod == AuthenticationMethod.ClientSecret ||
+            profile.AuthMethod == AuthenticationMethod.Certificate ||
+            profile.AuthMethod == AuthenticationMethod.PasswordlessCertificate)
+        {
+            // Use ClientCredentials flow to get a new token
+            return await AuthenticateClientCredentialsAsync(
+                profile, 
+                profile.CacheCertificatePassword, 
+                preLoadedCertificate, 
+                cancellationToken);
+        }
+
+        // For interactive flows, try to refresh from cache
         var app = await GetOrCreatePublicClientAsync(profile, cancellationToken);
         var accounts = await app.GetAccountsAsync();
         var account = accounts.FirstOrDefault();

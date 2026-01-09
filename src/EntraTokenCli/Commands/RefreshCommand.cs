@@ -47,10 +47,26 @@ public class RefreshCommand : AsyncCommand<RefreshSettings>
                 profile = ConsoleUi.PromptForProfile(_configService.GetProfiles());
             }
 
+            // Pre-load certificate if needed (to avoid password prompt during spinner)
+            System.Security.Cryptography.X509Certificates.X509Certificate2? preLoadedCertificate = null;
+            if (profile.AuthMethod == AuthenticationMethod.Certificate || 
+                profile.AuthMethod == AuthenticationMethod.PasswordlessCertificate)
+            {
+                var cachedPassword = profile.CacheCertificatePassword
+                    ? await _configService.GetCertificatePasswordAsync(profile.Name)
+                    : null;
+
+                preLoadedCertificate = Authentication.CertificateLoader.LoadCertificate(
+                    profile.CertificatePath!,
+                    cachedPassword,
+                    profile.CacheCertificatePassword,
+                    promptForPassword: true);
+            }
+
             // Refresh token
             var result = await ConsoleUi.ShowSpinnerAsync(
                 "Refreshing token...",
-                async () => await _authService.RefreshTokenAsync(profile));
+                async () => await _authService.RefreshTokenAsync(profile, preLoadedCertificate));
 
             ConsoleUi.DisplaySuccess("Token refreshed successfully!");
 
