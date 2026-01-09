@@ -160,7 +160,7 @@ public class MsalAuthService
             {
                 var result = await app.AcquireTokenSilent(profile.Scopes, accounts.First())
                     .ExecuteAsync(cancellationToken);
-                return ConvertResult(result, isFromCache: true);
+                return ConvertResult(result);
             }
             catch (MsalUiRequiredException)
             {
@@ -218,7 +218,7 @@ public class MsalAuthService
             {
                 var result = await app.AcquireTokenSilent(profile.Scopes, accounts.First())
                     .ExecuteAsync(cancellationToken);
-                return ConvertResult(result, isFromCache: true);
+                return ConvertResult(result);
             }
             catch (MsalUiRequiredException)
             {
@@ -342,15 +342,20 @@ public class MsalAuthService
 
     private static AuthenticationResult ConvertResult(
         Microsoft.Identity.Client.AuthenticationResult msalResult,
-        bool isFromCache = false)
+        bool? isFromCache = null)
     {
+        // Determine if token is from cache
+        // If explicitly provided, use that value; otherwise use MSAL's TokenSource
+        bool fromCache = isFromCache ?? 
+            (msalResult.AuthenticationResultMetadata.TokenSource == TokenSource.Cache);
+
         return new AuthenticationResult
         {
             AccessToken = msalResult.AccessToken,
             ExpiresOn = msalResult.ExpiresOn,
             Scopes = msalResult.Scopes.ToArray(),
             TokenType = msalResult.TokenType,
-            IsFromCache = isFromCache
+            IsFromCache = fromCache
         };
     }
 }
