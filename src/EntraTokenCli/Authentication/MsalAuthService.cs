@@ -74,6 +74,14 @@ public class MsalAuthService
         X509Certificate2? preLoadedCertificate = null,
         CancellationToken cancellationToken = default)
     {
+        // Validate profile before attempting token refresh
+        var (isValid, errors) = await _configService.ValidateProfileAsync(profile, cancellationToken);
+        if (!isValid)
+        {
+            throw new InvalidOperationException(
+                $"Profile validation failed:\n{string.Join("\n", errors)}");
+        }
+
         // For ClientCredentials flow (ClientSecret/Certificate), we need to get a new token
         // These don't use cached accounts, they use app-only authentication
         if (profile.AuthMethod == AuthenticationMethod.ClientSecret ||
