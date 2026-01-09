@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 using EntraAuthCli.Authentication;
 using EntraAuthCli.Configuration;
 using EntraAuthCli.UI;
@@ -48,7 +49,7 @@ public class RefreshCommand : AsyncCommand<RefreshSettings>
             }
 
             // Pre-load certificate if needed (to avoid password prompt during spinner)
-            System.Security.Cryptography.X509Certificates.X509Certificate2? preLoadedCertificate = null;
+            X509Certificate2? preLoadedCertificate = null;
             if (profile.AuthMethod == AuthenticationMethod.Certificate || 
                 profile.AuthMethod == AuthenticationMethod.PasswordlessCertificate)
             {
