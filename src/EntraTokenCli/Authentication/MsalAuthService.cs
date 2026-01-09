@@ -71,8 +71,33 @@ public class MsalAuthService
     /// </summary>
     public async Task<AuthenticationResult> RefreshTokenAsync(
         AuthProfile profile,
+        X509Certificate2? preLoadedCertificate = null,
         CancellationToken cancellationToken = default)
     {
+        // Validate profile before attempting token refresh
+        var (isValid, errors) = await _configService.ValidateProfileAsync(profile, cancellationToken);
+        if (!isValid)
+        {
+            throw new InvalidOperationException(
+                $"Profile validation failed:\n{string.Join("\n", errors)}");
+        }
+
+        // For ClientCredentials flow (ClientSecret/Certificate), we need to get a new token
+        // These don't use cached accounts, they use app-only authentication
+        if (profile.AuthMethod == AuthenticationMethod.ClientSecret ||
+            profile.AuthMethod == AuthenticationMethod.Certificate ||
+            profile.AuthMethod == AuthenticationMethod.PasswordlessCertificate)
+        {
+            // Use ClientCredentials flow to get a new token with force refresh
+            return await AuthenticateClientCredentialsAsync(
+                profile, 
+                profile.CacheCertificatePassword, 
+                preLoadedCertificate, 
+                cancellationToken,
+                forceRefresh: true);
+        }
+
+        // For interactive flows, try to refresh from cache
         var app = await GetOrCreatePublicClientAsync(profile, cancellationToken);
         var accounts = await app.GetAccountsAsync();
         var account = accounts.FirstOrDefault();
@@ -85,7 +110,9 @@ public class MsalAuthService
 
         try
         {
+            // Force refresh to get a new token with updated claims
             var result = await app.AcquireTokenSilent(profile.Scopes, account)
+                .WithForceRefresh(true)
                 .ExecuteAsync(cancellationToken);
 
             return ConvertResult(result);
@@ -102,7 +129,8 @@ public class MsalAuthService
         AuthProfile profile,
         bool cacheCertPassword,
         X509Certificate2? preLoadedCertificate,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool forceRefresh = false)
     {
         var app = await GetOrCreateConfidentialClientAsync(profile, cacheCertPassword, preLoadedCertificate, cancellationToken);
 
@@ -110,8 +138,14 @@ public class MsalAuthService
             ? profile.Scopes.ToArray() 
             : new[] { $"{profile.Resource}/.default" };
 
-        var result = await app.AcquireTokenForClient(scopes)
-            .ExecuteAsync(cancellationToken);
+        var builder = app.AcquireTokenForClient(scopes);
+        
+        if (forceRefresh)
+        {
+            builder = builder.WithForceRefresh(true);
+        }
+
+        var result = await builder.ExecuteAsync(cancellationToken);
 
         return ConvertResult(result);
     }
@@ -134,7 +168,7 @@ public class MsalAuthService
             {
                 var result = await app.AcquireTokenSilent(profile.Scopes, accounts.First())
                     .ExecuteAsync(cancellationToken);
-                return ConvertResult(result, isFromCache: true);
+                return ConvertResult(result);
             }
             catch (MsalUiRequiredException)
             {
@@ -192,7 +226,7 @@ public class MsalAuthService
             {
                 var result = await app.AcquireTokenSilent(profile.Scopes, accounts.First())
                     .ExecuteAsync(cancellationToken);
-                return ConvertResult(result, isFromCache: true);
+                return ConvertResult(result);
             }
             catch (MsalUiRequiredException)
             {
@@ -316,15 +350,20 @@ public class MsalAuthService
 
     private static AuthenticationResult ConvertResult(
         Microsoft.Identity.Client.AuthenticationResult msalResult,
-        bool isFromCache = false)
+        bool? isFromCache = null)
     {
+        // Determine if token is from cache
+        // If explicitly provided, use that value; otherwise use MSAL's TokenSource
+        bool fromCache = isFromCache ?? 
+            (msalResult.AuthenticationResultMetadata.TokenSource == TokenSource.Cache);
+
         return new AuthenticationResult
         {
             AccessToken = msalResult.AccessToken,
             ExpiresOn = msalResult.ExpiresOn,
             Scopes = msalResult.Scopes.ToArray(),
             TokenType = msalResult.TokenType,
-            IsFromCache = isFromCache
+            IsFromCache = fromCache
         };
     }
 }
