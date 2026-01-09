@@ -90,9 +90,20 @@ echo "eyJ0eXAiOiJKV1Qi..." | entra-auth-cli inspect -
 
 ### 4. Refresh a Token
 
+The `refresh` command forces the generation of a new access token, which is useful when:
+- You've added new API permissions or roles to your app registration
+- You need to ensure you have the latest claims and permissions
+- You want a fresh token with a full expiration lifetime
+
 ```bash
+# Refresh token for a specific profile
 entra-auth-cli refresh -p myprofile
+
+# Or let the tool prompt you to select a profile
+entra-auth-cli refresh
 ```
+
+**Note**: The refresh command always generates a new token from Azure AD (not from cache), ensuring you get updated permissions and a fresh expiration time. This works with all authentication methods including ClientSecret, Certificate, and interactive flows.
 
 ## Usage Examples
 
