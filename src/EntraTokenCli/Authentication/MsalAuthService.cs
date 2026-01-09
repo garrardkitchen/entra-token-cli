@@ -80,12 +80,13 @@ public class MsalAuthService
             profile.AuthMethod == AuthenticationMethod.Certificate ||
             profile.AuthMethod == AuthenticationMethod.PasswordlessCertificate)
         {
-            // Use ClientCredentials flow to get a new token
+            // Use ClientCredentials flow to get a new token with force refresh
             return await AuthenticateClientCredentialsAsync(
                 profile, 
                 profile.CacheCertificatePassword, 
                 preLoadedCertificate, 
-                cancellationToken);
+                cancellationToken,
+                forceRefresh: true);
         }
 
         // For interactive flows, try to refresh from cache
@@ -101,7 +102,9 @@ public class MsalAuthService
 
         try
         {
+            // Force refresh to get a new token with updated claims
             var result = await app.AcquireTokenSilent(profile.Scopes, account)
+                .WithForceRefresh(true)
                 .ExecuteAsync(cancellationToken);
 
             return ConvertResult(result);
@@ -118,7 +121,8 @@ public class MsalAuthService
         AuthProfile profile,
         bool cacheCertPassword,
         X509Certificate2? preLoadedCertificate,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool forceRefresh = false)
     {
         var app = await GetOrCreateConfidentialClientAsync(profile, cacheCertPassword, preLoadedCertificate, cancellationToken);
 
@@ -126,8 +130,14 @@ public class MsalAuthService
             ? profile.Scopes.ToArray() 
             : new[] { $"{profile.Resource}/.default" };
 
-        var result = await app.AcquireTokenForClient(scopes)
-            .ExecuteAsync(cancellationToken);
+        var builder = app.AcquireTokenForClient(scopes);
+        
+        if (forceRefresh)
+        {
+            builder = builder.WithForceRefresh(true);
+        }
+
+        var result = await builder.ExecuteAsync(cancellationToken);
 
         return ConvertResult(result);
     }
