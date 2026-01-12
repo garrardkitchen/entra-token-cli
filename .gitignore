@@ -150,3 +150,4 @@ profiles.json
 
 docs/learn/public/
 docs/learn/.hugo_build.lock
+docs/learn/_vendor/
